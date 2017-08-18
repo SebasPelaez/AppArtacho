@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">LabsCM20172</string>
+    <string name="strIngresar">Ingresar</string>
+    <string name="strClave">Contraseña</string>
+</resources>
