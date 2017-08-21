@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LabsCM20172</string>
+    <string name="Constraseña">Senha</string>
+    <string name="ConstraseñaR">Repetir a senha</string>
+    <string name="Direccion_Registro">Endereço</string>
+    <string name="Email">o email</string>
+    <string name="FechaNacimiento_Registro">Aniversário</string>
+    <string name="Telefono_Registro">telefone</string>
+    <string name="actualizar">atualizar</string>
+    <string name="apellido">Último nome</string>
+    <string name="cambiarIdioma">Último nome</string>
+    <string name="ciudad">mudar idioma</string>
+    <string name="femenino">fêmea</string>
+    <string name="genero_Registro">gênero</string>
+    <string name="ingresar">assinar em</string>
+    <string name="navigation_drawer_close">assinar em</string>
+    <string name="masculino">Masculino</string>
+    <string name="navigation_drawer_open">Aberto Navigation Drawer</string>
+    <string name="nombre">nome</string>
+    <string name="registrame">Inscrever-se</string>
+    <string name="registrar">Registo</string>
+    <string name="salir">Sair</string>
+    <string name="strClave">Senha</string>
+    <string name="strIngresar">Assinar em</string>
+</resources>
