@@ -3,10 +3,12 @@ package co.edu.udea.compumovil.gr02_20172.lab1;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,7 +19,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
 import java.util.Locale;
 
@@ -34,7 +38,7 @@ public class Principal extends AppCompatActivity
         setContentView(R.layout.activity_principal);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //recuperarInformacion();
+        recuperarInformacion();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,23 +60,30 @@ public class Principal extends AppCompatActivity
 
     private void recuperarInformacion() {
         Singleton_InformacionPersonal informacion  = Singleton_InformacionPersonal.getInformacion();
-        EditText nombre  = (EditText)findViewById(R.id.txtNombre_Registro);
-        EditText apellido  = (EditText)findViewById(R.id.txtApellido_Registro);
-        EditText telefono  = (EditText)findViewById(R.id.txtTelefono_Registro);
-        EditText direccion  = (EditText)findViewById(R.id.txtDireccion_Registro);
-        EditText email  = (EditText)findViewById(R.id.txtEmail);
-        EditText ciudad  = (EditText)findViewById(R.id.txtCiudad);
-        EditText password  = (EditText)findViewById(R.id.txtPassword);
-        RadioButton genMasculino  = (RadioButton)findViewById(R.id.rbtnSexoMasculino_Registro);
-        RadioButton genFemenino  = (RadioButton)findViewById(R.id.rbtnSexoFemenino_Registro);
+        TextView nombre  = (TextView)findViewById(R.id.txtNombre_Informacion);
+        TextView apellido  = (TextView)findViewById(R.id.txtApellido_Informacion);
+        TextView telefono  = (TextView)findViewById(R.id.txtTelefono_Informacion);
+        TextView direccion  = (TextView)findViewById(R.id.txtDireccion_Informacion);
+        TextView email  = (TextView)findViewById(R.id.txtEmail_Informacion);
+        TextView ciudad  = (TextView)findViewById(R.id.txtCiudad_Informacion);
+        RadioButton genMasculino  = (RadioButton)findViewById(R.id.rbtnSexoMasculino_Informacion);
+        RadioButton genFemenino  = (RadioButton)findViewById(R.id.rbtnSexoFemenino_Informacion);
+        ImageView foto = (ImageView)findViewById(R.id.imgFoto_Informacion);
 
-        nombre.setText(informacion.getData().getNombre());
-        apellido.setText(informacion.getData().getApellidos());
-        telefono.setText(informacion.getData().getTelefono());
-        direccion.setText(informacion.getData().getDireccion());
-        email.setText(informacion.getData().getEmail());
-        ciudad.setText(informacion.getData().getCiudad());
-        password.setText(informacion.getData().getContrasena());
+        nombre.setText(nombre.getText().toString()+": "+informacion.getData().getNombre());
+        apellido.setText(apellido.getText().toString()+": "+informacion.getData().getApellidos());
+        telefono.setText(telefono.getText().toString()+": "+informacion.getData().getTelefono());
+        direccion.setText(direccion.getText().toString()+": "+informacion.getData().getDireccion());
+        email.setText(email.getText().toString()+": "+informacion.getData().getEmail());
+        ciudad.setText(ciudad.getText().toString()+": "+informacion.getData().getCiudad());
+
+        if(informacion.getData().getGenero().equals("Masculino")){
+            genMasculino.setChecked(true);
+        }else{
+            genFemenino.setChecked(true);
+        }
+
+        foto.setImageURI(Uri.parse(informacion.getData().getRuta_foto()));
 
     }
 

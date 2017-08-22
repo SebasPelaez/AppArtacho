@@ -133,6 +133,7 @@ public class Registro extends AppCompatActivity implements View.OnClickListener 
         if(resultCode == RESULT_OK && requestCode == 100){
             Uri imageUri = data.getData();
             foto.setImageURI(imageUri);
+            informacion.getData().setRuta_foto(imageUri.toString());
         }
     }
 
