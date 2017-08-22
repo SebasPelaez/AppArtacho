@@ -4,10 +4,13 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -28,9 +31,11 @@ public class Registro extends AppCompatActivity implements View.OnClickListener 
     private EditText telefono;
     private EditText direccion;
     private EditText email;
-    private EditText ciudad;
+    private AutoCompleteTextView ciudad;
     private EditText password;
     private EditText rPassword;
+
+    private String[] ciudades={"Medellín","Bogota"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +43,10 @@ public class Registro extends AppCompatActivity implements View.OnClickListener 
         setContentView(R.layout.activity_registro);
         inicializarComponentes();
         informacion = Singleton_InformacionPersonal.getInformacion();
+
+        ArrayAdapter adapterCiudades = new ArrayAdapter(this,android.R.layout.simple_list_item_1,ciudades);
+        ciudad.setAdapter(adapterCiudades);
+        ciudad.setThreshold(1);
 
         foto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +75,7 @@ public class Registro extends AppCompatActivity implements View.OnClickListener 
             case R.id.btnFecha_Registro:
                 int dia,mes,ano;
                 final Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(System.currentTimeMillis());
                 dia = calendar.get(Calendar.DAY_OF_MONTH);
                 mes = calendar.get(Calendar.MONTH);
                 ano = calendar.get(Calendar.YEAR);
@@ -125,7 +135,7 @@ public class Registro extends AppCompatActivity implements View.OnClickListener 
         telefono  = (EditText)findViewById(R.id.txtTelefono_Registro);
         direccion  = (EditText)findViewById(R.id.txtDireccion_Registro);
         email  = (EditText)findViewById(R.id.txtEmail);
-        ciudad  = (EditText)findViewById(R.id.txtCiudad);
+        ciudad  = (AutoCompleteTextView)findViewById(R.id.txtCiudad);
         password  = (EditText)findViewById(R.id.txtPassword);
         rPassword  = (EditText)findViewById(R.id.txtPasswordRepeat);
         txtFecha = (TextView)findViewById(R.id.lblFechaNacimiento_Registro);
