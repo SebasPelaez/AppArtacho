@@ -52,9 +52,13 @@ public class Registro extends AppCompatActivity implements View.OnClickListener 
         switch (v.getId()) {
             case R.id.btnRegistrar:
                 if(validarContrasenas()){
-                    recogerInformacion();
-                    Intent i = new Intent(Registro.this, Loggin.class);
-                    startActivity(i);
+                    if(validarCamposVacios()){
+                        recogerInformacion();
+                        Intent i = new Intent(Registro.this, Loggin.class);
+                        startActivity(i);
+                    }else{
+                        Toast.makeText(getApplicationContext(),"Hay campos vacios",Toast.LENGTH_SHORT).show();
+                    }
                 }else{
                     Toast.makeText(getApplicationContext(),"Las contraseñas no coinciden",Toast.LENGTH_SHORT).show();
                 }
@@ -76,6 +80,10 @@ public class Registro extends AppCompatActivity implements View.OnClickListener 
             default:
                 break;
         }
+    }
+
+    private boolean validarCamposVacios() {
+        return !informacion.getData().getGenero().equals("") && !informacion.getData().getRuta_foto().equals("");
     }
 
     private boolean validarContrasenas() {
@@ -134,6 +142,20 @@ public class Registro extends AppCompatActivity implements View.OnClickListener 
             Uri imageUri = data.getData();
             foto.setImageURI(imageUri);
             informacion.getData().setRuta_foto(imageUri.toString());
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState){
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState){
+        super.onRestoreInstanceState(savedInstanceState);
+        if(!informacion.getData().getRuta_foto().equals("")){
+            foto.setImageURI(Uri.parse(informacion.getData().getRuta_foto()));
         }
     }
 

@@ -18,6 +18,8 @@ public class InformacionPersonal {
 
     public InformacionPersonal(){
         this.nombre = "";
+        this.genero = "";
+        this.ruta_foto = "";
     }
 
     public String getRuta_foto() {
