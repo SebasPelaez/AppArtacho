@@ -1,9 +1,11 @@
 package co.edu.udea.compumovil.gr02_20172.lab1;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 
 import java.util.Timer;
@@ -20,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         // Hide title bar
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+
 
         TimerTask task = new TimerTask() {
             @Override
@@ -40,4 +43,5 @@ public class MainActivity extends AppCompatActivity {
         Timer timer = new Timer();
         timer.schedule(task, SPLASH_SCREEN_DELAY);
     }
+
 }

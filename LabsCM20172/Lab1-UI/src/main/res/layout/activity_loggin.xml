@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
     tools:context="co.edu.udea.compumovil.gr02_20172.lab1.Loggin">
 
     <ScrollView
@@ -12,16 +11,13 @@
         android:layout_height="0dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:background="@drawable/gradient"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -30,41 +26,53 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="450px"
-                android:layout_height="450px"
+                android:layout_width="300dp"
+                android:layout_height="300px"
+                android:layout_marginTop="80dp"
                 android:layout_gravity="center"
                 app:srcCompat="@drawable/logo" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:paddingTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/txtUsuario"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="40dp"
-                    android:hint="@string/strIngresar"
-                    android:inputType="textPersonName"
-                    android:textColorHint="@color/colorPrimaryDLigth"/>
 
-                <EditText
-                    android:id="@+id/txtPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:textColorHint="@color/colorPrimaryDLigth"
-                    android:hint="@string/strClave"
-                    android:inputType="textPassword"/>
+                    <EditText
+                        android:id="@+id/txtUsuario"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:hint="@string/strIngresar"
+                        android:padding="15dp"
+                        android:background="@drawable/edit_text_border"
+                        android:inputType="textPersonName"
+                        android:textColorHint="#ffffff"
+                        android:textColor="#ffffff"
+                        android:drawableStart="@drawable/ic_account"
+                        android:drawablePadding="5dp"/>
+
+                    <EditText
+                        android:id="@+id/txtPassword"
+                        android:layout_width="match_parent"
+                        android:padding="15dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="20dp"
+                        android:textColorHint="#ffffff"
+                        android:textColor="#ffffff"
+                        android:hint="@string/strClave"
+                        android:inputType="textPassword"
+                        android:background="@drawable/edit_text_border"
+                        android:drawableStart="@drawable/ic_pass"
+                        android:drawablePadding="5dp"/>
 
                 <Button
                     android:id="@+id/btnIngesar"
@@ -73,7 +81,9 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginTop="29dp"
-                    android:background="@color/colorAccent"
+                    android:background="@drawable/corner_input"
+                    android:backgroundTint="@color/primary"
+                    android:textColor="#ffffff"
                     android:onClick="onClick"
                     android:text="@string/ingresar"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -81,19 +91,23 @@
                     app:layout_constraintTop_toBottomOf="@+id/txtPassword"
                     tools:layout_editor_absoluteX="41dp" />
 
-                <TextView
+                <Button
                     android:id="@+id/txtRegistrar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:clickable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="53dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/corner_input"
+                    android:backgroundTint="@color/primary"
+                    android:textColor="#ffffff"
                     android:onClick="onClick"
                     android:text="@string/registrame"
-                    android:textColor="@color/colorAccent"
-                    android:textStyle="italic"
+                    android:layout_marginBottom="10dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/btnIngesar" />
+                    app:layout_constraintTop_toBottomOf="@+id/btnIngesar"
+                    tools:layout_editor_absoluteX="41dp" />
 
             </LinearLayout>
 

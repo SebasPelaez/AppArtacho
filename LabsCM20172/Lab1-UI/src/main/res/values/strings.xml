@@ -28,7 +28,7 @@
     <string name="str_es" >Spanish</string>
     <string name="str_pt" >Portuguese</string>
     <string name="cambiarIdioma">Cambiar Idioma</string>
-    <string name="registrame">Deseo registrame</string>
+    <string name="registrame">Registrarme</string>
     <string-array name="languages" >
         <item>@string/str_en</item>
         <item>@string/str_es</item>
