@@ -32,18 +32,22 @@ public class Principal extends AppCompatActivity
     private Locale locale;
     private Configuration config = new Configuration();
 
+    private Singleton_InformacionPersonal informacion;
+
+    private TextView txtEmail_NavBar;
+    private TextView txtUser_NavBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        recuperarInformacion();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Lo más seguro es que le hayas dado clic.", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -56,10 +60,13 @@ public class Principal extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        informacion  = Singleton_InformacionPersonal.getInformacion();
+        recuperarInformacion();
     }
 
     private void recuperarInformacion() {
-        Singleton_InformacionPersonal informacion  = Singleton_InformacionPersonal.getInformacion();
+
         TextView nombre  = (TextView)findViewById(R.id.txtNombre_Informacion);
         TextView apellido  = (TextView)findViewById(R.id.txtApellido_Informacion);
         TextView telefono  = (TextView)findViewById(R.id.txtTelefono_Informacion);
@@ -143,7 +150,7 @@ public class Principal extends AppCompatActivity
                         break;
                 }
                 getResources().updateConfiguration(config, null);
-                Intent refresh = new Intent(Principal.this, MainActivity.class);
+                Intent refresh = new Intent(Principal.this, Loggin.class);
                 startActivity(refresh);
                 finish();
             }
