@@ -18,6 +18,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -162,12 +164,12 @@ public class Registro extends AppCompatActivity implements View.OnClickListener 
         switch (v.getId()) {
             case R.id.btnRegistrar:
                 if(validarContrasenas()){
-                    if(validarCamposVacios()){
+                    if(checkValidation() && validarCamposVacios()){
                         recogerInformacion();
                         Intent i = new Intent(Registro.this, Loggin.class);
                         startActivity(i);
                     }else{
-                        Toast.makeText(getApplicationContext(),"Hay campos vacios",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"Hay errores en el formulario",Toast.LENGTH_SHORT).show();
                     }
                 }else{
                     Toast.makeText(getApplicationContext(),"Las contraseñas no coinciden",Toast.LENGTH_SHORT).show();
@@ -191,6 +193,19 @@ public class Registro extends AppCompatActivity implements View.OnClickListener 
             default:
                 break;
         }
+    }
+
+    private boolean checkValidation() {
+        boolean ret = true;
+
+        if (!Validation.hasText(nombre)) ret = false;
+        if (!Validation.hasText(apellido)) ret = false;
+        if (!Validation.hasText(direccion)) ret = false;
+        if (!Validation.hasText(ciudad)) ret = false;
+        if (!Validation.isEmailAddress(email, true)) ret = false;
+        if (!Validation.isPhoneNumber(telefono, false)) ret = false;
+
+        return ret;
     }
 
     private boolean validarCamposVacios() {
@@ -241,6 +256,59 @@ public class Registro extends AppCompatActivity implements View.OnClickListener 
         rPassword  = (EditText)findViewById(R.id.txtPasswordRepeat);
         txtFecha = (TextView)findViewById(R.id.lblFechaNacimiento_Registro);
         layout_imagen = (LinearLayout)findViewById(R.id.layoutImagen);
+        agregarValidaciones();
+    }
+
+    private void agregarValidaciones() {
+        nombre.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                Validation.hasText(nombre);
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+            public void onTextChanged(CharSequence s, int start, int before, int count){}
+        });
+
+        apellido.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                Validation.hasText(apellido);
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+            public void onTextChanged(CharSequence s, int start, int before, int count){}
+        });
+
+        direccion.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                Validation.hasText(direccion);
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+            public void onTextChanged(CharSequence s, int start, int before, int count){}
+        });
+
+        ciudad.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                Validation.hasText(ciudad);
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+            public void onTextChanged(CharSequence s, int start, int before, int count){}
+        });
+
+        telefono.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                Validation.isPhoneNumber(telefono, false);
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+            public void onTextChanged(CharSequence s, int start, int before, int count){}
+        });
+
+        email.addTextChangedListener(new TextWatcher() {
+            // after every change has been made to this editText, we would like to check validity
+            public void afterTextChanged(Editable s) {
+                Validation.isEmailAddress(email, true);
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+            public void onTextChanged(CharSequence s, int start, int before, int count){}
+        });
+
     }
 
     @Override
