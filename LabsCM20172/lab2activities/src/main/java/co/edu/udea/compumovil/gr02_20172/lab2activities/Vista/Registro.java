@@ -1,4 +1,4 @@
-package co.edu.udea.compumovil.gr02_20172.lab2activities;
+package co.edu.udea.compumovil.gr02_20172.lab2activities.Vista;
 
 import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
@@ -34,6 +34,9 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.Calendar;
+
+import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.Validacion.Validation;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;

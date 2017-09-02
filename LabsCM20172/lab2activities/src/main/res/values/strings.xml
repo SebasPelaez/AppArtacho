@@ -36,4 +36,12 @@
     </string-array>
 
     <string name="action_settings">Configuraciones</string>
+    <string name="apartamentos">Apartamentos</string>
+    <string name="Perfil">Perfil</string>
+    <string name="configuraciones">Configuraciones</string>
+    <string name="cerrarSesion">Cerrar Sesion</string>
+    <string name="acercaDe">Acerca de</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

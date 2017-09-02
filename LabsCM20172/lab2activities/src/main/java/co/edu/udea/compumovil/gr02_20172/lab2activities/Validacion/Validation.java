@@ -1,4 +1,4 @@
-package co.edu.udea.compumovil.gr02_20172.lab2activities;
+package co.edu.udea.compumovil.gr02_20172.lab2activities.Validacion;
 
 /**
  * Created by Sebas on 2/09/2017.

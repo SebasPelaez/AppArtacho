@@ -23,12 +23,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Loggin" />
+        <activity android:name=".Vista.Loggin" />
         <activity
-            android:name=".Principal"
+            android:name=".Vista.Principal"
             android:label="@string/title_activity_principal"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".Registro"></activity>
+        <activity android:name=".Vista.Registro"></activity>
     </application>
 
 </manifest>

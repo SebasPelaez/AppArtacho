@@ -24,4 +24,7 @@
     <string name="strClave">Senha</string>
     <string name="strIngresar">Assinar em</string>
     <string name="action_settings">Setnininhas</string>
+    <string name="configuraciones">Configuraciones</string>
+    <string name="cerrarSesion">Acerca de</string>
+    <string name="acercaDe">Cerrar Sesion</string>
 </resources>

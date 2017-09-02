@@ -1,14 +1,15 @@
-package co.edu.udea.compumovil.gr02_20172.lab2activities;
+package co.edu.udea.compumovil.gr02_20172.lab2activities.Vista;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,20 +19,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.TextView;
 import java.util.Locale;
+
+import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.Apartamentos;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.Perfil;
 
 public class Principal extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private Locale locale;
     private Configuration config = new Configuration();
-
-    private TextView txtEmail_NavBar;
-    private TextView txtUser_NavBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,36 +55,8 @@ public class Principal extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        recuperarInformacion();
-    }
-
-    private void recuperarInformacion() {
-        /*
-        TextView nombre  = (TextView)findViewById(R.id.txtNombre_Informacion);
-        TextView apellido  = (TextView)findViewById(R.id.txtApellido_Informacion);
-        TextView telefono  = (TextView)findViewById(R.id.txtTelefono_Informacion);
-        TextView direccion  = (TextView)findViewById(R.id.txtDireccion_Informacion);
-        TextView email  = (TextView)findViewById(R.id.txtEmail_Informacion);
-        TextView ciudad  = (TextView)findViewById(R.id.txtCiudad_Informacion);
-        RadioButton genMasculino  = (RadioButton)findViewById(R.id.rbtnSexoMasculino_Informacion);
-        RadioButton genFemenino  = (RadioButton)findViewById(R.id.rbtnSexoFemenino_Informacion);
-        ImageView foto = (ImageView)findViewById(R.id.imgFoto_Informacion);
-
-        nombre.setText(nombre.getText().toString()+": "+informacion.getData().getNombre());
-        apellido.setText(apellido.getText().toString()+": "+informacion.getData().getApellidos());
-        telefono.setText(telefono.getText().toString()+": "+informacion.getData().getTelefono());
-        direccion.setText(direccion.getText().toString()+": "+informacion.getData().getDireccion());
-        email.setText(email.getText().toString()+": "+informacion.getData().getEmail());
-        ciudad.setText(ciudad.getText().toString()+": "+informacion.getData().getCiudad());
-
-        if(informacion.getData().getGenero().equals("Masculino")){
-            genMasculino.setChecked(true);
-        }else{
-            genFemenino.setChecked(true);
-        }
-
-        foto.setImageURI(Uri.parse(informacion.getData().getRuta_foto()));
-        */
+        Fragment fragmentApartamentos = new Apartamentos();
+        changeFragment(fragmentApartamentos);
     }
 
     @Override
@@ -97,6 +67,12 @@ public class Principal extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+        /*
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }*/
     }
 
     @Override
@@ -157,18 +133,51 @@ public class Principal extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         Intent i;
-        if (id == R.id.nav_actualizar) {
-            i = new Intent(Principal.this, Registro.class);
-            startActivity(i);
-        } else if (id == R.id.nav_salir) {
-            finish();
-            i = new Intent(Intent.ACTION_MAIN);
-            i.addCategory(Intent.CATEGORY_HOME);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(i);
+        switch (id){
+            case R.id.nav_apartamentos:
+                Fragment fragmenApartamentos = new Apartamentos();
+                changeFragment(fragmenApartamentos);
+                break;
+            case R.id.nav_perfil:
+                Fragment fragmentPerfil = new Perfil();
+                changeFragment(fragmentPerfil);
+                break;
+            case R.id.nav_configuraciones:
+                i = new Intent(Principal.this, Registro.class);
+                startActivity(i);
+                break;
+            case R.id.nav_cerrarSesion:
+                i = new Intent(Principal.this, Registro.class);
+                startActivity(i);
+                break;
+            case R.id.nav_acercaDe:
+                i = new Intent(Principal.this, Registro.class);
+                startActivity(i);
+                break;
+            default:
+                break;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void changeFragment(Fragment fragment){
+
+        // Create transaction
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+
+        // Create new fragment
+        //Fragment fragmentA = new FragmentA();
+        // Replace whatever is in the fragment_container view with this fragment
+        transaction.replace(R.id.fragment_container, fragment);
+
+        // add the transaction to the back stack (optional)
+        transaction.addToBackStack(null);
+
+        // Commit the transaction
+        transaction.commit();
+
     }
 }

@@ -24,4 +24,7 @@
     <string name="strClave">Password</string>
     <string name="strIngresar">Sign In</string>
     <string name="registrame">Sign Up</string>
+    <string name="configuraciones">Configuraciones</string>
+    <string name="cerrarSesion">Acerca de</string>
+    <string name="acercaDe">Cerrar Sesion</string>
 </resources>

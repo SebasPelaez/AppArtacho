@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="co.edu.udea.compumovil.gr02_20172.lab2activities.Principal">
+    tools:context="co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Principal">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

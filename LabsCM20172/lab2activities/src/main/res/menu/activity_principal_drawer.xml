@@ -3,17 +3,29 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_actualizar"
+            android:id="@+id/nav_apartamentos"
             android:icon="@drawable/ic_menu_manage"
-            android:title="@string/actualizar" />
+            android:title="@string/apartamentos" />
+        <item
+            android:id="@+id/nav_perfil"
+            android:icon="@drawable/ic_menu_send"
+            android:title="@string/Perfil" />
+        <item
+            android:id="@+id/nav_configuraciones"
+            android:icon="@drawable/ic_menu_send"
+            android:title="@string/configuraciones" />
     </group>
 
     <item android:title="Otros">
         <menu>
             <item
-                android:id="@+id/nav_salir"
+                android:id="@+id/nav_cerrarSesion"
                 android:icon="@drawable/ic_menu_send"
-                android:title="@string/salir" />
+                android:title="@string/cerrarSesion" />
+            <item
+                android:id="@+id/nav_acercaDe"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/acercaDe" />
         </menu>
     </item>
 
