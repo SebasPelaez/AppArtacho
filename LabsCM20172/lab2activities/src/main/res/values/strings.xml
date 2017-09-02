@@ -1,3 +1,39 @@
 <resources>
-    <string name="app_name">"Lab2Activities "</string>
+    <string name="app_name">LabsCM20172</string>
+    <string name="strIngresar">Ingresar</string>
+    <string name="strClave">Contraseña</string>
+    <string name="title_activity_principal">Principal</string>
+
+    <string name="navigation_drawer_open">Abrir navigation drawer</string>
+    <string name="navigation_drawer_close">Cerrar navigation drawer</string>
+
+    <string name="nombre">Nombre</string>
+    <string name="apellido">Apellido</string>
+    <string name="masculino">Masculino</string>
+    <string name="femenino">Femenino</string>
+    <string name="genero_Registro">Género</string>
+    <string name="FechaNacimiento_Registro">Fecha de Nacimiento</string>
+    <string name="Telefono_Registro">Teléfono</string>
+    <string name="Direccion_Registro">Dirección</string>
+    <string name="Email">Correo Electrónico</string>
+    <string name="Constraseña">Constraseña</string>
+    <string name="ciudad">Ciudad</string>
+    <string name="ConstraseñaR">Repite la contraseña</string>
+    <string name="actualizar">Actualizar</string>
+    <string name="salir">Salir</string>
+    <string name="ingresar">Ingresar</string>
+    <string name="registrar">Registrar</string>
+
+    <string name="str_en">English</string>
+    <string name="str_es">Spanish</string>
+    <string name="str_pt">Portuguese</string>
+    <string name="cambiarIdioma">Cambiar Idioma</string>
+    <string name="registrame">Registrarme</string>
+    <string-array name="languages">
+        <item>@string/str_en</item>
+        <item>@string/str_es</item>
+        <item>@string/str_pt</item>
+    </string-array>
+
+    <string name="action_settings">Configuraciones</string>
 </resources>
