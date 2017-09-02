@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
         // Hide title bar
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+<<<<<<< HEAD
 
         TimerTask task = new TimerTask() {
             @Override
@@ -39,5 +40,8 @@ public class MainActivity extends AppCompatActivity {
         // Simulate a long loading process on application startup.
         Timer timer = new Timer();
         timer.schedule(task, SPLASH_SCREEN_DELAY);
+=======
+        //prueba 
+>>>>>>> 978cb5061fbf668b2bc29b4195facf6724793740
     }
 }
