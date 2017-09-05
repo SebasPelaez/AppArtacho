@@ -1,10 +1,12 @@
 package co.edu.udea.compumovil.gr02_20172.lab2activities.Modelo;
 
+import java.io.Serializable;
+
 /**
  * Created by Sebas on 2/09/2017.
  */
 
-public class Apartamento {
+public class Apartamento implements Serializable {
 
     private String nombre;
     private String tipo;

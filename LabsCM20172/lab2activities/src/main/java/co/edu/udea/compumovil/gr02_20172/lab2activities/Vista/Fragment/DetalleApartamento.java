@@ -66,6 +66,13 @@ public class DetalleApartamento extends Fragment{
 
         });
 
+        Bundle objetoApartamento=getArguments();
+        Apartamento apto=null;
+        if (objetoApartamento != null) {
+            apto= (Apartamento) objetoApartamento.getSerializable("objeto");
+            //asignarInformacion(miPersonaje);LLena la informacion
+        }
+
         return rootView;
     }
 

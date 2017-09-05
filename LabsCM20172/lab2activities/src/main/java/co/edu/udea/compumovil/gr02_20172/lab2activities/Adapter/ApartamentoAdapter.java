@@ -19,10 +19,19 @@ import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
  * Created by Sebas on 2/09/2017.
  */
 
-public class ApartamentoAdapter extends RecyclerView.Adapter<ApartamentoAdapter.MyViewHolder>{
+public class ApartamentoAdapter extends RecyclerView.Adapter<ApartamentoAdapter.MyViewHolder> implements View.OnClickListener{
 
     private Context mContext;
     private List<Apartamento> albumList;
+
+    private View.OnClickListener listener;
+
+    @Override
+    public void onClick(View v) {
+        if (listener!=null){
+            listener.onClick(v);
+        }
+    }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView nombre, tipo,valor,area,descripcion;
@@ -49,6 +58,7 @@ public class ApartamentoAdapter extends RecyclerView.Adapter<ApartamentoAdapter.
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.cardview_item, parent, false);
 
+        itemView.setOnClickListener(this);
         return new MyViewHolder(itemView);
     }
 
@@ -70,5 +80,10 @@ public class ApartamentoAdapter extends RecyclerView.Adapter<ApartamentoAdapter.
     public int getItemCount() {
         return albumList.size();
     }
+
+    public void setOnClickListener(View.OnClickListener listener){
+        this.listener=listener;
+    }
+
 
 }

@@ -1,5 +1,7 @@
 package co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Adapter.ApartamentoAdapter;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.Interface.IComunicaFragments;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Modelo.Apartamento;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
 
@@ -24,6 +27,9 @@ public class Apartamentos extends Fragment {
     private RecyclerView recyclerView;
     private ApartamentoAdapter adapter;
     private List<Apartamento> apartamentoList;
+
+    private Activity activity;
+    private IComunicaFragments interfaceComunicaFragments;
 
     public Apartamentos() {
         // Required empty public constructor
@@ -50,6 +56,13 @@ public class Apartamentos extends Fragment {
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(llm);
+
+        adapter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                interfaceComunicaFragments.enviarApartamento(apartamentoList.get(recyclerView.getChildAdapterPosition(view)));
+            }
+        });
 
         return rootView;
     }
@@ -82,4 +95,12 @@ public class Apartamentos extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof Activity){
+            this.activity= (Activity) context;
+            this.interfaceComunicaFragments = (IComunicaFragments) this.activity;
+        }
+    }
 }

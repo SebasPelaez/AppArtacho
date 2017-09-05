@@ -21,6 +21,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import java.util.Locale;
 
+import co.edu.udea.compumovil.gr02_20172.lab2activities.Interface.IComunicaFragments;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.Modelo.Apartamento;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.Apartamentos;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.DetalleApartamento;
@@ -28,7 +30,7 @@ import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.Perfil;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.SettingsActivity;
 
 public class Principal extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,IComunicaFragments {
 
     private Locale locale;
     private Configuration config = new Configuration();
@@ -181,5 +183,16 @@ public class Principal extends AppCompatActivity
         // Commit the transaction
         transaction.commit();
 
+    }
+
+    @Override
+    public void enviarApartamento(Apartamento apto) {
+
+        DetalleApartamento detalleApartamento=new DetalleApartamento();
+        Bundle bundleEnvio=new Bundle();
+        bundleEnvio.putSerializable("objeto",apto);
+        detalleApartamento.setArguments(bundleEnvio);
+            //cargamos el fragment en el Activity
+        changeFragment(detalleApartamento);
     }
 }
