@@ -23,6 +23,7 @@ import java.util.Locale;
 
 import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.Apartamentos;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.DetalleApartamento;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.Perfil;
 
 public class Principal extends AppCompatActivity
@@ -143,8 +144,8 @@ public class Principal extends AppCompatActivity
                 changeFragment(fragmentPerfil);
                 break;
             case R.id.nav_configuraciones:
-                i = new Intent(Principal.this, Registro.class);
-                startActivity(i);
+                Fragment fragmentDetalle = new DetalleApartamento();
+                changeFragment(fragmentDetalle);
                 break;
             case R.id.nav_cerrarSesion:
                 i = new Intent(Principal.this, Registro.class);

@@ -27,4 +27,8 @@
     <string name="configuraciones">Configuraciones</string>
     <string name="cerrarSesion">Acerca de</string>
     <string name="acercaDe">Cerrar Sesion</string>
+    <string name="NumeroHabitaciones">Número Habitaciones</string>
+    <string name="AreaApartamento">Area</string>
+    <string name="DescripcionApartamento">Descripción</string>
+    <string name="UbicaciónApartamento">Ubicación</string>
 </resources>

@@ -28,7 +28,7 @@
             android:name=".Vista.Principal"
             android:label="@string/title_activity_principal"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".Vista.Registro"></activity>
+        <activity android:name=".Vista.Registro" />
     </application>
 
 </manifest>
