@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.RegistroApartamento">
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/gradient"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/layoutImagen"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/imgFoto"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/noavatar" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutComponentesDos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
+
+                <AutoCompleteTextView
+                    android:id="@+id/txtTipoInmueble"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/edit_text_border"
+                    android:drawablePadding="5dp"
+                    android:hint="@string/TipoInmueble"
+                    android:inputType="textCapWords|textNoSuggestions"
+                    android:padding="15dp"
+                    android:textColor="#ffffff"
+                    android:textColorHint="#ffffff"
+                    />
+
+
+                <EditText
+                    android:id="@+id/txtValor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/edit_text_border"
+                    android:hint="@string/valorInmueble"
+                    android:inputType="textCapWords|textNoSuggestions"
+                    android:padding="15dp"
+                    android:textColor="#ffffff"
+                    android:textColorHint="#ffffff" />
+
+                <EditText
+                    android:id="@+id/txtArea"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/edit_text_border"
+                    android:hint="@string/areaInmueble"
+                    android:inputType="textCapWords|textNoSuggestions"
+                    android:padding="15dp"
+                    android:textColor="#ffffff"
+                    android:textColorHint="#ffffff" />
+
+                <EditText
+                    android:id="@+id/txtCuartos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/edit_text_border"
+                    android:hint="@string/numeroCuartos"
+                    android:inputType="textCapWords|textNoSuggestions"
+                    android:padding="15dp"
+                    android:textColor="#ffffff"
+                    android:textColorHint="#ffffff" />
+
+                <EditText
+                    android:id="@+id/txtUbicacion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/edit_text_border"
+                    android:hint="@string/UbicacionInmueble"
+                    android:inputType="textCapWords|textNoSuggestions"
+                    android:padding="15dp"
+                    android:textColor="#ffffff"
+                    android:textColorHint="#ffffff" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnRegistrar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/primary"
+                android:onClick="onClick"
+                android:text="@string/registrar"
+                android:textColor="#ffffff"
+                android:background="@drawable/corner_input"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layoutComponentesDos"
+                app:layout_constraintVertical_bias="0.089999974" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

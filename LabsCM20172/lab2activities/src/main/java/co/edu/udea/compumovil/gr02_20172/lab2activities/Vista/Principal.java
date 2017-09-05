@@ -27,6 +27,7 @@ import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.Apartamentos;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.DetalleApartamento;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.Perfil;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.RegistroApartamento;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.SettingsActivity;
 
 public class Principal extends AppCompatActivity
@@ -41,14 +42,6 @@ public class Principal extends AppCompatActivity
         setContentView(R.layout.activity_principal);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Lo más seguro es que le hayas dado clic.", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -195,4 +188,17 @@ public class Principal extends AppCompatActivity
             //cargamos el fragment en el Activity
         changeFragment(detalleApartamento);
     }
+
+    @Override
+    public void generarAccion(String tag) {
+        switch (tag){
+            case "add_Apartamento":
+                Fragment fragmentRegistroApartamento = new RegistroApartamento();
+                changeFragment(fragmentRegistroApartamento);
+                break;
+            default:
+                break;
+        }
+    }
+
 }

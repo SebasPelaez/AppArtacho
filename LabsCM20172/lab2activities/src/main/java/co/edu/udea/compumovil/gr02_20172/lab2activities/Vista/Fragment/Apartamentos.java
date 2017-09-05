@@ -3,6 +3,8 @@ package co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -45,6 +47,14 @@ public class Apartamentos extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_apartamentos, container, false);
+
+        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                interfaceComunicaFragments.generarAccion("add_Apartamento");
+            }
+        });
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_viewApartamentos);
         recyclerView.setHasFixedSize(true);

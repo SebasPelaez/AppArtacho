@@ -8,4 +8,5 @@ import co.edu.udea.compumovil.gr02_20172.lab2activities.Modelo.Apartamento;
 
 public interface IComunicaFragments {
     public void enviarApartamento(Apartamento apto);
+    public void generarAccion(String tag);
 }
