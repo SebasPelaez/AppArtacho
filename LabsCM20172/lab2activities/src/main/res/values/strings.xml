@@ -123,4 +123,5 @@
     <string name="AreaApartamento">Area</string>
     <string name="DescripcionApartamento">Descripción</string>
     <string name="UbicaciónApartamento">Ubicación</string>
+    <string name="NombreUsuario">Nombre de usuario</string>
 </resources>

@@ -11,7 +11,7 @@ import java.util.List;
 public class Apartament {
     private int id;
     private String name;
-    private String tipo;
+    private String type;
     private int value;
     private int idUSer;
     private int area;
@@ -38,12 +38,12 @@ public class Apartament {
         this.name = name;
     }
 
-    public String getTipo() {
-        return tipo;
+    public String getType() {
+        return type;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public int getValue() {

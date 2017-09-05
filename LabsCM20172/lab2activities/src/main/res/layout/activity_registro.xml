@@ -259,6 +259,20 @@
                     tools:layout_editor_absoluteX="294dp"
                     tools:layout_editor_absoluteY="497dp" />
 
+                <EditText
+                    android:id="@+id/txtUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/edit_text_border"
+                    android:drawablePadding="5dp"
+                    android:drawableStart="@drawable/ic_user"
+                    android:hint="@string/NombreUsuario"
+                    android:inputType="textNoSuggestions"
+                    android:padding="15dp"
+                    android:textColor="#ffffff"
+                    android:textColorHint="#ffffff" />
+
 
                 <EditText
                     android:id="@+id/txtPassword"
