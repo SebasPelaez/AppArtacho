@@ -173,6 +173,7 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
                 if(validarContrasenas()){
                     if(checkValidation() && validarCamposVacios()){
                         recogerInformacion();
+                        registerUser();
                         Intent i = new Intent(Registro.this, Loggin.class);
                         startActivity(i);
                     }else{
@@ -407,6 +408,7 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
         SQLiteConnectionHelper connectionDb = new SQLiteConnectionHelper(this,"db_lab",null,1);
         SQLiteDatabase db = connectionDb.getWritableDatabase();
         ContentValues  values = new ContentValues();
+        System.out.print(username);
         values.put("username",username.getText().toString());
         values.put("password",password.getText().toString());
         values.put("name",nombre.getText().toString());
@@ -417,9 +419,8 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
         values.put("address",direccion.getText().toString());
         values.put("email",email.getText().toString());
         values.put("city",ciudad.getText().toString());
-        values.put("image",.getText().toString());
-
-
-
+        values.put("image",mPath);
+        Long registered = db.insert("user","",values);
+        Toast.makeText(getApplicationContext(),"Saved:"+registered,Toast.LENGTH_SHORT);
     }
 }

@@ -17,12 +17,12 @@ public class SQLiteConnectionHelper extends SQLiteOpenHelper {
             "name text NOT NULL," +
             "last_name text NOT NULL," +
             "gender integer NOT NULL," +
-            "brithday text," +
+            "birthday text," +
             "phone text," +
             "address text," +
             "email text," +
             "city text," +
-            "image text," +
+            "image text" +
             ")";
 
     private final String CREATE_APARTAMENT_TABLE= "CREATE TABLE IF NOT EXISTS apartament(" +
