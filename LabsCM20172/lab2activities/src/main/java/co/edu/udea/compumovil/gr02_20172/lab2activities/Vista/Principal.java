@@ -25,6 +25,7 @@ import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.Apartamentos;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.DetalleApartamento;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.Perfil;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.SettingsActivity;
 
 public class Principal extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -144,8 +145,8 @@ public class Principal extends AppCompatActivity
                 changeFragment(fragmentPerfil);
                 break;
             case R.id.nav_configuraciones:
-                Fragment fragmentDetalle = new DetalleApartamento();
-                changeFragment(fragmentDetalle);
+                i = new Intent(Principal.this, SettingsActivity.class);
+                startActivity(i);
                 break;
             case R.id.nav_cerrarSesion:
                 i = new Intent(Principal.this, Registro.class);
