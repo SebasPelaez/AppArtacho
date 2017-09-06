@@ -60,6 +60,7 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
     private EditText rPassword;
     private LinearLayout layout_imagen;
     private int sexo;
+    private String imagePath;
 
     /**
      * Para la foto
@@ -340,6 +341,7 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
         if(resultCode == RESULT_OK){
             switch (requestCode){
                 case PHOTO_CODE:
+                    imagePath = mPath;
                     MediaScannerConnection.scanFile(this,
                             new String[]{mPath}, null,
                             new MediaScannerConnection.OnScanCompletedListener() {
@@ -356,7 +358,9 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
                     foto.setImageBitmap(bitmap);
                     break;
                 case SELECT_PICTURE:
+
                     Uri path = data.getData();
+                    imagePath = path.toString();
                     foto.setImageURI(path);
                     //informacion.getData().setRuta_foto(path.toString());
                     break;
@@ -422,7 +426,7 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
             values.put("address",direccion.getText().toString());
             values.put("email",email.getText().toString());
             values.put("city",ciudad.getText().toString());
-            values.put("image",mPath);
+            values.put("image",imagePath);
             Long registered = db.insert("user","",values);
             Toast.makeText(getApplicationContext(),"Saved:"+registered,Toast.LENGTH_SHORT).show();
             Intent i = new Intent(Registro.this, Loggin.class);
