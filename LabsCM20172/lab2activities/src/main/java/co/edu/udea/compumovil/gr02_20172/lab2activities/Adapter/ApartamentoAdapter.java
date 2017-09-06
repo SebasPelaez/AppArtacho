@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Modelo.Apartamento;
@@ -22,7 +23,7 @@ import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
 public class ApartamentoAdapter extends RecyclerView.Adapter<ApartamentoAdapter.MyViewHolder> implements View.OnClickListener{
 
     private Context mContext;
-    private List<Apartamento> albumList;
+    private List<Apartamento> apartamentoList;
 
     private View.OnClickListener listener;
 
@@ -48,9 +49,9 @@ public class ApartamentoAdapter extends RecyclerView.Adapter<ApartamentoAdapter.
         }
     }
 
-    public ApartamentoAdapter(Context mContext, List<Apartamento> albumList) {
+    public ApartamentoAdapter(Context mContext, List<Apartamento> apartamentoList) {
         this.mContext = mContext;
-        this.albumList = albumList;
+        this.apartamentoList = apartamentoList;
     }
 
     @Override
@@ -64,7 +65,7 @@ public class ApartamentoAdapter extends RecyclerView.Adapter<ApartamentoAdapter.
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        Apartamento apto = albumList.get(position);
+        Apartamento apto = apartamentoList.get(position);
         holder.nombre.setText(apto.getNombre());
         holder.valor.setText(" $"+apto.getValor());
         holder.tipo.setText(apto.getTipo());
@@ -78,12 +79,17 @@ public class ApartamentoAdapter extends RecyclerView.Adapter<ApartamentoAdapter.
 
     @Override
     public int getItemCount() {
-        return albumList.size();
+        return apartamentoList.size();
     }
 
     public void setOnClickListener(View.OnClickListener listener){
         this.listener=listener;
     }
 
-
+    public void setFilter(List<Apartamento> newList){
+        apartamentoList= new ArrayList<>();
+        apartamentoList.addAll(newList);
+        notifyDataSetChanged();
+    }
+    
 }

@@ -4,11 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -20,11 +24,12 @@ import co.edu.udea.compumovil.gr02_20172.lab2activities.Adapter.ApartamentoAdapt
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Interface.IComunicaFragments;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Modelo.Apartamento;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.entities.Apartament;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Apartamentos extends Fragment {
+public class Apartamentos extends Fragment implements SearchView.OnQueryTextListener {
 
     private RecyclerView recyclerView;
     private ApartamentoAdapter adapter;
@@ -112,5 +117,32 @@ public class Apartamentos extends Fragment {
             this.activity= (Activity) context;
             this.interfaceComunicaFragments = (IComunicaFragments) this.activity;
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        searchView.setOnQueryTextListener(this);
+        inflater.inflate(R.menu.menu_search, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        newText  = newText.toLowerCase();
+        ArrayList<Apartamento> nuevaLista =  new ArrayList<>();
+        for (Apartamento ap: apartamentoList){
+            String nombre =  ap.getNombre().toLowerCase();
+            if (nombre.contains(newText))
+                nuevaLista.add(ap);
+        }
+        adapter.setFilter(nuevaLista);
+        return true;
     }
 }

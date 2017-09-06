@@ -128,4 +128,5 @@
     <string name="areaInmueble">Area Inmueble</string>
     <string name="numeroCuartos">Número de cuartos</string>
     <string name="UbicacionInmueble">Ubicación</string>
+    <string name="Buscar">Buscar</string>
 </resources>
