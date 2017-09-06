@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -174,8 +175,6 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
                     if(checkValidation() && validarCamposVacios()){
                         recogerInformacion();
                         registerUser();
-                        Intent i = new Intent(Registro.this, Loggin.class);
-                        startActivity(i);
                     }else{
                         Toast.makeText(getApplicationContext(),"Hay errores en el formulario",Toast.LENGTH_SHORT).show();
                     }
@@ -407,20 +406,28 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
     public void registerUser(){
         SQLiteConnectionHelper connectionDb = new SQLiteConnectionHelper(this,"db_lab",null,1);
         SQLiteDatabase db = connectionDb.getWritableDatabase();
-        ContentValues  values = new ContentValues();
-        System.out.print(username);
-        values.put("username",username.getText().toString());
-        values.put("password",password.getText().toString());
-        values.put("name",nombre.getText().toString());
-        values.put("last_name",apellido.getText().toString());
-        values.put("gender",sexo);
-        values.put("birthday",txtFecha.getText().toString());
-        values.put("phone",telefono.getText().toString());
-        values.put("address",direccion.getText().toString());
-        values.put("email",email.getText().toString());
-        values.put("city",ciudad.getText().toString());
-        values.put("image",mPath);
-        Long registered = db.insert("user","",values);
-        Toast.makeText(getApplicationContext(),"Saved:"+registered,Toast.LENGTH_SHORT);
+        String[] params = {username.getText().toString()};
+        Cursor cursor = db.rawQuery("SELECT * FROM user WHERE username=?",params);
+        if (cursor.moveToFirst()) {
+            Toast.makeText(getApplicationContext(),"Ya existe un con el mismo username",Toast.LENGTH_SHORT).show();
+        }else{
+            ContentValues  values = new ContentValues();
+            values.put("username",username.getText().toString());
+            values.put("password",password.getText().toString());
+            values.put("name",nombre.getText().toString());
+            values.put("last_name",apellido.getText().toString());
+            values.put("gender",sexo);
+            values.put("birthday",txtFecha.getText().toString());
+            values.put("phone",telefono.getText().toString());
+            values.put("address",direccion.getText().toString());
+            values.put("email",email.getText().toString());
+            values.put("city",ciudad.getText().toString());
+            values.put("image",mPath);
+            Long registered = db.insert("user","",values);
+            Toast.makeText(getApplicationContext(),"Saved:"+registered,Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(Registro.this, Loggin.class);
+            startActivity(i);
+        }
+
     }
 }
