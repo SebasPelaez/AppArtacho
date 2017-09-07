@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
 
@@ -12,13 +13,14 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener{
 
     private EditText txtUsuario;
     private EditText txtClave;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loggin);
 
-        txtUsuario = (EditText)findViewById(R.id.txtUsuario);
         txtClave = (EditText)findViewById(R.id.txtPassword);
+        txtUsuario = (EditText)findViewById(R.id.txtUsuario);
     }
 
     @Override

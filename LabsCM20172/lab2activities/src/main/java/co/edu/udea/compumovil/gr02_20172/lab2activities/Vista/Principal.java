@@ -7,14 +7,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +32,7 @@ public class Principal extends AppCompatActivity
 
     private Locale locale;
     private Configuration config = new Configuration();
+    private Fragment fragmentGenerico;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +50,8 @@ public class Principal extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Fragment fragmentApartamentos = new Apartamentos();
-        changeFragment(fragmentApartamentos);
+        fragmentGenerico = new Apartamentos();
+        changeFragment(fragmentGenerico);
     }
 
     @Override
@@ -74,6 +73,11 @@ public class Principal extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        if(fragmentGenerico!=null){
+            if(fragmentGenerico instanceof Apartamentos){
+                return true;
+            }
+        }
         getMenuInflater().inflate(R.menu.principal, menu);
         return true;
     }
@@ -131,12 +135,12 @@ public class Principal extends AppCompatActivity
         Intent i;
         switch (id){
             case R.id.nav_apartamentos:
-                Fragment fragmenApartamentos = new Apartamentos();
-                changeFragment(fragmenApartamentos);
+                fragmentGenerico = new Apartamentos();
+                changeFragment(fragmentGenerico);
                 break;
             case R.id.nav_perfil:
-                Fragment fragmentPerfil = new Perfil();
-                changeFragment(fragmentPerfil);
+                fragmentGenerico = new Perfil();
+                changeFragment(fragmentGenerico);
                 break;
             case R.id.nav_configuraciones:
                 i = new Intent(Principal.this, SettingsActivity.class);
