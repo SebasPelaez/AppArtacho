@@ -2,13 +2,14 @@ package co.edu.udea.compumovil.gr02_20172.lab2activities.entities;
 
 import android.graphics.Point;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Juan on 1/09/2017.
  */
 
-public class Apartament {
+public class Apartament implements Serializable {
     private int id;
     private String name;
     private String type;
@@ -17,10 +18,24 @@ public class Apartament {
     private int area;
     private String description;
     private List<Resource> resources;
-    private int latitude;
-    private int length;
+    private String location;
     private int numRooms;
 
+    public Apartament() {
+    }
+
+    public Apartament(int id, String name, String type, int value, int idUSer, int area, String description, List<Resource> resources, String location, int numRooms) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.value = value;
+        this.idUSer = idUSer;
+        this.area = area;
+        this.description = description;
+        this.resources = resources;
+        this.location = location;
+        this.numRooms = numRooms;
+    }
 
     public int getId() {
         return id;
@@ -82,24 +97,18 @@ public class Apartament {
         return resources;
     }
 
+    public Resource getResource(int i){return resources.get(i);}
+
     public void setResources(List<Resource> resources) {
         this.resources = resources;
     }
 
-    public int getLatitude() {
-        return latitude;
+    public String getLocation() {
+        return location;
     }
 
-    public void setLatitude(int latitude) {
-        this.latitude = latitude;
-    }
-
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public int getNumRooms() {

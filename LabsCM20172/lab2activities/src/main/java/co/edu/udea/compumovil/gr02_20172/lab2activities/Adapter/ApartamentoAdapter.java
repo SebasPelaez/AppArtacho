@@ -13,8 +13,8 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
-import co.edu.udea.compumovil.gr02_20172.lab2activities.Modelo.Apartamento;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.entities.Apartament;
 
 /**
  * Created by Sebas on 2/09/2017.
@@ -23,7 +23,7 @@ import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
 public class ApartamentoAdapter extends RecyclerView.Adapter<ApartamentoAdapter.MyViewHolder> implements View.OnClickListener{
 
     private Context mContext;
-    private List<Apartamento> apartamentoList;
+    private List<Apartament> apartamentoList;
 
     private View.OnClickListener listener;
 
@@ -49,7 +49,7 @@ public class ApartamentoAdapter extends RecyclerView.Adapter<ApartamentoAdapter.
         }
     }
 
-    public ApartamentoAdapter(Context mContext, List<Apartamento> apartamentoList) {
+    public ApartamentoAdapter(Context mContext, List<Apartament> apartamentoList) {
         this.mContext = mContext;
         this.apartamentoList = apartamentoList;
     }
@@ -65,15 +65,15 @@ public class ApartamentoAdapter extends RecyclerView.Adapter<ApartamentoAdapter.
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        Apartamento apto = apartamentoList.get(position);
-        holder.nombre.setText(apto.getNombre());
-        holder.valor.setText(" $"+apto.getValor());
-        holder.tipo.setText(apto.getTipo());
+        Apartament apto = apartamentoList.get(position);
+        holder.nombre.setText(apto.getName());
+        holder.valor.setText(" $"+apto.getValue());
+        holder.tipo.setText(apto.getType());
         holder.area.setText(apto.getArea());
-        holder.descripcion.setText(apto.getDescripcion());
+        holder.descripcion.setText(apto.getDescription());
 
         // loading album cover using Glide library
-        Glide.with(mContext).load(apto.getThumbnail()).into(holder.thumbnail);
+        Glide.with(mContext).load(apto.getResource(0).getIdApartment()).into(holder.thumbnail);//aca verificar si existte el path si no, es con la imagen
 
     }
 
@@ -86,7 +86,7 @@ public class ApartamentoAdapter extends RecyclerView.Adapter<ApartamentoAdapter.
         this.listener=listener;
     }
 
-    public void setFilter(List<Apartamento> newList){
+    public void setFilter(List<Apartament> newList){
         apartamentoList= new ArrayList<>();
         apartamentoList.addAll(newList);
         notifyDataSetChanged();

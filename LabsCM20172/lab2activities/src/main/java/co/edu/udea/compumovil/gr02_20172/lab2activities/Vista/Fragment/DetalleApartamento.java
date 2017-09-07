@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Adapter.BannerAdapter;
-import co.edu.udea.compumovil.gr02_20172.lab2activities.Modelo.Apartamento;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.entities.Apartament;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -67,9 +67,9 @@ public class DetalleApartamento extends Fragment{
         });
 
         Bundle objetoApartamento=getArguments();
-        Apartamento apto=null;
+        Apartament apto=null;
         if (objetoApartamento != null) {
-            apto= (Apartamento) objetoApartamento.getSerializable("objeto");
+            apto= (Apartament) objetoApartamento.getSerializable("objeto");
             //asignarInformacion(miPersonaje);LLena la informacion
         }
 
