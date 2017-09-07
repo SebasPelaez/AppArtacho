@@ -2,9 +2,12 @@ package co.edu.udea.compumovil.gr02_20172.lab2activities.Vista;
 
 import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
@@ -36,6 +39,7 @@ import java.io.File;
 import java.util.Calendar;
 
 import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.SQLiteConnectionHelper;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Validacion.Validation;
 
 import static android.Manifest.permission.CAMERA;
@@ -52,8 +56,11 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
     private EditText email;
     private AutoCompleteTextView ciudad;
     private EditText password;
+    private EditText username;
     private EditText rPassword;
     private LinearLayout layout_imagen;
+    private int sexo;
+    private String imagePath;
 
     /**
      * Para la foto
@@ -168,8 +175,7 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
                 if(validarContrasenas()){
                     if(checkValidation() && validarCamposVacios()){
                         recogerInformacion();
-                        Intent i = new Intent(Registro.this, Loggin.class);
-                        startActivity(i);
+                        registerUser();
                     }else{
                         Toast.makeText(getApplicationContext(),"Hay errores en el formulario",Toast.LENGTH_SHORT).show();
                     }
@@ -230,11 +236,11 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
         switch(view.getId()) {
             case R.id.rbtnSexoFemenino_Registro:
                 if (checked)
-
+                    sexo = 0;
                 break;
             case R.id.rbtnSexoMasculino_Registro:
                 if (checked)
-
+                    sexo = 1;
                 break;
         }
     }
@@ -247,6 +253,7 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
         direccion  = (EditText)findViewById(R.id.txtDireccion_Registro);
         email  = (EditText)findViewById(R.id.txtEmail);
         ciudad  = (AutoCompleteTextView)findViewById(R.id.txtCiudad);
+        username = (EditText)findViewById(R.id.txtUsername);
         password  = (EditText)findViewById(R.id.txtPassword);
         rPassword  = (EditText)findViewById(R.id.txtPasswordRepeat);
         txtFecha = (TextView)findViewById(R.id.lblFechaNacimiento_Registro);
@@ -295,6 +302,14 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
             public void onTextChanged(CharSequence s, int start, int before, int count){}
         });
 
+        username.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                Validation.hasText(username);
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+            public void onTextChanged(CharSequence s, int start, int before, int count){}
+        });
+
         email.addTextChangedListener(new TextWatcher() {
             // after every change has been made to this editText, we would like to check validity
             public void afterTextChanged(Editable s) {
@@ -326,6 +341,7 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
         if(resultCode == RESULT_OK){
             switch (requestCode){
                 case PHOTO_CODE:
+                    imagePath = mPath;
                     MediaScannerConnection.scanFile(this,
                             new String[]{mPath}, null,
                             new MediaScannerConnection.OnScanCompletedListener() {
@@ -342,7 +358,9 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
                     foto.setImageBitmap(bitmap);
                     break;
                 case SELECT_PICTURE:
+
                     Uri path = data.getData();
+                    imagePath = path.toString();
                     foto.setImageURI(path);
                     //informacion.getData().setRuta_foto(path.toString());
                     break;
@@ -387,5 +405,33 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
             }
         });
         builder.show();
+    }
+
+    public void registerUser(){
+        SQLiteConnectionHelper connectionDb = new SQLiteConnectionHelper(this,"db_lab",null,1);
+        SQLiteDatabase db = connectionDb.getWritableDatabase();
+        String[] params = {username.getText().toString()};
+        Cursor cursor = db.rawQuery("SELECT * FROM user WHERE username=?",params);
+        if (cursor.moveToFirst()) {
+            Toast.makeText(getApplicationContext(),"Ya existe un con el mismo username",Toast.LENGTH_SHORT).show();
+        }else{
+            ContentValues  values = new ContentValues();
+            values.put("username",username.getText().toString());
+            values.put("password",password.getText().toString());
+            values.put("name",nombre.getText().toString());
+            values.put("last_name",apellido.getText().toString());
+            values.put("gender",sexo);
+            values.put("birthday",txtFecha.getText().toString());
+            values.put("phone",telefono.getText().toString());
+            values.put("address",direccion.getText().toString());
+            values.put("email",email.getText().toString());
+            values.put("city",ciudad.getText().toString());
+            values.put("image",imagePath);
+            Long registered = db.insert("user","",values);
+            Toast.makeText(getApplicationContext(),"Saved:"+registered,Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(Registro.this, Loggin.class);
+            startActivity(i);
+        }
+
     }
 }

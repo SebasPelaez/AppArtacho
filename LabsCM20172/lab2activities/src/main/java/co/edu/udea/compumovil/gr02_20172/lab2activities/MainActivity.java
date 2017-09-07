@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
         // Simulate a long loading process on application startup.
         Timer timer = new Timer();
         timer.schedule(task, SPLASH_SCREEN_DELAY);
+
+        SQLiteConnectionHelper  connectionDb = new SQLiteConnectionHelper(this,"db_lab",null,1);
     }
 
 }

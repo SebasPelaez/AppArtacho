@@ -10,13 +10,25 @@ public class User {
     private String password;
     private String name;
     private String lastName;
-    private String gender;
+    private int gender;
     private String birthday;
     private String phone;
     private String address;
     private String email;
     private String city;
     private String image;
+
+    private static User instance = null;
+
+    protected User() {}
+
+    public static User getInstance(){
+        if(instance == null) {
+            instance = new User();
+        }
+        return instance;
+    }
+
 
     public String getImage() {
         return image;
@@ -66,11 +78,11 @@ public class User {
         this.lastName = lastname;
     }
 
-    public String getGender() {
+    public int getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(int gender) {
         this.gender = gender;
     }
 
