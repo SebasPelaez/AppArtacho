@@ -13,7 +13,11 @@
         android:title="@string/pref_header_notifications" />
 
     <header
-        android:fragment="co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.SettingsActivity$DataSyncPreferenceFragment"
         android:icon="@drawable/ic_sync_black_24dp"
-        android:title="@string/pref_header_data_sync" />
+        android:title="@string/pref_header_data_sync">
+        <intent android:targetPackage="co.edu.udea.compumovil.gr02_20172.lab2activities"
+            android:targetClass="co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.updatePerfil"/>
+    </header>
+
+
 </preference-headers>

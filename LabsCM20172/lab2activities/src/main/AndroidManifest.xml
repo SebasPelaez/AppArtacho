@@ -31,7 +31,8 @@
         <activity android:name=".Vista.Registro" />
         <activity
             android:name=".Vista.Fragment.SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings" />
+        <activity android:name=".Vista.updatePerfil"></activity>
     </application>
 
 </manifest>
