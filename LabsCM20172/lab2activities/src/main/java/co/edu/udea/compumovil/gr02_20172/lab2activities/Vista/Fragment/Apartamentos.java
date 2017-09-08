@@ -1,9 +1,11 @@
 package co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -11,22 +13,27 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Adapter.ApartamentoAdapter;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.BuildConfig;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Interface.IComunicaFragments;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.SQLiteConnectionHelper;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.entities.Apartament;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.entities.Resource;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -94,15 +101,44 @@ public class Apartamentos extends Fragment implements SearchView.OnQueryTextList
     private void prepareApartamentos() {
         SQLiteConnectionHelper connectionDb = new SQLiteConnectionHelper(rootView.getContext(),"db_lab",null,1);
         SQLiteDatabase db = connectionDb.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM a",null);
-
-        /**
-         * Llenar el recycler con todos los datos posibles
-         * apartamentoList.add(new Apartament("Casa 1","Casa", 13,"Poblado","Aqui vivo yo", covers[0]));
-         */
-
-
+        try {
+            Cursor cursor = db.rawQuery("SELECT id,apartamentname,type,value,area,description,location,num_rooms FROM apartament",null);
+            if(cursor.moveToFirst()){
+                do{
+                    Apartament apartament = new Apartament();
+                    apartament.setId(cursor.getInt(0));
+                    apartament.setName(cursor.getString(1));
+                    apartament.setType(cursor.getString(2));
+                    apartament.setValue(cursor.getInt(3));
+                    apartament.setArea(cursor.getDouble(4));
+                    apartament.setDescription(cursor.getString(5));
+                    apartament.setLocation(cursor.getString(6));
+                    apartament.setNumRooms(cursor.getInt(7));
+                    apartament.setResources(findResources(apartament.getId()));
+                    apartamentoList.add(apartament);
+                }while (cursor.moveToNext());
+            }
+        }catch (Exception ex){
+            Log.e("Base de Datos","Error al conectar");
+        }
         adapter.notifyDataSetChanged();
+    }
+
+    private List<Resource> findResources(int idApartamento) {
+        SQLiteConnectionHelper connectionDb = new SQLiteConnectionHelper(rootView.getContext(),"db_lab",null,1);
+        SQLiteDatabase db = connectionDb.getWritableDatabase();
+        ArrayList<Resource> resources = new ArrayList<>();
+        Cursor findResources = db.rawQuery("SELECT id,id_apartament,image FROM resource where id_apartament='" + idApartamento + "'", null);
+        if(findResources.moveToFirst()) {
+            do {
+                Resource r = new Resource();
+                r.setId(findResources.getInt(0));
+                r.setIdApartment(findResources.getInt(1));
+                r.setPathResource(findResources.getString(2));
+                resources.add(r);
+            } while (findResources.moveToNext());
+        }
+        return resources;
     }
 
     @Override

@@ -427,6 +427,6 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
             Intent i = new Intent(Registro.this, Loggin.class);
             startActivity(i);
         }
-
     }
+
 }

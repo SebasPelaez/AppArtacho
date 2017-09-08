@@ -1,6 +1,5 @@
 package co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment;
 
-
 import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -8,6 +7,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,10 +20,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,15 +36,16 @@ import java.io.File;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.SQLiteConnectionHelper;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Validacion.Validation;
-import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Registro;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.entities.User;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RegistroApartamento extends Fragment implements View.OnClickListener{
+public class RegistroApartamento extends Fragment{
 
     private View rootView;
 
@@ -52,6 +57,7 @@ public class RegistroApartamento extends Fragment implements View.OnClickListene
     private EditText txtArea;
     private EditText txtCuartos;
     private EditText txtUbicacion;
+    private Button btnRegistrar;
     private LinearLayout layout_imagenApartamento;
 
     /**
@@ -63,6 +69,7 @@ public class RegistroApartamento extends Fragment implements View.OnClickListene
     private final int PHOTO_CODE = 200;
     private final int SELECT_PICTURE = 300;
     private String mPath;
+    private String imagePath;
 
     public RegistroApartamento() {
         // Required empty public constructor
@@ -79,10 +86,18 @@ public class RegistroApartamento extends Fragment implements View.OnClickListene
             imgFotosApartamento.setEnabled(true);
         else
             imgFotosApartamento.setEnabled(false);
+
         imgFotosApartamento.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showOptions();
+            }
+        });
+
+        btnRegistrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                registerApartment();
             }
         });
 
@@ -100,6 +115,7 @@ public class RegistroApartamento extends Fragment implements View.OnClickListene
         txtUbicacion  = (EditText)rootView.findViewById(R.id.txtUbicacion);
         txtDescripcionApartamento = (EditText)rootView.findViewById(R.id.txtDescripcionApartamento);
         layout_imagenApartamento = (LinearLayout)rootView.findViewById(R.id.layout_imagenApartamento);
+        btnRegistrar = (Button)rootView.findViewById(R.id.btnRegistrarApartamento);
         agregarValidaciones();
     }
 
@@ -227,17 +243,6 @@ public class RegistroApartamento extends Fragment implements View.OnClickListene
 
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btnRegistrar:
-                registerApartment();
-                break;
-            default:
-                break;
-        }
-    }
-
     public void registerApartment(){
         SQLiteConnectionHelper connectionDb = new SQLiteConnectionHelper(rootView.getContext(),"db_lab",null,1);
         SQLiteDatabase db = connectionDb.getWritableDatabase();
@@ -246,15 +251,14 @@ public class RegistroApartamento extends Fragment implements View.OnClickListene
         values.put("apartamentname",txtNombreInmueble.getText().toString());
         values.put("type",txtTipoInmueble.getText().toString());
         values.put("value",Integer.parseInt(txtValor.getText().toString()));
+        values.put("id_user", User.getInstance().getId());
         values.put("area",Double.parseDouble(txtArea.getText().toString()));
         values.put("description",txtDescripcionApartamento.getText().toString());
         values.put("num_rooms",Integer.parseInt(txtCuartos.getText().toString()));
         values.put("location",txtUbicacion.getText().toString());
-        Long registered = db.insert("apartament","",values);
-
-        registerImg_Apartment();
-
+        Long registered = db.insert("apartament",null,values);
         Toast.makeText(rootView.getContext(),"Saved:"+registered,Toast.LENGTH_SHORT).show();
+        registerImg_Apartment();
 
     }
 
@@ -265,9 +269,47 @@ public class RegistroApartamento extends Fragment implements View.OnClickListene
 
         String[] params = {txtNombreInmueble.getText().toString()};
         Cursor cursor = db.rawQuery("SELECT id FROM apartament WHERE apartamentname=?",params);
-        values.put("id_apartament",cursor.getColumnName(0));
-        values.put("image",mPath);
-        Long registered = db.insert("apartament","",values);
+        if (cursor.moveToFirst()) {
+            int a = cursor.getInt(0);
+            values.put("id_apartament",a);
+            values.put("image",imagePath);
+            Long registered = db.insert("resource",null,values);
+            Toast.makeText(rootView.getContext(),"Saved:"+registered,Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == RESULT_OK){
+            switch (requestCode){
+                case PHOTO_CODE:
+                    imagePath = mPath;
+                    MediaScannerConnection.scanFile(rootView.getContext(),
+                            new String[]{mPath}, null,
+                            new MediaScannerConnection.OnScanCompletedListener() {
+                                @Override
+                                public void onScanCompleted(String path, Uri uri) {
+                                    Log.i("ExternalStorage", "Scanned " + path + ":");
+                                    Log.i("ExternalStorage", "-> Uri = " + uri);
+                                    //informacion.getData().setRuta_foto(path);
+                                }
+                            });
+
+
+                    Bitmap bitmap = BitmapFactory.decodeFile(mPath);
+                    imgFotosApartamento.setImageBitmap(bitmap);
+                    break;
+                case SELECT_PICTURE:
+                    Uri path = data.getData();
+                    imagePath = path.toString();
+                    imgFotosApartamento.setImageURI(path);
+                    //informacion.getData().setRuta_foto(path.toString());
+                    break;
+
+            }
+        }
     }
 
 }

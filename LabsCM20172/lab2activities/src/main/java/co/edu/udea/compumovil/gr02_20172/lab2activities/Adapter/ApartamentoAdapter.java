@@ -69,11 +69,11 @@ public class ApartamentoAdapter extends RecyclerView.Adapter<ApartamentoAdapter.
         holder.nombre.setText(apto.getName());
         holder.valor.setText(" $"+apto.getValue());
         holder.tipo.setText(apto.getType());
-        holder.area.setText(apto.getArea());
+        holder.area.setText(""+apto.getArea());
         holder.descripcion.setText(apto.getDescription());
 
         // loading album cover using Glide library
-        Glide.with(mContext).load(apto.getResource(0).getIdApartment()).into(holder.thumbnail);//aca verificar si existte el path si no, es con la imagen
+        Glide.with(mContext).load(apto.getResource(0).getPathResource()).into(holder.thumbnail);//aca verificar si existte el path si no, es con la imagen
 
     }
 

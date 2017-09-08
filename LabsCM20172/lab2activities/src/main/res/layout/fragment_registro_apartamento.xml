@@ -140,7 +140,7 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/btnRegistrar"
+                android:id="@+id/btnRegistrarApartamento"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -151,13 +151,7 @@
                 android:onClick="onClick"
                 android:text="@string/registrar"
                 android:textColor="#ffffff"
-                android:background="@drawable/corner_input"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layoutComponentesDos"
-                app:layout_constraintVertical_bias="0.089999974" />
+                android:background="@drawable/corner_input"/>
 
         </LinearLayout>
 

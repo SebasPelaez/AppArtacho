@@ -42,7 +42,7 @@ public class DetalleApartamento extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_detalle_apartamento, container, false);
-
+        inicializarComponentes();
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_viewbanner);
         recyclerView.setHasFixedSize(true);
 
@@ -70,11 +70,19 @@ public class DetalleApartamento extends Fragment{
         Apartament apto=null;
         if (objetoApartamento != null) {
             apto= (Apartament) objetoApartamento.getSerializable("objeto");
-            //asignarInformacion(miPersonaje);LLena la informacion
+            asignarInformacion(apto);
         }
 
         return rootView;
     }
+
+    private void inicializarComponentes() {
+
+    }
+
+    private void asignarInformacion(Apartament apto) {
+    }
+
 
     private void prepareApartamentos() {
         int[] covers = new int[]{
