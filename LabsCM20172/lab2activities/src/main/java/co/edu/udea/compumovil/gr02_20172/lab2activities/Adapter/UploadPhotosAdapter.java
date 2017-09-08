@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
@@ -15,10 +14,10 @@ import java.util.List;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
 
 /**
- * Created by Sebas on 4/09/2017.
+ * Created by Sebas on 8/09/2017.
  */
 
-public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.MyViewHolder> {
+public class UploadPhotosAdapter extends RecyclerView.Adapter<UploadPhotosAdapter.MyViewHolder>  {
 
     private Context mContext;
     private List<String> photos;
@@ -32,21 +31,21 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.MyViewHold
         }
     }
 
-    public BannerAdapter(Context mContext, List<String> photos) {
+    public UploadPhotosAdapter(Context mContext, List<String> photos) {
         this.mContext = mContext;
         this.photos = photos;
     }
 
     @Override
-    public BannerAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public UploadPhotosAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.bannerphotodetail, parent, false);
 
-        return new BannerAdapter.MyViewHolder(itemView);
+        return new UploadPhotosAdapter.MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final BannerAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, int position) {
         String pathPhoto = photos.get(position);
         // loading album cover using Glide library
         Glide.with(mContext).load(pathPhoto).into(holder.thumbnail);
@@ -56,5 +55,4 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.MyViewHold
     public int getItemCount() {
         return photos.size();
     }
-
 }

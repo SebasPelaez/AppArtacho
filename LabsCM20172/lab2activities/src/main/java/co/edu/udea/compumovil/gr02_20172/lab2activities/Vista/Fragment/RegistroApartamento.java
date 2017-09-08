@@ -15,9 +15,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -27,15 +30,19 @@ import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
+import co.edu.udea.compumovil.gr02_20172.lab2activities.Adapter.ApartamentoAdapter;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.Adapter.UploadPhotosAdapter;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.SQLiteConnectionHelper;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Validacion.Validation;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.entities.Apartament;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.entities.User;
 
 import static android.Manifest.permission.CAMERA;
@@ -51,13 +58,13 @@ public class RegistroApartamento extends Fragment{
 
     private AutoCompleteTextView txtTipoInmueble;
     private EditText txtNombreInmueble;
-    private ImageView imgFotosApartamento;
     private EditText txtDescripcionApartamento;
     private EditText txtValor;
     private EditText txtArea;
     private EditText txtCuartos;
     private EditText txtUbicacion;
     private Button btnRegistrar;
+    private FloatingActionButton fab;
     private LinearLayout layout_imagenApartamento;
 
     /**
@@ -71,6 +78,10 @@ public class RegistroApartamento extends Fragment{
     private String mPath;
     private String imagePath;
 
+    private RecyclerView recyclerView;
+    private UploadPhotosAdapter adapter;
+    private List<String> photosList;
+
     public RegistroApartamento() {
         // Required empty public constructor
     }
@@ -82,17 +93,28 @@ public class RegistroApartamento extends Fragment{
         rootView = inflater.inflate(R.layout.fragment_registro_apartamento, container, false);
         inicializarComponentes(rootView);
 
-        if(mayRequestStoragePermission())
-            imgFotosApartamento.setEnabled(true);
-        else
-            imgFotosApartamento.setEnabled(false);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_viewUpload);
+        recyclerView.setHasFixedSize(true);
 
-        imgFotosApartamento.setOnClickListener(new View.OnClickListener() {
+        photosList = new ArrayList<>();
+        adapter = new UploadPhotosAdapter(rootView.getContext(), photosList);
+        recyclerView.setAdapter(adapter);
+
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
+        recyclerView.setLayoutManager(llm);
+
+        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 showOptions();
             }
         });
+
+        if(mayRequestStoragePermission())
+            fab.setEnabled(true);
+        else
+            fab.setEnabled(false);
 
         btnRegistrar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,7 +128,6 @@ public class RegistroApartamento extends Fragment{
 
 
     public void inicializarComponentes(View rootView){
-        imgFotosApartamento  = (ImageView)rootView.findViewById(R.id.imgFotosApartamento);
         txtNombreInmueble  = (EditText)rootView.findViewById(R.id.txtNombreInmueble);
         txtTipoInmueble  = (AutoCompleteTextView)rootView.findViewById(R.id.txtTipoInmueble);
         txtValor  = (EditText)rootView.findViewById(R.id.txtValor);
@@ -271,10 +292,12 @@ public class RegistroApartamento extends Fragment{
         Cursor cursor = db.rawQuery("SELECT id FROM apartament WHERE apartamentname=?",params);
         if (cursor.moveToFirst()) {
             int a = cursor.getInt(0);
-            values.put("id_apartament",a);
-            values.put("image",imagePath);
-            Long registered = db.insert("resource",null,values);
-            Toast.makeText(rootView.getContext(),"Saved:"+registered,Toast.LENGTH_SHORT).show();
+            for(String s: photosList){
+                values.put("id_apartament",a);
+                values.put("image",s);
+                Long registered = db.insert("resource",null,values);
+                Toast.makeText(rootView.getContext(),"Saved:"+registered,Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -299,15 +322,15 @@ public class RegistroApartamento extends Fragment{
 
 
                     Bitmap bitmap = BitmapFactory.decodeFile(mPath);
-                    imgFotosApartamento.setImageBitmap(bitmap);
+                    photosList.add(mPath);
+                    adapter.notifyDataSetChanged();
                     break;
                 case SELECT_PICTURE:
                     Uri path = data.getData();
                     imagePath = path.toString();
-                    imgFotosApartamento.setImageURI(path);
-                    //informacion.getData().setRuta_foto(path.toString());
+                    photosList.add(imagePath);
+                    adapter.notifyDataSetChanged();
                     break;
-
             }
         }
     }

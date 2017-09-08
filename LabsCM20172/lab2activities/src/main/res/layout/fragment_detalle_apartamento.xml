@@ -22,13 +22,19 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/lblTipo"
+                android:id="@+id/lblNombreApartamento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nombreInmueble" />
+
+            <TextView
+                android:id="@+id/lblTipoApartamento"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/TipoApartamento" />
 
             <TextView
-                android:id="@+id/lblValor"
+                android:id="@+id/lblValorApartamento"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/ValorApartamento" />

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Adapter.BannerAdapter;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.entities.Apartament;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.entities.Resource;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,7 +28,17 @@ public class DetalleApartamento extends Fragment{
 
     private RecyclerView recyclerView;
     private BannerAdapter adapter;
-    private List<Integer> photoList;
+    private List<String> photoList;
+
+    private TextView lblNombreApartamento;
+    private TextView lblTipoApartamento;
+    private TextView lblValorApartamento;
+    private TextView lblNumeroHabitaciones;
+    private TextView lblArea;
+    private TextView lblDescripcion;
+
+    private View rootView;
+    private String ubicacion;
 
     public DetalleApartamento() {
         // Required empty public constructor
@@ -41,14 +53,13 @@ public class DetalleApartamento extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_detalle_apartamento, container, false);
+        rootView = inflater.inflate(R.layout.fragment_detalle_apartamento, container, false);
         inicializarComponentes();
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_viewbanner);
         recyclerView.setHasFixedSize(true);
 
         photoList = new ArrayList<>();
         adapter = new BannerAdapter(rootView.getContext(), photoList);
-        prepareApartamentos();
         recyclerView.setAdapter(adapter);
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
@@ -58,7 +69,7 @@ public class DetalleApartamento extends Fragment{
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Uri gmmIntentUri = Uri.parse("geo:37.7749,-122.4194");
+                Uri gmmIntentUri = Uri.parse(ubicacion);
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 startActivity(mapIntent);
@@ -71,41 +82,36 @@ public class DetalleApartamento extends Fragment{
         if (objetoApartamento != null) {
             apto= (Apartament) objetoApartamento.getSerializable("objeto");
             asignarInformacion(apto);
+            prepareApartamentos(apto);
         }
 
         return rootView;
     }
 
     private void inicializarComponentes() {
-
+        lblNombreApartamento = (TextView)rootView.findViewById(R.id.lblNombreApartamento);
+        lblTipoApartamento= (TextView) rootView.findViewById(R.id.lblTipoApartamento);
+        lblValorApartamento = (TextView)rootView.findViewById(R.id.lblValorApartamento);
+        lblNumeroHabitaciones = (TextView)rootView.findViewById(R.id.lblNumeroHabitaciones);
+        lblArea = (TextView)rootView.findViewById(R.id.lblArea);
+        lblDescripcion = (TextView) rootView.findViewById(R.id.lblDescripcion);
     }
 
     private void asignarInformacion(Apartament apto) {
+        lblNombreApartamento.setText(lblNombreApartamento.getText()+": "+apto.getName());
+        lblTipoApartamento.setText(lblTipoApartamento.getText()+": "+apto.getType());
+        lblValorApartamento.setText(lblValorApartamento.getText()+": $"+apto.getValue());
+        lblNumeroHabitaciones.setText(lblNumeroHabitaciones.getText()+": "+apto.getNumRooms());
+        lblArea.setText(lblArea.getText()+": "+apto.getArea());;
+        lblDescripcion.setText(lblDescripcion.getText()+": "+apto.getDescription());
+        ubicacion = "geo:0,0?q="+apto.getLocation();
     }
 
 
-    private void prepareApartamentos() {
-        int[] covers = new int[]{
-                R.drawable.apartamento1,
-                R.drawable.apartamento2,
-                R.drawable.apartamento3,
-                R.drawable.apartamento4,
-                R.drawable.apartamento5,
-                R.drawable.apartamento6,
-                R.drawable.apartamento7,
-                R.drawable.apartamento8,
-                R.drawable.apartamento9};
-
-        photoList.add(covers[0]);
-        photoList.add(covers[1]);
-        photoList.add(covers[2]);
-        photoList.add(covers[3]);
-        photoList.add(covers[4]);
-        photoList.add(covers[5]);
-        photoList.add(covers[6]);
-        photoList.add(covers[7]);
-        photoList.add(covers[8]);
-
+    private void prepareApartamentos(Apartament apto) {
+        for(Resource r: apto.getResources()){
+            photoList.add(r.getPathResource());
+        }
         adapter.notifyDataSetChanged();
     }
 }
