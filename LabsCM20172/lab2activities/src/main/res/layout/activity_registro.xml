@@ -59,6 +59,8 @@
 
             <LinearLayout
                 android:id="@+id/layoutComponentesDos"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -203,9 +205,7 @@
                     android:inputType="number"
                     android:padding="15dp"
                     android:textColor="#ffffff"
-                    android:textColorHint="#ffffff"
-                    tools:layout_editor_absoluteX="87dp"
-                    tools:layout_editor_absoluteY="454dp" />
+                    android:textColorHint="#ffffff" />
 
 
                 <EditText

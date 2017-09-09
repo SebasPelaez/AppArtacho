@@ -1,7 +1,11 @@
 package co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -9,22 +13,27 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Adapter.ApartamentoAdapter;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.BuildConfig;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Interface.IComunicaFragments;
-import co.edu.udea.compumovil.gr02_20172.lab2activities.Modelo.Apartamento;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.SQLiteConnectionHelper;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.entities.Apartament;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.entities.Resource;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,10 +42,12 @@ public class Apartamentos extends Fragment implements SearchView.OnQueryTextList
 
     private RecyclerView recyclerView;
     private ApartamentoAdapter adapter;
-    private List<Apartamento> apartamentoList;
+    private List<Apartament> apartamentoList;
 
     private Activity activity;
     private IComunicaFragments interfaceComunicaFragments;
+
+    private View rootView;
 
     public Apartamentos() {
         // Required empty public constructor
@@ -52,7 +63,7 @@ public class Apartamentos extends Fragment implements SearchView.OnQueryTextList
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_apartamentos, container, false);
+        rootView = inflater.inflate(R.layout.fragment_apartamentos, container, false);
 
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -86,29 +97,48 @@ public class Apartamentos extends Fragment implements SearchView.OnQueryTextList
     /**
      * Adding few albums for testing
      */
+
     private void prepareApartamentos() {
-        int[] covers = new int[]{
-                R.drawable.apartamento1,
-                R.drawable.apartamento2,
-                R.drawable.apartamento3,
-                R.drawable.apartamento4,
-                R.drawable.apartamento5,
-                R.drawable.apartamento6,
-                R.drawable.apartamento7,
-                R.drawable.apartamento8,
-                R.drawable.apartamento9};
-
-        apartamentoList.add(new Apartamento("Casa 1","Casa", 13,"Poblado","Aqui vivo yo", covers[0]));
-        apartamentoList.add(new Apartamento("Casa 2","Apartamento", 3,"Aranjuez","Aqui vivo yo", covers[1]));
-        apartamentoList.add(new Apartamento("Casa 3","Hotel", 53,"Castilla", "Aqui vivo yo",covers[2]));
-        apartamentoList.add(new Apartamento("Casa 4","Apartamento",6,"La Milagrosa", "Aqui vivo yo",covers[3]));
-        apartamentoList.add(new Apartamento("Casa 5","Casa", 8,"Cordoba", "Aqui vivo yo",covers[4]));
-        apartamentoList.add(new Apartamento("Casa 6","Apartamento",2,"San Petesburgo", "Aqui vivo yo",covers[5]));
-        apartamentoList.add(new Apartamento("Casa 7","Casa", 4,"Tehuatiucan", "Aqui vivo yo",covers[6]));
-        apartamentoList.add(new Apartamento("Casa 8","Apartamento", 5, "Springfield","Aqui vivo yo",covers[7]));
-        apartamentoList.add(new Apartamento("Casa 9","Hotel",1,"Westeros","Aqui vivo yo",covers[8]));
-
+        SQLiteConnectionHelper connectionDb = new SQLiteConnectionHelper(rootView.getContext(),"db_lab",null,1);
+        SQLiteDatabase db = connectionDb.getWritableDatabase();
+        try {
+            Cursor cursor = db.rawQuery("SELECT id,apartamentname,type,value,area,description,location,num_rooms FROM apartament",null);
+            if(cursor.moveToFirst()){
+                do{
+                    Apartament apartament = new Apartament();
+                    apartament.setId(cursor.getInt(0));
+                    apartament.setName(cursor.getString(1));
+                    apartament.setType(cursor.getString(2));
+                    apartament.setValue(cursor.getInt(3));
+                    apartament.setArea(cursor.getDouble(4));
+                    apartament.setDescription(cursor.getString(5));
+                    apartament.setLocation(cursor.getString(6));
+                    apartament.setNumRooms(cursor.getInt(7));
+                    apartament.setResources(findResources(apartament.getId()));
+                    apartamentoList.add(apartament);
+                }while (cursor.moveToNext());
+            }
+        }catch (Exception ex){
+            Log.e("Base de Datos","Error al conectar");
+        }
         adapter.notifyDataSetChanged();
+    }
+
+    private List<Resource> findResources(int idApartamento) {
+        SQLiteConnectionHelper connectionDb = new SQLiteConnectionHelper(rootView.getContext(),"db_lab",null,1);
+        SQLiteDatabase db = connectionDb.getWritableDatabase();
+        ArrayList<Resource> resources = new ArrayList<>();
+        Cursor findResources = db.rawQuery("SELECT id,id_apartament,image FROM resource where id_apartament='" + idApartamento + "'", null);
+        if(findResources.moveToFirst()) {
+            do {
+                Resource r = new Resource();
+                r.setId(findResources.getInt(0));
+                r.setIdApartment(findResources.getInt(1));
+                r.setPathResource(findResources.getString(2));
+                resources.add(r);
+            } while (findResources.moveToNext());
+        }
+        return resources;
     }
 
     @Override
@@ -137,13 +167,20 @@ public class Apartamentos extends Fragment implements SearchView.OnQueryTextList
     @Override
     public boolean onQueryTextChange(String newText) {
         newText  = newText.toLowerCase();
-        ArrayList<Apartamento> nuevaLista =  new ArrayList<>();
-        for (Apartamento ap: apartamentoList){
-            String nombre =  ap.getNombre().toLowerCase();
+        ArrayList<Apartament> nuevaLista =  new ArrayList<>();
+        for (Apartament ap: apartamentoList){
+            String nombre =  ap.getName().toLowerCase();
             if (nombre.contains(newText))
                 nuevaLista.add(ap);
         }
         adapter.setFilter(nuevaLista);
         return true;
     }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+    }
+
 }

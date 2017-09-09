@@ -129,6 +129,7 @@
     <string name="numeroCuartos">Número de cuartos</string>
     <string name="UbicacionInmueble">Ubicación</string>
     <string name="Buscar">Buscar</string>
+    <string name="nombreInmueble">Nombre Inmueble</string>
     <string name="nuevoPass">Nueva contraseña</string>
     <string name="confirmPass">Confirmar contraseña</string>
     <string name="NombreUsuario">Nombre de usuario</string>

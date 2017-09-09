@@ -4,64 +4,80 @@
     android:layout_height="match_parent"
     tools:context="co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.DetalleApartamento">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_viewbanner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            />
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/lblTipo"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_viewbanner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/TipoApartamento" />
+                android:clipToPadding="false"
+                />
 
-            <TextView
-                android:id="@+id/lblValor"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/ValorApartamento" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/lblNumeroHabitaciones"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/NumeroHabitaciones" />
+                <TextView
+                    android:id="@+id/lblNombreApartamento"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/nombreInmueble" />
 
-            <TextView
-                android:id="@+id/lblArea"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/AreaApartamento" />
+                <TextView
+                    android:id="@+id/lblTipoApartamento"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/TipoApartamento" />
 
-            <TextView
-                android:id="@+id/lblDescripcion"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/DescripcionApartamento" />
+                <TextView
+                    android:id="@+id/lblValorApartamento"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ValorApartamento" />
 
-            <Button
-                android:id="@+id/btnUbicacion"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="onClick"
-                android:text="@string/UbicaciónApartamento" />
+                <TextView
+                    android:id="@+id/lblNumeroHabitaciones"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/NumeroHabitaciones" />
+
+                <TextView
+                    android:id="@+id/lblArea"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/AreaApartamento" />
+
+                <TextView
+                    android:id="@+id/lblDescripcion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/DescripcionApartamento" />
+
+                <Button
+                    android:id="@+id/btnUbicacion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="onClick"
+                    android:text="@string/UbicaciónApartamento" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
-
-
+    </ScrollView>
 
 </FrameLayout>
