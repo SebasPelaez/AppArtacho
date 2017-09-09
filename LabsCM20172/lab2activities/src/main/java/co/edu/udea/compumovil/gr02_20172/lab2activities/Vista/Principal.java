@@ -50,7 +50,7 @@ public class Principal extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        fragmentGenerico = new RegistroApartamento();
+        fragmentGenerico = new Apartamentos();
         changeFragment(fragmentGenerico);
     }
 
@@ -62,12 +62,11 @@ public class Principal extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-        /*
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
-        }*/
+        }
     }
 
     @Override

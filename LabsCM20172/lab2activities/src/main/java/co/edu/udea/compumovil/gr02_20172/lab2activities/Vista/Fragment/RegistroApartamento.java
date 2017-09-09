@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -82,6 +83,9 @@ public class RegistroApartamento extends Fragment{
     private UploadPhotosAdapter adapter;
     private List<String> photosList;
 
+    private String[] tipoInmuebles={"Casa","Apartamento","Finca","PenHouse","Hacienda","Cuchitril","Apartaestudio",
+            "Apartacho","Garaje "};
+
     public RegistroApartamento() {
         // Required empty public constructor
     }
@@ -115,6 +119,10 @@ public class RegistroApartamento extends Fragment{
             fab.setEnabled(true);
         else
             fab.setEnabled(false);
+
+        ArrayAdapter adapterTipos = new ArrayAdapter(rootView.getContext(),android.R.layout.simple_list_item_1,tipoInmuebles);
+        txtTipoInmueble.setAdapter(adapterTipos);
+        txtTipoInmueble.setThreshold(1);
 
         btnRegistrar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -234,7 +242,7 @@ public class RegistroApartamento extends Fragment{
 
         txtValor.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
-                Validation.hasText(txtValor);
+                Validation.isPhoneNumber(txtValor, false);
             }
             public void beforeTextChanged(CharSequence s, int start, int count, int after){}
             public void onTextChanged(CharSequence s, int start, int before, int count){}
@@ -242,7 +250,7 @@ public class RegistroApartamento extends Fragment{
 
         txtArea.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
-                Validation.hasText(txtArea);
+                Validation.isPhoneNumber(txtArea, false);
             }
             public void beforeTextChanged(CharSequence s, int start, int count, int after){}
             public void onTextChanged(CharSequence s, int start, int before, int count){}
@@ -333,6 +341,11 @@ public class RegistroApartamento extends Fragment{
                     break;
             }
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
     }
 
 }

@@ -176,4 +176,11 @@ public class Apartamentos extends Fragment implements SearchView.OnQueryTextList
         adapter.setFilter(nuevaLista);
         return true;
     }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+    }
+
 }
