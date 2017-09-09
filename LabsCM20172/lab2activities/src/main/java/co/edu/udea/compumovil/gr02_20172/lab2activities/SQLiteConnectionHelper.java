@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class SQLiteConnectionHelper extends SQLiteOpenHelper {
 
-    private final String CREATE_USER_TABLE= "CREATE TABLE IF NOT EXISTS user(" +
+    private final String CREATE_USER_TABLE= "CREATE TABLE user(" +
             "id integer PRIMARY KEY AUTOINCREMENT," +
             "username text NOT NULL," +
             "password text NOT NULL," +
@@ -25,20 +25,20 @@ public class SQLiteConnectionHelper extends SQLiteOpenHelper {
             "image text" +
             ")";
 
-    private final String CREATE_APARTAMENT_TABLE= "CREATE TABLE IF NOT EXISTS apartament(" +
+    private final String CREATE_APARTAMENT_TABLE= "CREATE TABLE apartament(" +
             "id integer PRIMARY KEY AUTOINCREMENT," +
+            "apartamentname text NOT NULL," +
             "type text NOT NULL," +
             "value integer NOT NULL," +
             "id_user integer NOT NULL," +
             "area real NOT NULL," +
             "description text NOT NULL," +
-            "latitud real NOT NULL," +
-            "length real NOT NULL," +
+            "location text NOT NULL," +
             "num_rooms integer NOT NULL," +
             "FOREIGN KEY (id_user) REFERENCES user(id)" +
             ")";
 
-    private final String CREATE_RESOURCE_TABLE= "CREATE TABLE IF NOT EXISTS  user(" +
+    private final String CREATE_RESOURCE_TABLE= "CREATE TABLE resource(" +
             "id integer PRIMARY KEY AUTOINCREMENT," +
             "id_apartament integer NOT NULL," +
             "image text NOT NULL," +

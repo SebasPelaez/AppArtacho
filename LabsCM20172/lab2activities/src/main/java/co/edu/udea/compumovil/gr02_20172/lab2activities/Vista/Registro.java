@@ -174,7 +174,6 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
             case R.id.btnRegistrar:
                 if(validarContrasenas()){
                     if(checkValidation() && validarCamposVacios()){
-                        recogerInformacion();
                         registerUser();
                     }else{
                         Toast.makeText(getApplicationContext(),"Hay errores en el formulario",Toast.LENGTH_SHORT).show();
@@ -222,10 +221,6 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
 
     private boolean validarContrasenas() {
         return password.getText().toString().equals(rPassword.getText().toString());
-    }
-
-    private void recogerInformacion() {
-
     }
 
     public void onRadioButtonClicked(View view) {
@@ -432,6 +427,6 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
             Intent i = new Intent(Registro.this, Loggin.class);
             startActivity(i);
         }
-
     }
+
 }

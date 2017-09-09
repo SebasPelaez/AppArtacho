@@ -67,4 +67,9 @@ public class Perfil extends Fragment {
         }
         foto.setImageURI(Uri.parse(user.getImage()));
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+    }
 }
