@@ -278,6 +278,7 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
 
     private void setInitValues(){
         User user = User.getInstance();
+        int positionCity;
         userId = user.getId();
         editName.setText(user.getName());
         editLastName.setText(user.getLastname());
@@ -294,6 +295,8 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
         }
         ArrayAdapter adapterCiudades = new ArrayAdapter(this,android.R.layout.simple_list_item_1,ciudades);
         editCity.setAdapter(adapterCiudades);
+        positionCity = adapterCiudades.getPosition(user.getCity());
+        editCity.setText(ciudades[positionCity]);
         editCity.setThreshold(1);
     }
 
@@ -302,8 +305,13 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
         SQLiteDatabase db = connectionDb.getWritableDatabase();
         String[] params = {Integer.toString(userId)};
         ContentValues values = new ContentValues();
-        if(editPassword.getText().toString() != null){
-            values.put("password",editPassword.getText().toString());
+        if(!editPassword.getText().toString().equals("")){
+            if(editPassword.getText().toString().equals(confirmPassword.getText().toString())){
+                values.put("password",editPassword.getText().toString());
+            }else {
+                Toast.makeText(getApplicationContext(), "Error: contraseñas no coinciden", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
         values.put("name",editName.getText().toString());
         values.put("last_name",editLastName.getText().toString());
@@ -312,11 +320,33 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
         values.put("address",editAddress.getText().toString());
         values.put("email",editEmail.getText().toString());
         values.put("city",editCity.getText().toString());
-        values.put("image",imagePath);
-        db.update("user",values,"id=?",params);
-        Toast.makeText(getApplicationContext(),"Actualizado",Toast.LENGTH_SHORT).show();
-        Intent i = new Intent(updatePerfil.this,Principal.class);
-        startActivity(i);
+        if(imagePath != null){
+            values.put("image",imagePath);
+        }
+        int updated = db.update("user",values,"id=?",params);
+        if(updated ==1){
+            User user = User.getInstance();
+            user.setName(editName.getText().toString());
+            user.setLastname(editLastName.getText().toString());
+            user.setGender(editGender);
+            user.setPhone(editPhone.getText().toString());
+            user.setAddress(editAddress.getText().toString());
+            user.setEmail(editEmail.getText().toString());
+            user.setCity(editCity.getText().toString());
+            if(!editPassword.getText().toString().equals("")){
+                user.setPassword(editCity.getText().toString());
+            }
+            if(imagePath != null){
+                user.setImage(imagePath);
+            }
+            Toast.makeText(getApplicationContext(),"Actualizado"+updated,Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(updatePerfil.this,Principal.class);
+            startActivity(i);
+        }else{
+            Toast.makeText(getApplicationContext(),"Error"+updated,Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
     @Override

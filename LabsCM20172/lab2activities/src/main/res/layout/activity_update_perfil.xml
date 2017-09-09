@@ -96,6 +96,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/confirmPass"/>
+
                 <EditText
                     android:id="@+id/confirmPassword"
                     android:layout_width="match_parent"
@@ -203,7 +204,6 @@
                     android:background="@drawable/edit_text_border"
                     android:drawablePadding="5dp"
                     android:drawableStart="@drawable/ic_city"
-                    android:hint="@string/ciudad"
                     android:inputType="textCapWords|textNoSuggestions"
                     android:padding="15dp"
                     android:textColor="#000000"

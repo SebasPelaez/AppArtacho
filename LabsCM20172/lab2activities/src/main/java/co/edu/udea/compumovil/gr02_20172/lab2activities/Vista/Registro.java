@@ -426,7 +426,11 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
             values.put("address",direccion.getText().toString());
             values.put("email",email.getText().toString());
             values.put("city",ciudad.getText().toString());
-            values.put("image",imagePath);
+            if(imagePath != null){
+                values.put("image",imagePath);
+            }else{
+                values.put("image",(String)null);
+            }
             Long registered = db.insert("user","",values);
             Toast.makeText(getApplicationContext(),"Saved:"+registered,Toast.LENGTH_SHORT).show();
             Intent i = new Intent(Registro.this, Loggin.class);

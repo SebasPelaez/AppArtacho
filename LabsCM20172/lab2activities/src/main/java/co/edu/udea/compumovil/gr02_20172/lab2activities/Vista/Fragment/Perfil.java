@@ -65,6 +65,8 @@ public class Perfil extends Fragment {
         } else {
             genFemenino.setChecked(true);
         }
-        foto.setImageURI(Uri.parse(user.getImage()));
+        if(user.getImage() != null){
+            foto.setImageURI(Uri.parse(user.getImage()));
+        }
     }
 }
