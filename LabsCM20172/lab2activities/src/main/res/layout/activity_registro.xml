@@ -87,8 +87,7 @@
                     android:inputType="textCapWords|textNoSuggestions"
                     android:padding="15dp"
                     android:textColor="#ffffff"
-                    android:textColorHint="#ffffff"
-                    />
+                    android:textColorHint="#ffffff" />
 
 
                 <EditText
