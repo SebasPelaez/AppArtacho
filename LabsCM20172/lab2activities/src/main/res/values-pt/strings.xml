@@ -33,4 +33,6 @@
     <string name="UbicaciónApartamento">Ubicación</string>
     <string name="NombreUsuario">Nombre de usuario</string>
     <string name="nombreInmueble">Nombre Inmueble</string>
+    <string name="activarsonidonoti">Activate notifications sound</string>
+    <string name="permitirnoti">Allow notifications</string>
 </resources>

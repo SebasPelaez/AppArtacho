@@ -7,10 +7,15 @@
     tools:context="co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.updatePerfil">
 
     <ScrollView
-        android:layout_width="368dp"
-        android:layout_height="551dp"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
 
         <LinearLayout
@@ -27,12 +32,19 @@
                 android:orientation="vertical"
                 android:padding="8dp">
 
-                <ImageView
+                <com.mikhaellopez.circularimageview.CircularImageView
                     android:id="@+id/editImage"
-                    android:layout_width="350px"
-                    android:layout_height="250px"
+                    app:civ_border_color="#ffffff"
+                    app:civ_border_width="2dp"
+                    app:civ_shadow="false"
+                    app:civ_shadow_color="#8BC34A"
+                    app:civ_shadow_radius="10"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/avatar"/>
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/avatar" />
 
             </LinearLayout>
 
@@ -60,49 +72,58 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/edit_text_border"
+                    android:background="@drawable/corner_input"
+                    android:backgroundTint="#ffffff"
                     android:inputType="textPersonName"
                     android:padding="15dp"
-                    android:text="@string/nombre" />
+                    android:textColor="@color/secondary_text"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="@string/lastNameLabel"/>
+                    android:text="@string/lastNameLabel"
+                    android:layout_marginTop="15dp"/>
                 <EditText
                     android:id="@+id/editLastName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/edit_text_border"
+                    android:background="@drawable/corner_input"
+                    android:backgroundTint="#ffffff"
                     android:inputType="textPersonName"
                     android:padding="15dp"
-                    android:text="@string/apellido" />
+                    android:textColor="@color/secondary_text"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="@string/newPassLabel"/>
+                    android:text="@string/newPassLabel"
+                    android:layout_marginTop="15dp"/>
                 <EditText
                     android:id="@+id/editPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/edit_text_border"
+                    android:background="@drawable/corner_input"
+                    android:backgroundTint="#ffffff"
                     android:inputType="textPassword"
-                    android:padding="15dp" />
+                    android:textColor="@color/secondary_text"
+                    android:padding="15dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="@string/confirmPass"/>
+                    android:text="@string/confirmPass"
+                    android:layout_marginTop="15dp"/>
 
                 <EditText
                     android:id="@+id/confirmPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/edit_text_border"
+                    android:textColor="@color/secondary_text"
+                    android:background="@drawable/corner_input"
+                    android:backgroundTint="#ffffff"
                     android:inputType="textPassword"
                     android:padding="15dp" />
 
@@ -114,13 +135,6 @@
                     android:orientation="horizontal"
                     android:padding="8dp">
 
-                    <TextView
-                        android:id="@+id/lblGenero_Informacion"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:text="@string/genero_Registro" />
 
                     <RadioGroup
                         android:layout_width="wrap_content"
@@ -133,7 +147,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:buttonTint="@color/primary"
+                            android:buttonTint="#ffffff"
                             android:onClick="onRadioButtonClicked"
                             android:text="@string/masculino" />
 
@@ -142,7 +156,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:buttonTint="@color/primary"
+                            android:buttonTint="#ffffff"
                             android:onClick="onRadioButtonClicked"
                             android:text="@string/femenino" />
 
@@ -153,72 +167,83 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="@string/phoneLabel"/>
+                    android:text="@string/phoneLabel"
+                    />
                 <EditText
                     android:id="@+id/editPhone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/edit_text_border"
+                    android:background="@drawable/corner_input"
+                    android:backgroundTint="#ffffff"
                     android:inputType="number"
                     android:padding="15dp"
-                    android:text="@string/Telefono_Registro" />
+                    android:textColor="@color/secondary_text"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="@string/addressLabel"/>
+                    android:text="@string/addressLabel"
+                    android:layout_marginTop="15dp"/>
                 <EditText
                     android:id="@+id/editAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/edit_text_border"
+                    android:background="@drawable/corner_input"
+                    android:backgroundTint="#ffffff"
                     android:inputType="textNoSuggestions"
                     android:padding="15dp"
-                    android:text="@string/Direccion_Registro" />
+                    android:textColor="@color/secondary_text"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="@string/emailLabel"/>
+                    android:text="@string/emailLabel"
+                    android:layout_marginTop="15dp"/>
                 <EditText
                     android:id="@+id/editEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/edit_text_border"
+                    android:background="@drawable/corner_input"
+                    android:backgroundTint="#ffffff"
                     android:inputType="textEmailAddress"
                     android:padding="15dp"
-                    android:text="@string/Email" />
+                    android:textColor="@color/secondary_text"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="@string/cityLabel"/>
+                    android:text="@string/cityLabel"
+                    android:layout_marginTop="15dp"/>
                 <AutoCompleteTextView
                     android:id="@+id/editCity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/edit_text_border"
+                    android:background="@drawable/corner_input"
+                    android:backgroundTint="#ffffff"
                     android:drawablePadding="5dp"
                     android:drawableStart="@drawable/ic_city"
                     android:inputType="textCapWords|textNoSuggestions"
                     android:padding="15dp"
-                    android:textColor="#000000"
-                    android:textColorHint="#000000"
+                    android:textColor="@color/secondary_text"
+                    android:textColorHint="@color/secondary_text"
                     tools:layout_editor_absoluteX="294dp"
                     tools:layout_editor_absoluteY="497dp" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/corner_input"
+                    android:backgroundTint="@color/accent"
+                    android:onClick="onClick"
+                    android:text="@string/updateInfo"
+                    android:textColor="#ffffff"/>
             </LinearLayout>
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/corner_input"
-                android:backgroundTint="@color/primary"
-                android:onClick="onClick"
-                android:text="@string/updateInfo"
-                android:textColor="#ffffff"/>
         </LinearLayout>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

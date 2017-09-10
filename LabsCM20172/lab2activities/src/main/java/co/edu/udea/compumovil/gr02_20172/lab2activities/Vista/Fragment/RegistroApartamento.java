@@ -43,6 +43,9 @@ import co.edu.udea.compumovil.gr02_20172.lab2activities.Adapter.UploadPhotosAdap
 import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.SQLiteConnectionHelper;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Validacion.Validation;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Loggin;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Principal;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Registro;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.entities.Apartament;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.entities.User;
 
@@ -286,8 +289,14 @@ public class RegistroApartamento extends Fragment{
         values.put("num_rooms",Integer.parseInt(txtCuartos.getText().toString()));
         values.put("location",txtUbicacion.getText().toString());
         Long registered = db.insert("apartament",null,values);
-        Toast.makeText(rootView.getContext(),"Saved:"+registered,Toast.LENGTH_SHORT).show();
-        registerImg_Apartment();
+        if(registered != -1){
+            Toast.makeText(rootView.getContext(),"Saved:"+registered,Toast.LENGTH_SHORT).show();
+            registerImg_Apartment();
+            Intent i = new Intent(getContext(),Principal.class);
+            startActivity(i);
+        }else{
+            Toast.makeText(rootView.getContext(),"Error",Toast.LENGTH_SHORT).show();
+        }
 
     }
 

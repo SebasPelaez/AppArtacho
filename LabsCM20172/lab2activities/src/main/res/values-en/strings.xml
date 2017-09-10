@@ -25,8 +25,8 @@
     <string name="strIngresar">Sign In</string>
     <string name="registrame">Sign Up</string>
     <string name="configuraciones">Configuraciones</string>
-    <string name="cerrarSesion">Acerca de</string>
-    <string name="acercaDe">Cerrar Sesion</string>
+    <string name="cerrarSesion">Logout</string>
+    <string name="acercaDe">About</string>
     <string name="NumeroHabitaciones">Número Habitaciones</string>
     <string name="AreaApartamento">Area</string>
     <string name="DescripcionApartamento">Descripción</string>
@@ -44,4 +44,9 @@
     <string name="cityLabel">City:</string>
     <string name="emailLabel">Email:</string>
     <string name="addressLabel">Address:</string>
+    <string name="fechaHint">Birthday</string>
+    <string name="editarPerfil">Edit iformation</string>
+    <string name="notificaciones">Notifications</string>
+    <string name="sesion">Session</string>
+    <string name="Mantenersesion">Keep session</string>
 </resources>

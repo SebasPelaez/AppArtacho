@@ -35,43 +35,51 @@
                     android:id="@+id/lblNombreApartamento"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/nombreInmueble" />
+                    android:text="@string/nombreInmueble"
+                    android:textSize="18dp"/>
 
                 <TextView
                     android:id="@+id/lblTipoApartamento"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/TipoApartamento" />
+                    android:text="@string/TipoApartamento"
+                    android:textSize="18dp"/>
 
                 <TextView
                     android:id="@+id/lblValorApartamento"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/ValorApartamento" />
+                    android:text="@string/ValorApartamento"
+                    android:textSize="18dp"/>
 
                 <TextView
                     android:id="@+id/lblNumeroHabitaciones"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/NumeroHabitaciones" />
+                    android:text="@string/NumeroHabitaciones"
+                    android:textSize="18dp"/>
 
                 <TextView
                     android:id="@+id/lblArea"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/AreaApartamento" />
+                    android:text="@string/AreaApartamento"
+                    android:textSize="18dp"/>
 
                 <TextView
                     android:id="@+id/lblDescripcion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/DescripcionApartamento" />
+                    android:text="@string/DescripcionApartamento"
+                    android:textSize="18dp"/>
 
                 <Button
                     android:id="@+id/btnUbicacion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="onClick"
+                    android:backgroundTint="@color/accent"
+                    android:textColor="#ffffff"
                     android:text="@string/UbicaciónApartamento" />
 
             </LinearLayout>

@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.mikhaellopez.circularimageview.CircularImageView;
+
 import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.entities.User;
 
@@ -27,7 +29,7 @@ public class Perfil extends Fragment {
     private TextView ciudad;
     private RadioButton genMasculino;
     private RadioButton genFemenino;
-    private ImageView foto;
+    private CircularImageView foto;
 
 
     public Perfil() {
@@ -47,7 +49,7 @@ public class Perfil extends Fragment {
         ciudad = (TextView) view.findViewById(R.id.txtCiudad_Informacion);
         genMasculino = (RadioButton) view.findViewById(R.id.rbtnSexoMasculino_Informacion);
         genFemenino = (RadioButton) view.findViewById(R.id.rbtnSexoFemenino_Informacion);
-        foto = (ImageView) view.findViewById(R.id.imgFoto_Informacion);
+        foto = (CircularImageView) view.findViewById(R.id.imgFoto_Informacion);
         recuperarInformacion();
         return view;
     }
@@ -65,7 +67,8 @@ public class Perfil extends Fragment {
         } else {
             genFemenino.setChecked(true);
         }
-        if(user.getImage() != null){
+        if(!user.getImage().equals("")){
+            Uri i = Uri.parse(user.getImage());
             foto.setImageURI(Uri.parse(user.getImage()));
         }
     }

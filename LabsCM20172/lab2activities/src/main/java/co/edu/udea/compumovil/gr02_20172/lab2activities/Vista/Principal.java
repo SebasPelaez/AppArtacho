@@ -3,6 +3,7 @@ package co.edu.udea.compumovil.gr02_20172.lab2activities.Vista;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,8 +17,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import java.util.Locale;
+import android.view.View;
+import android.widget.TextView;
 
+import com.mikhaellopez.circularimageview.CircularImageView;
+import java.util.Locale;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Interface.IComunicaFragments;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.Apartamentos;
@@ -26,10 +30,13 @@ import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.Perfil;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.RegistroApartamento;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.SettingsActivity;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.entities.Apartament;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.entities.User;
 
 public class Principal extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,IComunicaFragments {
 
+    private CircularImageView userImage;
+    private TextView userNameView;
     private Locale locale;
     private Configuration config = new Configuration();
     private Fragment fragmentGenerico;
@@ -52,6 +59,13 @@ public class Principal extends AppCompatActivity
 
         fragmentGenerico = new Apartamentos();
         changeFragment(fragmentGenerico);
+        View headerLayout = navigationView.getHeaderView(0);
+        userImage = (CircularImageView)headerLayout.findViewById(R.id.imageCircleUser);
+        userNameView = (TextView)headerLayout.findViewById(R.id.txtUser_NavBar);
+        User user = User.getInstance();
+        userNameView.setText(user.getName()+" "+ user.getLastname());
+        if(!user.getImage().equals(""))
+        userImage.setImageURI(Uri.parse(user.getImage()));
     }
 
     @Override

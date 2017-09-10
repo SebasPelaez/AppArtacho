@@ -8,9 +8,9 @@
     tools:context="co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.RegistroApartamento">
 
     <ScrollView
-        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/gradient"
+        android:layout_width="0dp"
+        android:background="@color/primary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -20,8 +20,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            tools:layout_editor_absoluteY="8dp"
+            tools:layout_editor_absoluteX="8dp">
 
             <LinearLayout
                 android:id="@+id/layout_imagenApartamento"
@@ -45,11 +47,6 @@
                 android:focusableInTouchMode="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="5dp"
                 android:orientation="vertical">
 
                 <EditText
@@ -57,25 +54,31 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/edit_text_border"
+                    android:background="@drawable/corner_input"
+                    android:backgroundTint="#ffffff"
                     android:hint="@string/nombreInmueble"
                     android:inputType="textCapWords|textNoSuggestions"
                     android:padding="15dp"
-                    android:textColor="#ffffff"
-                    android:textColorHint="#ffffff" />
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="15dp"
+                    android:textColor="@color/secondary_text"
+                    android:textColorHint="@color/secondary_text" />
 
                 <AutoCompleteTextView
                     android:id="@+id/txtTipoInmueble"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/edit_text_border"
+                    android:background="@drawable/corner_input"
+                    android:backgroundTint="#ffffff"
                     android:drawablePadding="5dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="15dp"
                     android:hint="@string/TipoInmueble"
                     android:inputType="textCapWords|textNoSuggestions"
                     android:padding="15dp"
-                    android:textColor="#ffffff"
-                    android:textColorHint="#ffffff"
+                    android:textColor="@color/secondary_text"
+                    android:textColorHint="@color/secondary_text"
                     />
 
 
@@ -84,60 +87,75 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/edit_text_border"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="15dp"
+                    android:background="@drawable/corner_input"
+                    android:backgroundTint="#ffffff"
                     android:hint="@string/valorInmueble"
                     android:inputType="number"
                     android:padding="15dp"
-                    android:textColor="#ffffff"
-                    android:textColorHint="#ffffff" />
+                    android:textColor="@color/secondary_text"
+                    android:textColorHint="@color/secondary_text" />
 
                 <EditText
                     android:id="@+id/txtArea"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/edit_text_border"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="15dp"
+                    android:background="@drawable/corner_input"
+                    android:backgroundTint="#ffffff"
                     android:hint="@string/areaInmueble"
                     android:inputType="number"
                     android:padding="15dp"
-                    android:textColor="#ffffff"
-                    android:textColorHint="#ffffff" />
+                    android:textColor="@color/secondary_text"
+                    android:textColorHint="@color/secondary_text" />
 
                 <EditText
                     android:id="@+id/txtCuartos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/edit_text_border"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="15dp"
+                    android:background="@drawable/corner_input"
+                    android:backgroundTint="#ffffff"
                     android:hint="@string/numeroCuartos"
                     android:inputType="number"
                     android:padding="15dp"
-                    android:textColor="#ffffff"
-                    android:textColorHint="#ffffff" />
+                    android:textColor="@color/secondary_text"
+                    android:textColorHint="@color/secondary_text" />
 
                 <EditText
                     android:id="@+id/txtUbicacion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="15dp"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/edit_text_border"
+                    android:background="@drawable/corner_input"
+                    android:backgroundTint="#ffffff"
                     android:hint="@string/UbicacionInmueble"
                     android:inputType="textCapWords|textNoSuggestions"
                     android:padding="15dp"
-                    android:textColor="#ffffff"
-                    android:textColorHint="#ffffff" />
+                    android:textColor="@color/secondary_text"
+                    android:textColorHint="@color/secondary_text" />
 
                 <EditText
                     android:id="@+id/txtDescripcionApartamento"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/edit_text_border"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="15dp"
+                    android:background="@drawable/corner_input"
+                    android:backgroundTint="#ffffff"
                     android:hint="@string/DescripcionApartamento"
                     android:inputType="textCapWords|textNoSuggestions"
                     android:padding="15dp"
-                    android:textColor="#ffffff"
-                    android:textColorHint="#ffffff" />
+                    android:textColor="@color/secondary_text"
+                    android:textColorHint="@color/secondary_text" />
 
             </LinearLayout>
 
@@ -146,10 +164,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="10dp"
-                android:backgroundTint="@color/primary"
+                android:layout_marginEnd="15dp"
+                android:layout_marginStart="15dp"
+                android:backgroundTint="@color/accent"
                 android:onClick="onClick"
                 android:text="@string/registrar"
                 android:textColor="#ffffff"
@@ -172,6 +190,7 @@
         android:layout_marginRight="16dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="148dp" />
+        android:layout_marginTop="148dp"
+        android:layout_marginEnd="16dp" />
 
 </android.support.constraint.ConstraintLayout>

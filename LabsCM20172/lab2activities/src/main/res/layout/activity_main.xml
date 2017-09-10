@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient"
+    android:background="@color/primary"
     tools:context="co.edu.udea.compumovil.gr02_20172.lab2activities.MainActivity">
 
     <ImageView

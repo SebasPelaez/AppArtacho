@@ -50,7 +50,7 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener{
         String username = txtUsuario.getText().toString();
         String password = txtClave.getText().toString();
         User user = User.getInstance();
-        if(username != "" && password != ""){
+        if(!username.equals("") && !password.equals("")){
             SQLiteConnectionHelper connectionDb = new SQLiteConnectionHelper(this,"db_lab",null,1);
             SQLiteDatabase db = connectionDb.getReadableDatabase();
             String[] params = {username,password};

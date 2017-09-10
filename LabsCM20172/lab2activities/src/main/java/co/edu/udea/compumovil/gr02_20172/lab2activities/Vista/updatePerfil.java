@@ -30,6 +30,8 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mikhaellopez.circularimageview.CircularImageView;
+
 import java.io.File;
 
 import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
@@ -56,7 +58,7 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
     private RadioButton editFem;
     private LinearLayout editInfoContainer;
     private String imagePath;
-    private ImageView editImage;
+    private CircularImageView editImage;
     private AutoCompleteTextView editCity;
     /**
      * Para la foto
@@ -245,7 +247,7 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initComponents(){
-        editImage  = (ImageView)findViewById(R.id.editImage);
+        editImage  = (CircularImageView)findViewById(R.id.editImage);
         editName  = (EditText) findViewById(R.id.editName);
         editLastName  = (EditText)findViewById(R.id.editLastName);
         editPhone  = (EditText)findViewById(R.id.editPhone);
@@ -290,7 +292,7 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
         } else {
             editFem.setChecked(true);
         }
-        if(user.getImage() != null){
+        if(!user.getImage().equals("")){
             editImage.setImageURI(Uri.parse(user.getImage()));
         }
         ArrayAdapter adapterCiudades = new ArrayAdapter(this,android.R.layout.simple_list_item_1,ciudades);

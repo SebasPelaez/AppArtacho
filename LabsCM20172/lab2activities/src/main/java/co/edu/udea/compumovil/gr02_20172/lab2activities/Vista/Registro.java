@@ -47,8 +47,8 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class Registro extends AppCompatActivity implements View.OnClickListener{
 
-    private TextView txtFecha;
     private ImageView foto;
+    private EditText birthday;
     private EditText nombre;
     private EditText apellido;
     private EditText telefono;
@@ -182,19 +182,19 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
                     Toast.makeText(getApplicationContext(),"Las contraseñas no coinciden",Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case R.id.btnFecha_Registro:
+            case R.id.birthday:
                 int dia,mes,ano;
-                final Calendar calendar = Calendar.getInstance();
+                Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(System.currentTimeMillis());
                 dia = calendar.get(Calendar.DAY_OF_MONTH);
                 mes = calendar.get(Calendar.MONTH);
                 ano = calendar.get(Calendar.YEAR);
-                DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener(){
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        txtFecha.setText(dayOfMonth+"/"+(month+1)+"/"+year);
+                        birthday.setText(dayOfMonth+"/"+(month+1)+"/"+year);
                     }
-                },dia,mes,ano);
+                },ano,mes,dia);
                 datePickerDialog.show();
                 break;
             default:
@@ -251,7 +251,7 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
         username = (EditText)findViewById(R.id.txtUsername);
         password  = (EditText)findViewById(R.id.txtPassword);
         rPassword  = (EditText)findViewById(R.id.txtPasswordRepeat);
-        txtFecha = (TextView)findViewById(R.id.lblFechaNacimiento_Registro);
+        birthday = (EditText)findViewById(R.id.birthday);
         layout_imagen = (LinearLayout)findViewById(R.id.layoutImagen);
         agregarValidaciones();
     }
@@ -416,7 +416,7 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
             values.put("name",nombre.getText().toString());
             values.put("last_name",apellido.getText().toString());
             values.put("gender",sexo);
-            values.put("birthday",txtFecha.getText().toString());
+            values.put("birthday",birthday.getText().toString());
             values.put("phone",telefono.getText().toString());
             values.put("address",direccion.getText().toString());
             values.put("email",email.getText().toString());
