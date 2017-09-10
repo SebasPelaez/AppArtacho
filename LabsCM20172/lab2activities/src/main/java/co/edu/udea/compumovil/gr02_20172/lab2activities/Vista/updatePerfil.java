@@ -344,6 +344,7 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(getApplicationContext(),"Actualizado"+updated,Toast.LENGTH_SHORT).show();
             Intent i = new Intent(updatePerfil.this,Principal.class);
             startActivity(i);
+            finish();
         }else{
             Toast.makeText(getApplicationContext(),"Error"+updated,Toast.LENGTH_SHORT).show();
         }

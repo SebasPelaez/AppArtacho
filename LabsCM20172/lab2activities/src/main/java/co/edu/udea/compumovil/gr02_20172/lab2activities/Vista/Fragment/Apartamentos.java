@@ -165,12 +165,14 @@ public class Apartamentos extends Fragment implements SearchView.OnQueryTextList
     }
 
     @Override
-    public boolean onQueryTextChange(String newText) {
-        newText  = newText.toLowerCase();
+    public boolean onQueryTextChange(String filtro) {
+        filtro  = filtro.toLowerCase();
         ArrayList<Apartament> nuevaLista =  new ArrayList<>();
         for (Apartament ap: apartamentoList){
-            String nombre =  ap.getName().toLowerCase();
-            if (nombre.contains(newText))
+            String tipoInmueble =  ap.getType().toLowerCase();
+            String numeroCuartos = String.valueOf(ap.getNumRooms());
+            String valor = String.valueOf(ap.getValue());
+            if (tipoInmueble.contains(filtro) || numeroCuartos.contains(filtro) || valor.contains(filtro))
                 nuevaLista.add(ap);
         }
         adapter.setFilter(nuevaLista);

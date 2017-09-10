@@ -430,6 +430,7 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
             Toast.makeText(getApplicationContext(),"Saved:"+registered,Toast.LENGTH_SHORT).show();
             Intent i = new Intent(Registro.this, Loggin.class);
             startActivity(i);
+            finish();
         }
     }
 

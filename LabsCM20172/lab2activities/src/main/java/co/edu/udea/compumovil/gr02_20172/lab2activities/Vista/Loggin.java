@@ -70,7 +70,9 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener{
                     user.setImage(cursor.getString(11));
                 } while(cursor.moveToNext());
                 i = new Intent(Loggin.this, Principal.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
+                finish();
                 }else{
                     Toast.makeText(getApplicationContext(),"Usuario y/o contraseña incorrectos",Toast.LENGTH_SHORT).show();
                 }

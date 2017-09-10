@@ -29,6 +29,10 @@ public class User {
         return instance;
     }
 
+    public static void destroyInstance(){
+        instance = null;
+    }
+
 
     public String getImage() {
         return image;

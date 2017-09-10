@@ -19,10 +19,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mikhaellopez.circularimageview.CircularImageView;
 import java.util.Locale;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Interface.IComunicaFragments;
+import co.edu.udea.compumovil.gr02_20172.lab2activities.MainActivity;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.R;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.Apartamentos;
 import co.edu.udea.compumovil.gr02_20172.lab2activities.Vista.Fragment.DetalleApartamento;
@@ -73,11 +75,6 @@ public class Principal extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
         }
@@ -160,12 +157,12 @@ public class Principal extends AppCompatActivity
                 startActivity(i);
                 break;
             case R.id.nav_cerrarSesion:
-                i = new Intent(Principal.this, Registro.class);
+                User.destroyInstance();
+                i = new Intent(Principal.this, MainActivity.class);
                 startActivity(i);
                 break;
             case R.id.nav_acercaDe:
-                i = new Intent(Principal.this, Registro.class);
-                startActivity(i);
+                Toast.makeText(this,"No hace nada:",Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
@@ -185,6 +182,7 @@ public class Principal extends AppCompatActivity
         //Fragment fragmentA = new FragmentA();
         // Replace whatever is in the fragment_container view with this fragment
         transaction.replace(R.id.fragment_container, fragment);
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 
         // add the transaction to the back stack (optional)
         transaction.addToBackStack(null);
