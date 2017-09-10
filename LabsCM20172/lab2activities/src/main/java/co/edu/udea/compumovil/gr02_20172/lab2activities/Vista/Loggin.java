@@ -1,6 +1,7 @@
 package co.edu.udea.compumovil.gr02_20172.lab2activities.Vista;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
@@ -18,12 +19,12 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener{
 
     private EditText txtUsuario;
     private EditText txtClave;
+    private static final String PREF_USER = "UserPref";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loggin);
-
         txtClave = (EditText)findViewById(R.id.txtPassword);
         txtUsuario = (EditText)findViewById(R.id.txtUsuario);
     }
@@ -71,6 +72,10 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener{
                 } while(cursor.moveToNext());
                 i = new Intent(Loggin.this, Principal.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                SharedPreferences settings = getSharedPreferences(PREF_USER, 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putInt("userId",user.getId());
+                editor.commit();
                 startActivity(i);
                 finish();
                 }else{
@@ -78,6 +83,6 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener{
                 }
             }else{
                 Toast.makeText(getApplicationContext(),"Usuario y contraseña requeridos",Toast.LENGTH_SHORT).show();
-            }
+        }
     }
 }

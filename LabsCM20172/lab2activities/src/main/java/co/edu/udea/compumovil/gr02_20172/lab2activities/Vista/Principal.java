@@ -2,9 +2,11 @@ package co.edu.udea.compumovil.gr02_20172.lab2activities.Vista;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -42,6 +44,8 @@ public class Principal extends AppCompatActivity
     private Locale locale;
     private Configuration config = new Configuration();
     private Fragment fragmentGenerico;
+    private static final String PREF_USER = "UserPref";
+    private static final String PREF_GENERAL = "pref_general";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +162,10 @@ public class Principal extends AppCompatActivity
                 break;
             case R.id.nav_cerrarSesion:
                 User.destroyInstance();
+                SharedPreferences settings = getSharedPreferences(PREF_USER, 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putInt("userId",0);
+                editor.commit();
                 i = new Intent(Principal.this, MainActivity.class);
                 startActivity(i);
                 break;
