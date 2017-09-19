@@ -170,7 +170,8 @@ public class Principal extends AppCompatActivity
                 startActivity(i);
                 break;
             case R.id.nav_acercaDe:
-                Toast.makeText(this,"No hace nada:",Toast.LENGTH_SHORT).show();
+                i = new Intent(Principal.this, AboutActivity.class);
+                startActivity(i);
                 break;
             default:
                 break;

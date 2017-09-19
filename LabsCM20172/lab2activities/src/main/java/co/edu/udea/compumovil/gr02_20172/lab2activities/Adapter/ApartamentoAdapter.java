@@ -35,13 +35,16 @@ public class ApartamentoAdapter extends RecyclerView.Adapter<ApartamentoAdapter.
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView nombre, ubicacion;
+        public TextView nombre, tipo,valor,area,descripcion;
         public ImageView thumbnail;
 
         public MyViewHolder(View view) {
             super(view);
             nombre = (TextView) view.findViewById(R.id.nombre);
-            ubicacion = (TextView) view.findViewById(R.id.ubicacion);
+            tipo = (TextView) view.findViewById(R.id.tipo);
+            valor = (TextView) view.findViewById(R.id.valor);
+            area = (TextView) view.findViewById(R.id.area);
+            descripcion = (TextView) view.findViewById(R.id.descripcion);
             thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
         }
     }
@@ -63,8 +66,11 @@ public class ApartamentoAdapter extends RecyclerView.Adapter<ApartamentoAdapter.
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         Apartament apto = apartamentoList.get(position);
-        holder.nombre.setText(apto.getName());
-        holder.ubicacion.setText(apto.getLocation());
+        holder.nombre.setText("Nombre: "+apto.getName());
+        holder.valor.setText("Valor: "+apto.getValue());
+        holder.tipo.setText("Tipo: "+apto.getType());
+        holder.area.setText("Área: "+apto.getArea());
+        holder.descripcion.setText("Descripción: "+apto.getDescription());
 
         // loading album cover using Glide library
         Glide.with(mContext).load(apto.getResource(0).getPathResource()).into(holder.thumbnail);//aca verificar si existte el path si no, es con la imagen
