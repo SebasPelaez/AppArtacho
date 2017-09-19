@@ -269,11 +269,11 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
         switch(view.getId()) {
             case R.id.editMasc:
                 if (checked)
-                    editGender = 0;
+                    editGender = 1;
                 break;
             case R.id.editFem:
                 if (checked)
-                    editGender = 1;
+                    editGender = 0;
                 break;
         }
     }
@@ -292,7 +292,8 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
         } else {
             editFem.setChecked(true);
         }
-        if(!user.getImage().equals("")){
+        String userI = user.getImage();
+        if(userI !=null &&!userI.equals("")){
             editImage.setImageURI(Uri.parse(user.getImage()));
         }
         ArrayAdapter adapterCiudades = new ArrayAdapter(this,android.R.layout.simple_list_item_1,ciudades);
