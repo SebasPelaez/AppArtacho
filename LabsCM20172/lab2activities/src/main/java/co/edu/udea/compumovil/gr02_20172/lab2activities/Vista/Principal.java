@@ -70,8 +70,10 @@ public class Principal extends AppCompatActivity
         userNameView = (TextView)headerLayout.findViewById(R.id.txtUser_NavBar);
         User user = User.getInstance();
         userNameView.setText(user.getName()+" "+ user.getLastname());
-        if(!user.getImage().equals(""))
-        userImage.setImageURI(Uri.parse(user.getImage()));
+        String userI = user.getImage();
+        if(userI != null && !userI.equals("")) {
+            userImage.setImageURI(Uri.parse(user.getImage()));
+        }
     }
 
     @Override
