@@ -10,6 +10,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/Lab1-UI" />
             <option value="$PROJECT_DIR$/lab2activities" />
+            <option value="$PROJECT_DIR$/lab3services" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
