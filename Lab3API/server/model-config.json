@@ -1,0 +1,32 @@
+{
+  "_meta": {
+    "sources": [
+      "loopback/common/models",
+      "loopback/server/models",
+      "../common/models",
+      "./models"
+    ],
+    "mixins": [
+      "loopback/common/mixins",
+      "loopback/server/mixins",
+      "../common/mixins",
+      "./mixins"
+    ]
+  },
+  "User": {
+    "dataSource": "lab3Api",
+    "public": true
+  },
+  "Resource": {
+    "dataSource": "lab3Api",
+    "public": true
+  },
+  "Apartament": {
+    "dataSource": "lab3Api",
+    "public": true
+  },
+  "Container": {
+    "dataSource": "dataimages",
+    "public": true
+  }
+}

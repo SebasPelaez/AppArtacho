@@ -33,6 +33,7 @@ import co.edu.udea.compumovil.gr02_20172.lab3services.Vista.Fragment.RegistroApa
 import co.edu.udea.compumovil.gr02_20172.lab3services.Vista.Fragment.SettingsActivity;
 import co.edu.udea.compumovil.gr02_20172.lab3services.entities.Apartament;
 import co.edu.udea.compumovil.gr02_20172.lab3services.entities.User;
+import co.edu.udea.compumovil.gr02_20172.lab3services.entities.User_Singleton;
 
 public class Principal extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,IComunicaFragments {
@@ -66,7 +67,7 @@ public class Principal extends AppCompatActivity
         View headerLayout = navigationView.getHeaderView(0);
         userImage = (CircularImageView)headerLayout.findViewById(R.id.imageCircleUser);
         userNameView = (TextView)headerLayout.findViewById(R.id.txtUser_NavBar);
-        User user = User.getInstance();
+        User user = User_Singleton.getInstance();
         userNameView.setText(user.getName()+" "+ user.getLastname());
         String userI = user.getImage();
         if(userI != null && !userI.equals("")) {
@@ -161,7 +162,7 @@ public class Principal extends AppCompatActivity
                 startActivity(i);
                 break;
             case R.id.nav_cerrarSesion:
-                User.destroyInstance();
+                //User.destroyInstance();
                 SharedPreferences settings = getSharedPreferences(PREF_USER, 0);
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putInt("userId",0);

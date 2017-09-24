@@ -1,0 +1,18 @@
+{
+  "lab3Api": {
+    "host": "127.0.0.1",
+    "port": 3306,
+    "url": "",
+    "database": "lab3database",
+    "password": "root",
+    "name": "lab3Api",
+    "user": "root",
+    "connector": "mysql"
+  },
+  "dataimages": {
+    "name": "dataimages",
+    "connector": "loopback-component-storage",
+    "provider": "filesystem",
+    "root": "./server/myimages"
+  }
+}

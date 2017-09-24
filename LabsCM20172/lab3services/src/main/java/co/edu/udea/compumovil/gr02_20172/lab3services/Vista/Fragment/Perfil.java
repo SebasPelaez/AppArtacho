@@ -54,6 +54,7 @@ public class Perfil extends Fragment {
     }
 
     public void recuperarInformacion() {
+        /*
         User user = User.getInstance();
         nombre.setText(nombre.getText().toString() + ": " + user.getName());
         apellido.setText(apellido.getText().toString() + ": " + user.getLastname());
@@ -69,7 +70,7 @@ public class Perfil extends Fragment {
         if(!user.getImage().equals("")){
             Uri i = Uri.parse(user.getImage());
             foto.setImageURI(Uri.parse(user.getImage()));
-        }
+        }*/
     }
 
     @Override

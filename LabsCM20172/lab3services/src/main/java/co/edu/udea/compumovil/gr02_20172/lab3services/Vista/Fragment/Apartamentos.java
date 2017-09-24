@@ -20,15 +20,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import co.edu.udea.compumovil.gr02_20172.lab3services.Adapter.ApartamentoAdapter;
 import co.edu.udea.compumovil.gr02_20172.lab3services.Interface.IComunicaFragments;
+import co.edu.udea.compumovil.gr02_20172.lab3services.Interface.RestClient;
 import co.edu.udea.compumovil.gr02_20172.lab3services.R;
-import co.edu.udea.compumovil.gr02_20172.lab3services.SQLiteConnectionHelper;
 import co.edu.udea.compumovil.gr02_20172.lab3services.entities.Apartament;
 import co.edu.udea.compumovil.gr02_20172.lab3services.entities.Resource;
+import retrofit2.Call;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -94,46 +96,14 @@ public class Apartamentos extends Fragment implements SearchView.OnQueryTextList
      */
 
     private void prepareApartamentos() {
-        SQLiteConnectionHelper connectionDb = new SQLiteConnectionHelper(rootView.getContext(),"db_lab",null,1);
-        SQLiteDatabase db = connectionDb.getWritableDatabase();
+        RestClient restClient = RestClient.retrofit.create(RestClient.class);
+        Call<List<Apartament>> call = restClient.getApartaments();
         try {
-            Cursor cursor = db.rawQuery("SELECT id,apartamentname,type,value,area,description,location,num_rooms FROM apartament",null);
-            if(cursor.moveToFirst()){
-                do{
-                    Apartament apartament = new Apartament();
-                    apartament.setId(cursor.getInt(0));
-                    apartament.setName(cursor.getString(1));
-                    apartament.setType(cursor.getString(2));
-                    apartament.setValue(cursor.getInt(3));
-                    apartament.setArea(cursor.getDouble(4));
-                    apartament.setDescription(cursor.getString(5));
-                    apartament.setLocation(cursor.getString(6));
-                    apartament.setNumRooms(cursor.getInt(7));
-                    apartament.setResources(findResources(apartament.getId()));
-                    apartamentoList.add(apartament);
-                }while (cursor.moveToNext());
-            }
-        }catch (Exception ex){
-            Log.e("Base de Datos","Error al conectar");
+            apartamentoList = call.execute().body();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         adapter.notifyDataSetChanged();
-    }
-
-    private List<Resource> findResources(int idApartamento) {
-        SQLiteConnectionHelper connectionDb = new SQLiteConnectionHelper(rootView.getContext(),"db_lab",null,1);
-        SQLiteDatabase db = connectionDb.getWritableDatabase();
-        ArrayList<Resource> resources = new ArrayList<>();
-        Cursor findResources = db.rawQuery("SELECT id,id_apartament,image FROM resource where id_apartament='" + idApartamento + "'", null);
-        if(findResources.moveToFirst()) {
-            do {
-                Resource r = new Resource();
-                r.setId(findResources.getInt(0));
-                r.setIdApartment(findResources.getInt(1));
-                r.setPathResource(findResources.getString(2));
-                resources.add(r);
-            } while (findResources.moveToNext());
-        }
-        return resources;
     }
 
     @Override

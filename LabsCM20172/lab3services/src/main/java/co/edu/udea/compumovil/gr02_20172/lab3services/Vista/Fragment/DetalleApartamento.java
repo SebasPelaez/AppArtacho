@@ -13,13 +13,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import co.edu.udea.compumovil.gr02_20172.lab3services.Adapter.BannerAdapter;
+import co.edu.udea.compumovil.gr02_20172.lab3services.Interface.RestClient;
 import co.edu.udea.compumovil.gr02_20172.lab3services.R;
 import co.edu.udea.compumovil.gr02_20172.lab3services.entities.Apartament;
 import co.edu.udea.compumovil.gr02_20172.lab3services.entities.Resource;
+import retrofit2.Call;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -108,9 +111,15 @@ public class DetalleApartamento extends Fragment{
 
 
     private void prepareApartamentos(Apartament apto) {
-        for(Resource r: apto.getResources()){
-            photoList.add(r.getPathResource());
+        RestClient restClient = RestClient.retrofit.create(RestClient.class);
+        Call<Resource> call = restClient.getResource(apto.getId());
+        Resource currentResource = null;
+        try {
+            currentResource = call.execute().body();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        photoList.add(currentResource.getPathResource());
         adapter.notifyDataSetChanged();
     }
 

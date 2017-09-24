@@ -2,12 +2,9 @@ package co.edu.udea.compumovil.gr02_20172.lab3services.Vista;
 
 import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
@@ -32,15 +29,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
 
+import co.edu.udea.compumovil.gr02_20172.lab3services.Interface.RestClient;
 import co.edu.udea.compumovil.gr02_20172.lab3services.R;
-import co.edu.udea.compumovil.gr02_20172.lab3services.SQLiteConnectionHelper;
 import co.edu.udea.compumovil.gr02_20172.lab3services.Validacion.Validation;
+import co.edu.udea.compumovil.gr02_20172.lab3services.entities.User;
+import retrofit2.Call;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -357,7 +356,6 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
                     Uri path = data.getData();
                     imagePath = path.toString();
                     foto.setImageURI(path);
-                    //informacion.getData().setRuta_foto(path.toString());
                     break;
 
             }
@@ -403,35 +401,34 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
     }
 
     public void registerUser(){
-        SQLiteConnectionHelper connectionDb = new SQLiteConnectionHelper(this,"db_lab",null,1);
-        SQLiteDatabase db = connectionDb.getWritableDatabase();
-        String[] params = {username.getText().toString()};
-        Cursor cursor = db.rawQuery("SELECT * FROM user WHERE username=?",params);
-        if (cursor.moveToFirst()) {
-            Toast.makeText(getApplicationContext(),"Ya existe un con el mismo username",Toast.LENGTH_SHORT).show();
-        }else{
-            ContentValues  values = new ContentValues();
-            values.put("username",username.getText().toString());
-            values.put("password",password.getText().toString());
-            values.put("name",nombre.getText().toString());
-            values.put("last_name",apellido.getText().toString());
-            values.put("gender",sexo);
-            values.put("birthday",birthday.getText().toString());
-            values.put("phone",telefono.getText().toString());
-            values.put("address",direccion.getText().toString());
-            values.put("email",email.getText().toString());
-            values.put("city",ciudad.getText().toString());
-            if(imagePath != null){
-                values.put("image",imagePath);
-            }else{
-                values.put("image",(String)null);
-            }
-            Long registered = db.insert("user","",values);
-            Toast.makeText(getApplicationContext(),"Saved:"+registered,Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(Registro.this, Loggin.class);
-            startActivity(i);
-            finish();
+        //RUTA PROVICIONAL PARA IMAGEN
+        String ruta = "http://localhost:3000/api/Containers/all/upload";
+        User u = new User();
+        u.setUsername(username.getText().toString());
+        u.setPassword(password.getText().toString());
+        u.setName(nombre.getText().toString());
+        u.setLastname(apellido.getText().toString());
+        u.setGender(new Integer(sexo));//Prueba con un Integer
+        u.setBirthday(birthday.getText().toString());
+        u.setPhone(telefono.getText().toString());
+        u.setAddress(direccion.getText().toString());
+        u.setEmail(email.getText().toString());
+        u.setCity(ciudad.getText().toString());
+        u.setImage(imagePath);
+
+        //se realiza la peticion para ingresarlo en la base de datos
+        RestClient restClient = RestClient.retrofit.create(RestClient.class);
+        Call<User> call = restClient.createUser(u);
+        try {
+            call.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        //Se redirigea la actividad principal para loguearse
+        Intent i = new Intent(Registro.this, Loggin.class);
+        startActivity(i);
+        finish();
     }
 
 }

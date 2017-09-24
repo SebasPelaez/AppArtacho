@@ -1,0 +1,23 @@
+{
+  "name": "Resource",
+  "plural": "Resources",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "idApartment": {
+      "type": "number",
+      "required": true
+    },
+    "pathResource": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

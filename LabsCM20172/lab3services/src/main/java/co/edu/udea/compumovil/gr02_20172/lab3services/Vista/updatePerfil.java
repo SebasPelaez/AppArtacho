@@ -1,11 +1,9 @@
 package co.edu.udea.compumovil.gr02_20172.lab3services.Vista;
 
 import android.annotation.TargetApi;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
@@ -24,19 +22,20 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.io.File;
+import java.io.IOException;
 
+import co.edu.udea.compumovil.gr02_20172.lab3services.Interface.RestClient;
 import co.edu.udea.compumovil.gr02_20172.lab3services.R;
-import co.edu.udea.compumovil.gr02_20172.lab3services.SQLiteConnectionHelper;
 import co.edu.udea.compumovil.gr02_20172.lab3services.entities.User;
+import co.edu.udea.compumovil.gr02_20172.lab3services.entities.User_Singleton;
+import retrofit2.Call;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -279,7 +278,7 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setInitValues(){
-        User user = User.getInstance();
+        User user = User_Singleton.getInstance();
         int positionCity;
         userId = user.getId();
         editName.setText(user.getName());
@@ -304,52 +303,29 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
     }
 
     private void updateUserInformation(){
-        SQLiteConnectionHelper connectionDb = new SQLiteConnectionHelper(this,"db_lab",null,1);
-        SQLiteDatabase db = connectionDb.getWritableDatabase();
-        String[] params = {Integer.toString(userId)};
-        ContentValues values = new ContentValues();
-        if(!editPassword.getText().toString().equals("")){
-            if(editPassword.getText().toString().equals(confirmPassword.getText().toString())){
-                values.put("password",editPassword.getText().toString());
-            }else {
-                Toast.makeText(getApplicationContext(), "Error: contraseñas no coinciden", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
-        values.put("name",editName.getText().toString());
-        values.put("last_name",editLastName.getText().toString());
-        values.put("gender",editGender);
-        values.put("phone",editPhone.getText().toString());
-        values.put("address",editAddress.getText().toString());
-        values.put("email",editEmail.getText().toString());
-        values.put("city",editCity.getText().toString());
-        if(imagePath != null){
-            values.put("image",imagePath);
-        }
-        int updated = db.update("user",values,"id=?",params);
-        if(updated ==1){
-            User user = User.getInstance();
-            user.setName(editName.getText().toString());
-            user.setLastname(editLastName.getText().toString());
-            user.setGender(editGender);
-            user.setPhone(editPhone.getText().toString());
-            user.setAddress(editAddress.getText().toString());
-            user.setEmail(editEmail.getText().toString());
-            user.setCity(editCity.getText().toString());
-            if(!editPassword.getText().toString().equals("")){
-                user.setPassword(editCity.getText().toString());
-            }
-            if(imagePath != null){
-                user.setImage(imagePath);
-            }
-            Toast.makeText(getApplicationContext(),"Actualizado"+updated,Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(updatePerfil.this,Principal.class);
-            startActivity(i);
-            finish();
-        }else{
-            Toast.makeText(getApplicationContext(),"Error"+updated,Toast.LENGTH_SHORT).show();
-        }
+        User editUser = new User();
 
+        editUser.setName(editName.getText().toString());
+        editUser.setLastname(editLastName.getText().toString());
+        editUser.setGender(editGender);
+        editUser.setPhone(editPhone.getText().toString());
+        editUser.setAddress(editAddress.getText().toString());
+        editUser.setEmail(editEmail.getText().toString());
+        editUser.setCity(editCity.getText().toString());
+        editUser.setPassword(editCity.getText().toString());
+        editUser.setImage(imagePath);
+
+        RestClient restClient = RestClient.retrofit.create(RestClient.class);
+        Call<User> call = restClient.editUser(editUser);
+        try {
+            call.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Toast.makeText(this, "Informacion editada", Toast.LENGTH_SHORT).show();
+        Intent i = new Intent(updatePerfil.this,Principal.class);
+        startActivity(i);
+        finish();
 
     }
 

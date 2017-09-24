@@ -2,17 +2,20 @@ package co.edu.udea.compumovil.gr02_20172.lab3services.Vista;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import co.edu.udea.compumovil.gr02_20172.lab3services.Interface.RestClient;
 import co.edu.udea.compumovil.gr02_20172.lab3services.R;
-import co.edu.udea.compumovil.gr02_20172.lab3services.SQLiteConnectionHelper;
 import co.edu.udea.compumovil.gr02_20172.lab3services.entities.User;
+import retrofit2.Call;
 
 public class Loggin extends AppCompatActivity implements View.OnClickListener{
 
@@ -49,26 +52,21 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener{
         Intent i;
         String username = txtUsuario.getText().toString();
         String password = txtClave.getText().toString();
-        User user = User.getInstance();
+        User user = new User();
         if(!username.equals("") && !password.equals("")){
-            SQLiteConnectionHelper connectionDb = new SQLiteConnectionHelper(this,"db_lab",null,1);
-            SQLiteDatabase db = connectionDb.getReadableDatabase();
-            String[] params = {username,password};
-            Cursor cursor = db.rawQuery("SELECT * FROM user WHERE username=? and password=?",params);
-            if (cursor.moveToFirst()) {
-                do {
-                    user.setId(cursor.getInt(0));
-                    user.setUsername(cursor.getString(1));
-                    user.setName(cursor.getString(3));
-                    user.setLastname(cursor.getString(4));
-                    user.setGender(cursor.getInt(5));
-                    user.setBirthday(cursor.getString(6));
-                    user.setPhone(cursor.getString(7));
-                    user.setAddress(cursor.getString(8));
-                    user.setEmail(cursor.getString(9));
-                    user.setCity(cursor.getString(10));
-                    user.setImage(cursor.getString(11));
-                } while(cursor.moveToNext());
+
+            Map<String, String> mapa = new HashMap<String, String>();
+            mapa.put("nombre", username);
+            mapa.put("contrasena",password);
+
+            RestClient restClient = RestClient.retrofit.create(RestClient.class);
+            Call<User> call = restClient.loginUser(mapa);
+            try {
+                user = call.execute().body();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (username.equals(user.getUsername()) && password.equals(user.getPassword())) {
                 i = new Intent(Loggin.this, Principal.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 SharedPreferences settings = getSharedPreferences(PREF_USER, 0);
@@ -77,11 +75,11 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener{
                 editor.commit();
                 startActivity(i);
                 finish();
-                }else{
-                    Toast.makeText(getApplicationContext(),"Usuario y/o contraseña incorrectos",Toast.LENGTH_SHORT).show();
-                }
             }else{
-                Toast.makeText(getApplicationContext(),"Usuario y contraseña requeridos",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"Usuario y/o contraseña incorrectos",Toast.LENGTH_SHORT).show();
+            }
+        }else{
+           Toast.makeText(getApplicationContext(),"Usuario y contraseña requeridos",Toast.LENGTH_SHORT).show();
         }
     }
 }

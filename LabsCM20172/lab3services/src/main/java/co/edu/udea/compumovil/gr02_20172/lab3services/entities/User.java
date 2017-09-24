@@ -9,8 +9,8 @@ public class User {
     private String username;
     private String password;
     private String name;
-    private String lastName;
-    private int gender;
+    private String last_name;
+    private Integer gender;
     private String birthday;
     private String phone;
     private String address;
@@ -18,21 +18,8 @@ public class User {
     private String city;
     private String image;
 
-    private static User instance = null;
-
-    protected User() {}
-
-    public static User getInstance(){
-        if(instance == null) {
-            instance = new User();
-        }
-        return instance;
+    public User() {
     }
-
-    public static void destroyInstance(){
-        instance = null;
-    }
-
 
     public String getImage() {
         return image;
@@ -75,18 +62,18 @@ public class User {
     }
 
     public String getLastname() {
-        return lastName;
+        return last_name;
     }
 
-    public void setLastname(String lastname) {
-        this.lastName = lastname;
+    public void setLastname(String last_name) {
+        this.last_name = last_name;
     }
 
-    public int getGender() {
+    public Integer getGender() {
         return gender;
     }
 
-    public void setGender(int gender) {
+    public void setGender(Integer gender) {
         this.gender = gender;
     }
 

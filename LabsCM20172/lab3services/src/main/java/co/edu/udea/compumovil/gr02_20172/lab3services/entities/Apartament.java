@@ -17,14 +17,13 @@ public class Apartament implements Serializable {
     private int idUSer;
     private Double area;
     private String description;
-    private List<Resource> resources;
     private String location;
     private int numRooms;
 
     public Apartament() {
     }
 
-    public Apartament(int id, String name, String type, int value, int idUSer, Double area, String description, List<Resource> resources, String location, int numRooms) {
+    public Apartament(int id, String name, String type, int value, int idUSer, Double area, String description, String location, int numRooms) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -32,7 +31,6 @@ public class Apartament implements Serializable {
         this.idUSer = idUSer;
         this.area = area;
         this.description = description;
-        this.resources = resources;
         this.location = location;
         this.numRooms = numRooms;
     }
@@ -91,16 +89,6 @@ public class Apartament implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<Resource> getResources() {
-        return resources;
-    }
-
-    public Resource getResource(int i){return resources.get(i);}
-
-    public void setResources(List<Resource> resources) {
-        this.resources = resources;
     }
 
     public String getLocation() {

@@ -35,19 +35,19 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import co.edu.udea.compumovil.gr02_20172.lab3services.Adapter.ApartamentoAdapter;
 import co.edu.udea.compumovil.gr02_20172.lab3services.Adapter.UploadPhotosAdapter;
+import co.edu.udea.compumovil.gr02_20172.lab3services.Interface.RestClient;
 import co.edu.udea.compumovil.gr02_20172.lab3services.R;
-import co.edu.udea.compumovil.gr02_20172.lab3services.SQLiteConnectionHelper;
 import co.edu.udea.compumovil.gr02_20172.lab3services.Validacion.Validation;
-import co.edu.udea.compumovil.gr02_20172.lab3services.Vista.Loggin;
 import co.edu.udea.compumovil.gr02_20172.lab3services.Vista.Principal;
-import co.edu.udea.compumovil.gr02_20172.lab3services.Vista.Registro;
 import co.edu.udea.compumovil.gr02_20172.lab3services.entities.Apartament;
-import co.edu.udea.compumovil.gr02_20172.lab3services.entities.User;
+import co.edu.udea.compumovil.gr02_20172.lab3services.entities.Resource;
+import co.edu.udea.compumovil.gr02_20172.lab3services.entities.User_Singleton;
+import retrofit2.Call;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -276,46 +276,32 @@ public class RegistroApartamento extends Fragment{
     }
 
     public void registerApartment(){
-        SQLiteConnectionHelper connectionDb = new SQLiteConnectionHelper(rootView.getContext(),"db_lab",null,1);
-        SQLiteDatabase db = connectionDb.getWritableDatabase();
-        ContentValues values = new ContentValues();
+        Apartament newApartament = new Apartament();
 
-        values.put("apartamentname",txtNombreInmueble.getText().toString());
-        values.put("type",txtTipoInmueble.getText().toString());
-        values.put("value",Integer.parseInt(txtValor.getText().toString()));
-        values.put("id_user", User.getInstance().getId());
-        values.put("area",Double.parseDouble(txtArea.getText().toString()));
-        values.put("description",txtDescripcionApartamento.getText().toString());
-        values.put("num_rooms",Integer.parseInt(txtCuartos.getText().toString()));
-        values.put("location",txtUbicacion.getText().toString());
-        Long registered = db.insert("apartament",null,values);
-        if(registered != -1){
-            Toast.makeText(rootView.getContext(),"Saved:"+registered,Toast.LENGTH_SHORT).show();
-            registerImg_Apartment();
-            Intent i = new Intent(getContext(),Principal.class);
-            startActivity(i);
-        }else{
-            Toast.makeText(rootView.getContext(),"Error",Toast.LENGTH_SHORT).show();
+        newApartament.setName(txtNombreInmueble.getText().toString());
+        newApartament.setType(txtTipoInmueble.getText().toString());
+        newApartament.setValue(Integer.parseInt(txtValor.getText().toString()));
+        newApartament.setIdUSer(User_Singleton.getInstance().getId());
+        newApartament.setArea(Double.parseDouble(txtArea.getText().toString()));
+        newApartament.setDescription(txtDescripcionApartamento.getText().toString());
+        newApartament.setNumRooms(Integer.parseInt(txtCuartos.getText().toString()));
+        newApartament.setLocation(txtUbicacion.getText().toString());
+
+        RestClient restClient = RestClient.retrofit.create(RestClient.class);
+        Call<Apartament> call = restClient.createApartament(newApartament);
+        try {
+            call.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
+        Toast.makeText(rootView.getContext(),"Saved:",Toast.LENGTH_SHORT).show();
+        registerImg_Apartment();
+        Intent i = new Intent(getContext(),Principal.class);
+        startActivity(i);
     }
 
     public void registerImg_Apartment(){
-        SQLiteConnectionHelper connectionDb = new SQLiteConnectionHelper(rootView.getContext(),"db_lab",null,1);
-        SQLiteDatabase db = connectionDb.getWritableDatabase();
-        ContentValues values = new ContentValues();
-
-        String[] params = {txtNombreInmueble.getText().toString()};
-        Cursor cursor = db.rawQuery("SELECT id FROM apartament WHERE apartamentname=?",params);
-        if (cursor.moveToFirst()) {
-            int a = cursor.getInt(0);
-            for(String s: photosList){
-                values.put("id_apartament",a);
-                values.put("image",s);
-                Long registered = db.insert("resource",null,values);
-                Toast.makeText(rootView.getContext(),"Saved:"+registered,Toast.LENGTH_SHORT).show();
-            }
-        }
+        Resource newResource = new Resource();
     }
 
     @Override
@@ -333,7 +319,6 @@ public class RegistroApartamento extends Fragment{
                                 public void onScanCompleted(String path, Uri uri) {
                                     Log.i("ExternalStorage", "Scanned " + path + ":");
                                     Log.i("ExternalStorage", "-> Uri = " + uri);
-                                    //informacion.getData().setRuta_foto(path);
                                 }
                             });
 
