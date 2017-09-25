@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import java.util.Locale;
 import co.edu.udea.compumovil.gr02_20172.lab3services.Interface.IComunicaFragments;
@@ -71,7 +72,9 @@ public class Principal extends AppCompatActivity
         userNameView.setText(user.getName()+" "+ user.getLastname());
         String userI = user.getImage();
         if(userI != null && !userI.equals("")) {
-            userImage.setImageURI(Uri.parse(user.getImage()));
+            Glide.with(Principal.this)
+                    .load(Uri.parse(user.getImage()))
+                    .into(userImage);
         }
     }
 
@@ -162,7 +165,7 @@ public class Principal extends AppCompatActivity
                 startActivity(i);
                 break;
             case R.id.nav_cerrarSesion:
-                //User.destroyInstance();
+                User_Singleton.destroyInstance();
                 SharedPreferences settings = getSharedPreferences(PREF_USER, 0);
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putInt("userId",0);
@@ -204,12 +207,10 @@ public class Principal extends AppCompatActivity
 
     @Override
     public void enviarApartamento(Apartament apto) {
-
         DetalleApartamento detalleApartamento=new DetalleApartamento();
         Bundle bundleEnvio=new Bundle();
         bundleEnvio.putSerializable("objeto",apto);
         detalleApartamento.setArguments(bundleEnvio);
-            //cargamos el fragment en el Activity
         changeFragment(detalleApartamento);
     }
 

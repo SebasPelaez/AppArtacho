@@ -294,7 +294,7 @@ public class RegistroApartamento extends Fragment{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Toast.makeText(rootView.getContext(),"Saved:",Toast.LENGTH_SHORT).show();
+        Toast.makeText(rootView.getContext(),"Apartamento guardado:",Toast.LENGTH_SHORT).show();
         registerImg_Apartment();
         Intent i = new Intent(getContext(),Principal.class);
         startActivity(i);

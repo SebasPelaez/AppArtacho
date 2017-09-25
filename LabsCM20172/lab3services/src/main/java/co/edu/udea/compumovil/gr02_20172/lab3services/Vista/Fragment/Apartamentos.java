@@ -74,8 +74,8 @@ public class Apartamentos extends Fragment implements SearchView.OnQueryTextList
         recyclerView.setHasFixedSize(true);
 
         apartamentoList = new ArrayList<>();
-        adapter = new ApartamentoAdapter(rootView.getContext(), apartamentoList);
         prepareApartamentos();
+        adapter = new ApartamentoAdapter(rootView.getContext(), apartamentoList);
         recyclerView.setAdapter(adapter);
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -103,7 +103,7 @@ public class Apartamentos extends Fragment implements SearchView.OnQueryTextList
         } catch (IOException e) {
             e.printStackTrace();
         }
-        adapter.notifyDataSetChanged();
+        //adapter.notifyDataSetChanged();
     }
 
     @Override

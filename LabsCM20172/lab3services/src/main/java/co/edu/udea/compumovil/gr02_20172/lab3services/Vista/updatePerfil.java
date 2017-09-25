@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.io.File;
@@ -288,12 +289,16 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
         editEmail.setText(user.getEmail());
         if (user.getGender() == 1) {
             editMasc.setChecked(true);
+            editGender=1;
         } else {
             editFem.setChecked(true);
+            editGender=0;
         }
         String userI = user.getImage();
         if(userI !=null &&!userI.equals("")){
-            editImage.setImageURI(Uri.parse(user.getImage()));
+            Glide.with(updatePerfil.this)
+                    .load(Uri.parse(user.getImage()))
+                    .into(editImage);
         }
         ArrayAdapter adapterCiudades = new ArrayAdapter(this,android.R.layout.simple_list_item_1,ciudades);
         editCity.setAdapter(adapterCiudades);
@@ -312,8 +317,13 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
         editUser.setAddress(editAddress.getText().toString());
         editUser.setEmail(editEmail.getText().toString());
         editUser.setCity(editCity.getText().toString());
-        editUser.setPassword(editCity.getText().toString());
-        editUser.setImage(imagePath);
+        editUser.setPassword(confirmPassword.getText().toString());
+        editUser.setImage(imagePath);//CORREGIR
+
+        editUser.setId(User_Singleton.getInstance().getId());
+        editUser.setUsername(User_Singleton.getInstance().getUsername());
+        editUser.setBirthday(User_Singleton.getInstance().getBirthday());
+        editUser.setImage(User_Singleton.getInstance().getImage());//QUITAR
 
         RestClient restClient = RestClient.retrofit.create(RestClient.class);
         Call<User> call = restClient.editUser(editUser);
@@ -322,6 +332,8 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
         } catch (IOException e) {
             e.printStackTrace();
         }
+        User_Singleton.destroyInstance();
+        User_Singleton.getInstance(editUser);
         Toast.makeText(this, "Informacion editada", Toast.LENGTH_SHORT).show();
         Intent i = new Intent(updatePerfil.this,Principal.class);
         startActivity(i);

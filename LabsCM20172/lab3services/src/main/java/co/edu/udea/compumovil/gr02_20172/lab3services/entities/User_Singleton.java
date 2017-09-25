@@ -14,6 +14,13 @@ public class User_Singleton {
         return instance;
     }
 
+    public static User getInstance(User u) {
+        if(instance == null) {
+            instance = u;
+        }
+        return instance;
+    }
+
     public static void destroyInstance(){
         instance = null;
     }

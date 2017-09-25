@@ -10,10 +10,12 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import co.edu.udea.compumovil.gr02_20172.lab3services.R;
 import co.edu.udea.compumovil.gr02_20172.lab3services.entities.User;
+import co.edu.udea.compumovil.gr02_20172.lab3services.entities.User_Singleton;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,8 +56,7 @@ public class Perfil extends Fragment {
     }
 
     public void recuperarInformacion() {
-        /*
-        User user = User.getInstance();
+        User user = User_Singleton.getInstance();
         nombre.setText(nombre.getText().toString() + ": " + user.getName());
         apellido.setText(apellido.getText().toString() + ": " + user.getLastname());
         telefono.setText(telefono.getText().toString() + ": " + user.getPhone());
@@ -69,8 +70,10 @@ public class Perfil extends Fragment {
         }
         if(!user.getImage().equals("")){
             Uri i = Uri.parse(user.getImage());
-            foto.setImageURI(Uri.parse(user.getImage()));
-        }*/
+            Glide.with(Perfil.this)
+                    .load(i)
+                    .into(foto);
+        }
     }
 
     @Override

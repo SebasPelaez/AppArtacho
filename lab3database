@@ -5,14 +5,14 @@ CREATE TABLE IF NOT EXISTS `user` (
 `name` VARCHAR(20) NOT NULL,
 `last_name` VARCHAR(20) NOT NULL,
 `gender` INT NOT NULL,
-`birthday` VARCHAR(20) NOT NULL,
-`phone` VARCHAR(20) NOT NULL, 
-`address` VARCHAR(20) NOT NULL, 
-`email` VARCHAR(20) NOT NULL, 
-`city` VARCHAR(20) NOT NULL, 
-`image` VARCHAR(20) NOT NULL, 
+`birthday` VARCHAR(10) NOT NULL,
+`phone` VARCHAR(13) NOT NULL, 
+`address` VARCHAR(100) NOT NULL, 
+`email` VARCHAR(50) NOT NULL, 
+`city` VARCHAR(30) NOT NULL, 
+`image` VARCHAR(400) NOT NULL, 
 PRIMARY KEY( `id` )
-) ENGINE=InnoDB  AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11;
 
 CREATE TABLE IF NOT EXISTS `apartament` (
 `id` INT NOT NULL AUTO_INCREMENT, 
@@ -21,12 +21,12 @@ CREATE TABLE IF NOT EXISTS `apartament` (
 `value` INT NOT NULL,
 `idUSer` INT NOT NULL,
 `area` FLOAT NOT NULL,
-`description` VARCHAR(20) NOT NULL,
-`location` VARCHAR(20) NOT NULL, 
+`description` VARCHAR(400) NOT NULL,
+`location` VARCHAR(100) NOT NULL, 
 `numRooms` INT NOT NULL,  
 PRIMARY KEY( `id` ),
 FOREIGN KEY (`idUSer`) REFERENCES user(`id`)
-) ENGINE=InnoDB  AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11;
 
 CREATE TABLE IF NOT EXISTS `resource` (
 `id` INT NOT NULL AUTO_INCREMENT, 
@@ -34,4 +34,13 @@ CREATE TABLE IF NOT EXISTS `resource` (
 `pathResource` VARCHAR(400) NOT NULL,
 PRIMARY KEY( `id` ),
 FOREIGN KEY (`idApartment`) REFERENCES apartament(`id`)
-) ENGINE=InnoDB  AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11;
+
+insert into user (id,username, password, name, last_name, gender, birthday, phone, address, email, city, image) 
+values (1,"s","123","Sebas","Pelaez",1,"1994/12/06","3113490954","Calle 94","sebas@hotmail.com","Medellin","img01");
+
+insert into apartament (id,name, type, value, idUSer, area, description, location, numRooms) 
+values (1,"Mi apartamento","Apartamento",1500,1,150,"Esta es mi casita","Calle 94 #51-34",4);
+
+insert into apartament (id,name, type, value, idUSer, area, description, location, numRooms) 
+values (2,"Mi casa","Casa",2500,1,40,"Esta es otra casita","Calle 94 #51-34",4);

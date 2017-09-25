@@ -15,6 +15,7 @@ import java.util.Map;
 import co.edu.udea.compumovil.gr02_20172.lab3services.Interface.RestClient;
 import co.edu.udea.compumovil.gr02_20172.lab3services.R;
 import co.edu.udea.compumovil.gr02_20172.lab3services.entities.User;
+import co.edu.udea.compumovil.gr02_20172.lab3services.entities.User_Singleton;
 import retrofit2.Call;
 
 public class Loggin extends AppCompatActivity implements View.OnClickListener{
@@ -67,6 +68,7 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener{
                 e.printStackTrace();
             }
             if (username.equals(user.getUsername()) && password.equals(user.getPassword())) {
+                setUser(user);
                 i = new Intent(Loggin.this, Principal.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 SharedPreferences settings = getSharedPreferences(PREF_USER, 0);
@@ -81,5 +83,19 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener{
         }else{
            Toast.makeText(getApplicationContext(),"Usuario y contraseña requeridos",Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void setUser(User u) {
+        User_Singleton.getInstance().setId(u.getId());
+        User_Singleton.getInstance().setUsername(u.getUsername());
+        User_Singleton.getInstance().setName(u.getName());
+        User_Singleton.getInstance().setLastname(u.getLastname());
+        User_Singleton.getInstance().setGender(u.getGender());
+        User_Singleton.getInstance().setBirthday(u.getBirthday());
+        User_Singleton.getInstance().setPhone(u.getPhone());
+        User_Singleton.getInstance().setAddress(u.getAddress());
+        User_Singleton.getInstance().setEmail(u.getEmail());
+        User_Singleton.getInstance().setCity(u.getCity());
+        User_Singleton.getInstance().setImage(u.getImage());
     }
 }

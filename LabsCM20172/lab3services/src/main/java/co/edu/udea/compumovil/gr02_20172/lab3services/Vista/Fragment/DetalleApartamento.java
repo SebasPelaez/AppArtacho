@@ -84,7 +84,7 @@ public class DetalleApartamento extends Fragment{
         if (objetoApartamento != null) {
             apto= (Apartament) objetoApartamento.getSerializable("objeto");
             asignarInformacion(apto);
-            prepareApartamentos(apto);
+            //prepareApartamentos(apto);
         }
 
         return rootView;
