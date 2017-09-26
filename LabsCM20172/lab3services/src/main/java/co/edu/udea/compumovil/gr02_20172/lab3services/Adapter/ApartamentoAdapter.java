@@ -1,6 +1,7 @@
 package co.edu.udea.compumovil.gr02_20172.lab3services.Adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,11 +11,17 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import co.edu.udea.compumovil.gr02_20172.lab3services.Interface.RestClient;
 import co.edu.udea.compumovil.gr02_20172.lab3services.R;
 import co.edu.udea.compumovil.gr02_20172.lab3services.entities.Apartament;
+import co.edu.udea.compumovil.gr02_20172.lab3services.entities.Resource;
+import retrofit2.Call;
 
 /**
  * Created by Sebas on 2/09/2017.
@@ -72,8 +79,7 @@ public class ApartamentoAdapter extends RecyclerView.Adapter<ApartamentoAdapter.
         holder.area.setText("Área: "+apto.getArea());
         holder.descripcion.setText("Descripción: "+apto.getDescription());
 
-        // loading album cover using Glide library
-        //Glide.with(mContext).load(apto.getResource(0).getPathResource()).into(holder.thumbnail);//aca verificar si existte el path si no, es con la imagen
+        Glide.with(mContext).load(Uri.parse(findImages(apto.getId()))).into(holder.thumbnail);//aca verificar si existte el path si no, es con la imagen
 
     }
 
@@ -90,6 +96,25 @@ public class ApartamentoAdapter extends RecyclerView.Adapter<ApartamentoAdapter.
         apartamentoList= new ArrayList<>();
         apartamentoList.addAll(newList);
         notifyDataSetChanged();
+    }
+
+    private String findImages(int aptoId){
+        List<Resource> resources = null;
+        String path=null;
+        RestClient restClient = RestClient.retrofit.create(RestClient.class);
+        Call<List<Resource>> call = restClient.getResources();
+        try {
+            resources = call.execute().body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        for(Resource r: resources){
+            if(r.getIdApartment() == aptoId){
+                path=r.getPathResource();
+                break;
+            }
+        }
+        return path;
     }
     
 }

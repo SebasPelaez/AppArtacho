@@ -34,9 +34,9 @@ public interface RestClient {
     @GET("users/{id}")
     Call <User> getUser(@Path("id") Integer id);
 
-    //Loggin
-    @GET("users/findOne")
-    Call<User> loginUser(@QueryMap Map<String,String> filters);
+    //BUSCAR LOS USUARIOS
+    @GET("users")
+    Call<List<User>> getUsers();
 
     //Listar apartamentos
     @GET("apartaments")
@@ -49,6 +49,10 @@ public interface RestClient {
     //Listar un recurso por id
     @GET("resources/{id}")
     Call <Resource> getResource(@Path("id") Integer id);
+
+    //RECURSOS
+    @GET("resources")
+    Call<List<Resource>> getResources();
 
     public static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://192.168.1.53:3000/api/")

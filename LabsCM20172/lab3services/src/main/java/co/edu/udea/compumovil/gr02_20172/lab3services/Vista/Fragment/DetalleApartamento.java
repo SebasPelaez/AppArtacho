@@ -84,7 +84,7 @@ public class DetalleApartamento extends Fragment{
         if (objetoApartamento != null) {
             apto= (Apartament) objetoApartamento.getSerializable("objeto");
             asignarInformacion(apto);
-            //prepareApartamentos(apto);
+            prepareApartamentos(apto);
         }
 
         return rootView;
@@ -111,15 +111,19 @@ public class DetalleApartamento extends Fragment{
 
 
     private void prepareApartamentos(Apartament apto) {
+        List<Resource> resources = null;
         RestClient restClient = RestClient.retrofit.create(RestClient.class);
-        Call<Resource> call = restClient.getResource(apto.getId());
-        Resource currentResource = null;
+        Call<List<Resource>> call = restClient.getResources();
         try {
-            currentResource = call.execute().body();
+            resources = call.execute().body();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        photoList.add(currentResource.getPathResource());
+        for(Resource r: resources){
+            if(r.getIdApartment() == apto.getId()){
+                photoList.add(r.getPathResource());
+            }
+        }
         adapter.notifyDataSetChanged();
     }
 

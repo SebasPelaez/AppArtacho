@@ -1,6 +1,7 @@
 package co.edu.udea.compumovil.gr02_20172.lab3services.Adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,7 +50,7 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.MyViewHold
     public void onBindViewHolder(final BannerAdapter.MyViewHolder holder, int position) {
         String pathPhoto = photos.get(position);
         // loading album cover using Glide library
-        Glide.with(mContext).load(pathPhoto).into(holder.thumbnail);
+        Glide.with(mContext).load(Uri.parse(pathPhoto)).into(holder.thumbnail);
     }
 
     @Override

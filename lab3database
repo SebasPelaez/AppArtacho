@@ -44,3 +44,18 @@ values (1,"Mi apartamento","Apartamento",1500,1,150,"Esta es mi casita","Calle 9
 
 insert into apartament (id,name, type, value, idUSer, area, description, location, numRooms) 
 values (2,"Mi casa","Casa",2500,1,40,"Esta es otra casita","Calle 94 #51-34",4);
+
+insert into resource (id,idApartment, pathResource) 
+values (1,1,"http://192.168.1.53:3000/api/Containers/all/download/a.jpg");
+
+insert into resource (id,idApartment, pathResource) 
+values (2,2,"http://192.168.1.53:3000/api/Containers/all/download/b.jpg");
+
+insert into resource (id,idApartment, pathResource) 
+values (3,11,"http://192.168.1.53:3000/api/Containers/all/download/c.jpg");
+
+insert into resource (id,idApartment, pathResource) 
+values (4,11,"http://192.168.1.53:3000/api/Containers/all/download/d.jpg");
+
+insert into resource (id,idApartment, pathResource) 
+values (5,11,"http://192.168.1.53:3000/api/Containers/all/download/e.jpg");

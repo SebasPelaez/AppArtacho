@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import co.edu.udea.compumovil.gr02_20172.lab3services.Interface.RestClient;
@@ -53,21 +54,24 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener{
         Intent i;
         String username = txtUsuario.getText().toString();
         String password = txtClave.getText().toString();
-        User user = new User();
+        List<User> userList = null;
         if(!username.equals("") && !password.equals("")){
 
-            Map<String, String> mapa = new HashMap<String, String>();
-            mapa.put("nombre", username);
-            mapa.put("contrasena",password);
-
             RestClient restClient = RestClient.retrofit.create(RestClient.class);
-            Call<User> call = restClient.loginUser(mapa);
+            Call<List<User>> call = restClient.getUsers();
             try {
-                user = call.execute().body();
+                userList = call.execute().body();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            if (username.equals(user.getUsername()) && password.equals(user.getPassword())) {
+            User user = null;
+            for(User u: userList){
+                if (username.equals(u.getUsername()) && password.equals(u.getPassword())) {
+                    user=u;
+                    break;
+                }
+            }
+            if (user!=null) {
                 setUser(user);
                 i = new Intent(Loggin.this, Principal.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
