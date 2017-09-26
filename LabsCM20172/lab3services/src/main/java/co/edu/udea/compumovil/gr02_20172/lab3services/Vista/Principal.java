@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.mikhaellopez.circularimageview.CircularImageView;
@@ -46,6 +47,8 @@ public class Principal extends AppCompatActivity
     private Fragment fragmentGenerico;
     private static final String PREF_USER = "UserPref";
     private static final String PREF_GENERAL = "pref_general";
+
+    private IComunicaFragments actualizarApartamentos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +79,7 @@ public class Principal extends AppCompatActivity
                     .load(Uri.parse(user.getImage()))
                     .into(userImage);
         }
+
     }
 
     @Override
@@ -172,6 +176,14 @@ public class Principal extends AppCompatActivity
                 editor.commit();
                 i = new Intent(Principal.this, MainActivity.class);
                 startActivity(i);
+                break;
+            case R.id.nav_actualizar:
+                if(fragmentGenerico instanceof Apartamentos){
+                    actualizarApartamentos = (Apartamentos)fragmentGenerico;
+                    actualizarApartamentos.generarAccion("Actualizar_Aptos");
+                }else{
+                    Toast.makeText(this,"Se actualizaron los apartamentos",Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.nav_acercaDe:
                 i = new Intent(Principal.this, AboutActivity.class);

@@ -1,5 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-
     package="co.edu.udea.compumovil.gr02_20172.lab3services">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE"/>
 
     <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
 
@@ -36,8 +37,42 @@
         <activity
             android:name=".Vista.Fragment.SettingsActivity"
             android:label="@string/title_activity_settings" />
-        <activity android:name=".Vista.updatePerfil"></activity>
+        <activity android:name=".Vista.updatePerfil" />
         <activity android:name=".Vista.AboutActivity" />
+
+        <receiver android:name=".ReceiverWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_provider_info" />
+        </receiver>
+
+        <service
+            android:name=".Service.ServiceBoot"
+            android:enabled="true"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name=".Service.ServiceBoot"></action>
+            </intent-filter>
+
+        </service>
+
+        <receiver
+            android:name=".Service.ReceiverBoot"
+            android:enabled="true"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED">
+                    <category android:name="android.intent.category.DEFAULT"></category>
+                </action>
+            </intent-filter>
+
+        </receiver>
     </application>
 
 </manifest>

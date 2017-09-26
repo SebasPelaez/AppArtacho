@@ -1,5 +1,7 @@
 package co.edu.udea.compumovil.gr02_20172.lab3services.Interface;
 
+import android.graphics.Bitmap;
+
 import java.util.List;
 import java.util.Map;
 
@@ -46,16 +48,33 @@ public interface RestClient {
     @POST("apartaments")
     Call<Apartament> createApartament(@Body Apartament apartament);
 
-    //Listar un recurso por id
-    @GET("resources/{id}")
-    Call <Resource> getResource(@Path("id") Integer id);
+    //Listar un apartamento por id
+    @GET("apartaments/{id}")
+    Call <Apartament> getApartament(@Path("id") Integer id);
+
+    //Contar los apartamentos
+    @GET("apartaments/count")
+    Call <Integer> countApartaments();
 
     //RECURSOS
     @GET("resources")
     Call<List<Resource>> getResources();
 
+    //CONTAINER
+    @GET("ontainers/all/upload")
+    Call uploadPhoto(@Body String photo);
+
+    //PARA LA CASA
+    /*
     public static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://192.168.1.53:3000/api/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+    */
+
+    //PARA EL LIS
+    public static final Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl("http://192.168.194.46:3000/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 }

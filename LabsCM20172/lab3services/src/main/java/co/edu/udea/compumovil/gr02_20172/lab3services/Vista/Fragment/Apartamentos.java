@@ -35,7 +35,7 @@ import retrofit2.Call;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Apartamentos extends Fragment implements SearchView.OnQueryTextListener {
+public class Apartamentos extends Fragment implements SearchView.OnQueryTextListener,IComunicaFragments{
 
     private RecyclerView recyclerView;
     private ApartamentoAdapter adapter;
@@ -75,19 +75,10 @@ public class Apartamentos extends Fragment implements SearchView.OnQueryTextList
 
         apartamentoList = new ArrayList<>();
         prepareApartamentos();
-        adapter = new ApartamentoAdapter(rootView.getContext(), apartamentoList);
-        recyclerView.setAdapter(adapter);
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(llm);
-
-        adapter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                interfaceComunicaFragments.enviarApartamento(apartamentoList.get(recyclerView.getChildAdapterPosition(view)));
-            }
-        });
-
+        
         return rootView;
     }
 
@@ -103,7 +94,9 @@ public class Apartamentos extends Fragment implements SearchView.OnQueryTextList
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //adapter.notifyDataSetChanged();
+        adapter = new ApartamentoAdapter(rootView.getContext(), apartamentoList);
+        recyclerView.setAdapter(adapter);
+        handlerClick();
     }
 
     @Override
@@ -150,4 +143,29 @@ public class Apartamentos extends Fragment implements SearchView.OnQueryTextList
         super.onSaveInstanceState(outState);
     }
 
+    @Override
+    public void enviarApartamento(Apartament apto) {
+
+    }
+
+    @Override
+    public void generarAccion(String tag) {
+        switch (tag){
+            case "Actualizar_Aptos":
+                prepareApartamentos();
+                adapter.notifyDataSetChanged();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void handlerClick(){
+        adapter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                interfaceComunicaFragments.enviarApartamento(apartamentoList.get(recyclerView.getChildAdapterPosition(view)));
+            }
+        });
+    }
 }

@@ -79,7 +79,7 @@ public class ApartamentoAdapter extends RecyclerView.Adapter<ApartamentoAdapter.
         holder.area.setText("Área: "+apto.getArea());
         holder.descripcion.setText("Descripción: "+apto.getDescription());
 
-        Glide.with(mContext).load(Uri.parse(findImages(apto.getId()))).into(holder.thumbnail);//aca verificar si existte el path si no, es con la imagen
+        //Glide.with(mContext).load(Uri.parse(findImages(apto.getId()))).into(holder.thumbnail);
 
     }
 

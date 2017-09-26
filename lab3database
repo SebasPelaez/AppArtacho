@@ -37,7 +37,7 @@ FOREIGN KEY (`idApartment`) REFERENCES apartament(`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11;
 
 insert into user (id,username, password, name, last_name, gender, birthday, phone, address, email, city, image) 
-values (1,"s","123","Sebas","Pelaez",1,"1994/12/06","3113490954","Calle 94","sebas@hotmail.com","Medellin","img01");
+values (1,"s","123","Sebas","Pelaez",1,"1994/12/06","3113490954","Calle 94","sebas@hotmail.com","Medellin","http://192.168.1.53:3000/api/Containers/all/download/1user.jpg");
 
 insert into apartament (id,name, type, value, idUSer, area, description, location, numRooms) 
 values (1,"Mi apartamento","Apartamento",1500,1,150,"Esta es mi casita","Calle 94 #51-34",4);

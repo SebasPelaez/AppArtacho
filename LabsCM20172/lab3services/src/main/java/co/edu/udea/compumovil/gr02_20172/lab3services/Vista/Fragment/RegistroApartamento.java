@@ -1,6 +1,7 @@
 package co.edu.udea.compumovil.gr02_20172.lab3services.Vista.Fragment;
 
 import android.annotation.TargetApi;
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,6 +33,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import java.io.File;
@@ -42,6 +44,7 @@ import java.util.List;
 import co.edu.udea.compumovil.gr02_20172.lab3services.Adapter.UploadPhotosAdapter;
 import co.edu.udea.compumovil.gr02_20172.lab3services.Interface.RestClient;
 import co.edu.udea.compumovil.gr02_20172.lab3services.R;
+import co.edu.udea.compumovil.gr02_20172.lab3services.ReceiverWidget;
 import co.edu.udea.compumovil.gr02_20172.lab3services.Validacion.Validation;
 import co.edu.udea.compumovil.gr02_20172.lab3services.Vista.Principal;
 import co.edu.udea.compumovil.gr02_20172.lab3services.entities.Apartament;
@@ -296,6 +299,7 @@ public class RegistroApartamento extends Fragment{
         }
         Toast.makeText(rootView.getContext(),"Apartamento guardado:",Toast.LENGTH_SHORT).show();
         registerImg_Apartment();
+
         Intent i = new Intent(getContext(),Principal.class);
         startActivity(i);
     }
@@ -321,15 +325,14 @@ public class RegistroApartamento extends Fragment{
                                     Log.i("ExternalStorage", "-> Uri = " + uri);
                                 }
                             });
-
-
-                    Bitmap bitmap = BitmapFactory.decodeFile(mPath);
+                    //saveImage(mPath);
                     photosList.add(mPath);
                     adapter.notifyDataSetChanged();
                     break;
                 case SELECT_PICTURE:
                     Uri path = data.getData();
                     imagePath = path.toString();
+                    //saveImage(imagePath);
                     photosList.add(imagePath);
                     adapter.notifyDataSetChanged();
                     break;
@@ -340,6 +343,17 @@ public class RegistroApartamento extends Fragment{
     @Override
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
+    }
+
+    private void saveImage(String pathImage){
+        Bitmap bmap = BitmapFactory.decodeFile(pathImage);
+        RestClient restClient = RestClient.retrofit.create(RestClient.class);
+        Call call = restClient.uploadPhoto(pathImage);
+        try {
+            call.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
