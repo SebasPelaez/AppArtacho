@@ -50,29 +50,6 @@
                 android:resource="@xml/widget_provider_info" />
         </receiver>
 
-        <service
-            android:name=".Service.ServiceBoot"
-            android:enabled="true"
-            android:exported="true">
-
-            <intent-filter>
-                <action android:name=".Service.ServiceBoot"></action>
-            </intent-filter>
-
-        </service>
-
-        <receiver
-            android:name=".Service.ReceiverBoot"
-            android:enabled="true"
-            android:exported="true">
-
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED">
-                    <category android:name="android.intent.category.DEFAULT"></category>
-                </action>
-            </intent-filter>
-
-        </receiver>
     </application>
 
 </manifest>

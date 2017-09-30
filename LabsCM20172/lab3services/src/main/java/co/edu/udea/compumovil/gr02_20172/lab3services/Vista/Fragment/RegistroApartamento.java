@@ -1,15 +1,9 @@
 package co.edu.udea.compumovil.gr02_20172.lab3services.Vista.Fragment;
 
 import android.annotation.TargetApi;
-import android.app.PendingIntent;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
@@ -33,7 +27,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import java.io.File;
@@ -44,7 +37,6 @@ import java.util.List;
 import co.edu.udea.compumovil.gr02_20172.lab3services.Adapter.UploadPhotosAdapter;
 import co.edu.udea.compumovil.gr02_20172.lab3services.Interface.RestClient;
 import co.edu.udea.compumovil.gr02_20172.lab3services.R;
-import co.edu.udea.compumovil.gr02_20172.lab3services.ReceiverWidget;
 import co.edu.udea.compumovil.gr02_20172.lab3services.Validacion.Validation;
 import co.edu.udea.compumovil.gr02_20172.lab3services.Vista.Principal;
 import co.edu.udea.compumovil.gr02_20172.lab3services.entities.Apartament;
@@ -305,7 +297,26 @@ public class RegistroApartamento extends Fragment{
     }
 
     public void registerImg_Apartment(){
-        Resource newResource = new Resource();
+        String images[] = {"http://192.168.1.53:3000/api/Containers/all/download/a.jpg","http://192.168.1.53:3000/api/Containers/all/download/b.jpg",
+                "http://192.168.1.53:3000/api/Containers/all/download/c.jpg","http://192.168.1.53:3000/api/Containers/all/download/d.jpg",
+                "http://192.168.1.53:3000/api/Containers/all/download/e.jpg","http://192.168.1.53:3000/api/Containers/all/download/f.jpg",
+                "http://192.168.1.53:3000/api/Containers/all/download/g.jpg","http://192.168.1.53:3000/api/Containers/all/download/h.jpg",
+                "http://192.168.1.53:3000/api/Containers/all/download/i.jpg"};
+
+        int rand = randomize(9,1);
+        for(int i=0;i<rand;i++){
+            Resource newResource = new Resource();
+            newResource.setIdApartment(lastApartment());
+            newResource.setPathResource(images[randomize(9,1)]);
+
+            RestClient restClient = RestClient.retrofit.create(RestClient.class);
+            Call<Resource> call = restClient.createResource(newResource);
+            try {
+                call.execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -325,14 +336,12 @@ public class RegistroApartamento extends Fragment{
                                     Log.i("ExternalStorage", "-> Uri = " + uri);
                                 }
                             });
-                    //saveImage(mPath);
                     photosList.add(mPath);
                     adapter.notifyDataSetChanged();
                     break;
                 case SELECT_PICTURE:
                     Uri path = data.getData();
                     imagePath = path.toString();
-                    //saveImage(imagePath);
                     photosList.add(imagePath);
                     adapter.notifyDataSetChanged();
                     break;
@@ -345,15 +354,22 @@ public class RegistroApartamento extends Fragment{
         super.onSaveInstanceState(outState);
     }
 
-    private void saveImage(String pathImage){
-        Bitmap bmap = BitmapFactory.decodeFile(pathImage);
+    private int lastApartment(){
+        int id=0;
         RestClient restClient = RestClient.retrofit.create(RestClient.class);
-        Call call = restClient.uploadPhoto(pathImage);
+        Call<List<Apartament>> call = restClient.getApartaments();
+        List<Apartament> apartaments;
         try {
-            call.execute();
+            apartaments = call.execute().body();
+            id = apartaments.get(apartaments.size()-1).getId();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return id;
+    }
+
+    public int randomize(int top, int below) {
+       return (int) (Math.random() * (top - below + 1) + below);
     }
 
 }

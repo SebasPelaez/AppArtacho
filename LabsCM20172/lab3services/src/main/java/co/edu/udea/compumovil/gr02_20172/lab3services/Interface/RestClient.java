@@ -8,11 +8,13 @@ import java.util.Map;
 import co.edu.udea.compumovil.gr02_20172.lab3services.entities.Apartament;
 import co.edu.udea.compumovil.gr02_20172.lab3services.entities.Resource;
 import co.edu.udea.compumovil.gr02_20172.lab3services.entities.User;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -52,29 +54,27 @@ public interface RestClient {
     @GET("apartaments/{id}")
     Call <Apartament> getApartament(@Path("id") Integer id);
 
-    //Contar los apartamentos
-    @GET("apartaments/count")
-    Call <Integer> countApartaments();
-
     //RECURSOS
     @GET("resources")
     Call<List<Resource>> getResources();
 
-    //CONTAINER
-    @GET("ontainers/all/upload")
-    Call uploadPhoto(@Body String photo);
+    //RECURSOS
+    @POST("resources")
+    Call<Resource> createResource(@Body Resource resource);
+
 
     //PARA LA CASA
-    /*
     public static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://192.168.1.53:3000/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
-    */
+
 
     //PARA EL LIS
+    /*
     public static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://192.168.194.46:3000/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
+            */
 }

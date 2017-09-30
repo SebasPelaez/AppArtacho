@@ -78,7 +78,7 @@ public class Apartamentos extends Fragment implements SearchView.OnQueryTextList
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(llm);
-        
+
         return rootView;
     }
 
