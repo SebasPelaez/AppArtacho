@@ -64,17 +64,18 @@ public interface RestClient {
 
 
     //PARA LA CASA
+    /*
     public static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://192.168.1.53:3000/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
-
+*/
     //PARA EL LIS
-    /*
+
     public static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://192.168.194.46:3000/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
-            */
+
 }
