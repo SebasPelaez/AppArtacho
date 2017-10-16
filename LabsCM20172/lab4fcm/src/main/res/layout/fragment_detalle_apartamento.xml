@@ -1,0 +1,91 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="co.edu.udea.compumovil.gr02_20172.lab4fmc.Vista.Fragment.DetalleApartamento">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_viewbanner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/lblNombreApartamento"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/nombreInmueble"
+                    android:textSize="18dp"/>
+
+                <TextView
+                    android:id="@+id/lblTipoApartamento"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/TipoApartamento"
+                    android:textSize="18dp"/>
+
+                <TextView
+                    android:id="@+id/lblValorApartamento"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ValorApartamento"
+                    android:textSize="18dp"/>
+
+                <TextView
+                    android:id="@+id/lblNumeroHabitaciones"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/NumeroHabitaciones"
+                    android:textSize="18dp"/>
+
+                <TextView
+                    android:id="@+id/lblArea"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/AreaApartamento"
+                    android:textSize="18dp"/>
+
+                <TextView
+                    android:id="@+id/lblDescripcion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/DescripcionApartamento"
+                    android:textSize="18dp"/>
+
+                <Button
+                    android:id="@+id/btnUbicacion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="onClick"
+                    android:backgroundTint="@color/accent"
+                    android:textColor="#ffffff"
+                    android:text="@string/UbicaciónApartamento" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>

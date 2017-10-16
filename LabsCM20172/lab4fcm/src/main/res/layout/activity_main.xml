@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary"
+    tools:context="co.edu.udea.compumovil.gr02_20172.lab4fmc.MainActivity">
+
+    <ImageView
+        android:id="@+id/imageView_Splash"
+        android:layout_width="200dp"
+        android:layout_height="4200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/logo"
+        />
+
+</RelativeLayout>

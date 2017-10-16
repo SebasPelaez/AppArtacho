@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "290030320885",
+    "firebase_url": "https://appartacho.firebaseio.com",
+    "project_id": "appartacho",
+    "storage_bucket": "appartacho.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:290030320885:android:794401481d00e050",
+        "android_client_info": {
+          "package_name": "co.edu.udea.compumovil.gr02_20172.lab4fcm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "290030320885-ptma8bcfbv9taradbflqd34u20b05lsn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "co.edu.udea.compumovil.gr02_20172.lab4fcm",
+            "certificate_hash": "c4a0b73a6ecb9eae329999a5c56a4c7ba07780b8"
+          }
+        },
+        {
+          "client_id": "290030320885-60lgg1c1rfaom0o56hio9hkvik0i9ame.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0o5B6Bjx8GJXsWQsdRz3EP3Sda1DJJBk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "290030320885-60lgg1c1rfaom0o56hio9hkvik0i9ame.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
