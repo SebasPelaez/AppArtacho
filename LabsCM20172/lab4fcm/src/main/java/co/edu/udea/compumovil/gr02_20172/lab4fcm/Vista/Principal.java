@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -24,6 +25,12 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import java.util.Locale;
@@ -40,7 +47,7 @@ import co.edu.udea.compumovil.gr02_20172.lab4fcm.entities.User;
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.entities.User_Singleton;
 
 public class Principal extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,IComunicaFragments {
+        implements NavigationView.OnNavigationItemSelectedListener,IComunicaFragments,GoogleApiClient.OnConnectionFailedListener {
 
     private CircularImageView userImage;
     private TextView userNameView;
@@ -49,6 +56,8 @@ public class Principal extends AppCompatActivity
     private Fragment fragmentGenerico;
     private static final String PREF_USER = "UserPref";
     private static final String PREF_GENERAL = "pref_general";
+
+    private GoogleApiClient googleApiClient;
 
     private IComunicaFragments actualizarApartamentos;
 
@@ -81,6 +90,15 @@ public class Principal extends AppCompatActivity
                     .load(Uri.parse(user.getImage()))
                     .into(userImage);
         }
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
 
     }
 
@@ -176,11 +194,7 @@ public class Principal extends AppCompatActivity
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putInt("userId",0);
                 editor.commit();
-                FirebaseAuth.getInstance().signOut();
-                LoginManager.getInstance().logOut();
-                i = new Intent(Principal.this, MainActivity.class);
-                startActivity(i);
-                finish();
+                logOut();
                 break;
             case R.id.nav_actualizar:
                 if(fragmentGenerico instanceof Apartamentos){
@@ -203,23 +217,18 @@ public class Principal extends AppCompatActivity
     }
 
     public void changeFragment(Fragment fragment){
-
         // Create transaction
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-
         // Create new fragment
         //Fragment fragmentA = new FragmentA();
         // Replace whatever is in the fragment_container view with this fragment
         transaction.replace(R.id.fragment_container, fragment);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-
         // add the transaction to the back stack (optional)
         transaction.addToBackStack(null);
-
         // Commit the transaction
         transaction.commit();
-
     }
 
     @Override
@@ -242,4 +251,44 @@ public class Principal extends AppCompatActivity
                 break;
         }
     }
+
+    private void logOut() {
+        FirebaseAuth.getInstance().signOut(); //CIERRO SESIÓN EN FIREBASE SEA, CUAL SEA EL MÉTODO
+        LoginManager.getInstance().logOut(); //CIERRO SESIÓN EN FACEBOOK
+        logOutGoogle(); //CIERRO SESIÓN DE GOOGLE DIRECTAMENTE
+        revokeGoogle(); // QUITO TODOS RASTRO DE QUE ENTRE CON GOOGLE
+        returnLoginScreen(); //VUELVO A LA VENTANA DE LOGIN
+    }
+
+    private void returnLoginScreen(){
+        Intent i;
+        i = new Intent(Principal.this, MainActivity.class);
+        startActivity(i);
+        finish();
+    }
+
+    private void logOutGoogle(){
+        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
+            @Override
+            public void onResult(@NonNull Status status) {
+                if(!status.isSuccess()){
+                    Toast.makeText(getApplicationContext(),"Ocurrió un error en logOutGoogle",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void revokeGoogle(){
+        Auth.GoogleSignInApi.revokeAccess(googleApiClient).setResultCallback(new ResultCallback<Status>() {
+            @Override
+            public void onResult(@NonNull Status status) {
+                if(!status.isSuccess()){
+                    Toast.makeText(getApplicationContext(),"Ocurrió un error en revokeGoogle",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) { }
 }

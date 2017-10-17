@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FacebookSdk.sdkInitialize(getApplicationContext());
+        FacebookSdk.sdkInitialize(getApplicationContext()); //INICIALIZAMOS EL SDK DE FACEBOOK PARA GUARDAR REGISTRO DE LO QUE PASE CON ESTA API
         AppEventsLogger.activateApp(this);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -72,5 +72,5 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-    }
+}
 

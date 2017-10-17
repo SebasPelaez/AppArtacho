@@ -1,11 +1,9 @@
 package co.edu.udea.compumovil.gr02_20172.lab4fcm.Vista;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -17,6 +15,13 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -24,45 +29,70 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.R;
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.entities.User_Singleton;
 
-public class Loggin extends AppCompatActivity implements View.OnClickListener{
+
+public class Loggin extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener{
 
     private EditText txtUsuario;
     private EditText txtClave;
 
-    private LoginButton loginButtonFacebook;
-    private CallbackManager callbackManager;
-    private FirebaseAuth firebaseAuth;
-    private FirebaseAuth.AuthStateListener firebaseAuthListener;
+    private LoginButton loginButtonFacebook; //BOTÓN DE INICIO DE FACEBOOK
+    private SignInButton loginButtonGoogle; //BOTÓN DE INICIO DE GOOGLE
+
+    private CallbackManager callbackManager; //CALLBACK PARA LOS LLAMADOS DE FACEBOOK
+    private FirebaseAuth firebaseAuth; //VARIABLE QUE MANEJARA EL LOGUEO RELACIONADO A FIREBASE
+    private FirebaseAuth.AuthStateListener firebaseAuthListener; //LISTENER DE FIREBASE QUE REGISTRA EVENTOS
+    private GoogleApiClient googleApiClient; //COMPONENTE PARA USAR LOS SERVICIOS DE GOOGLE
 
     private ProgressBar progressBar;
-
+    private static final int SIGN_IN_GOOGLE_CODE = 777; //CÓGIDO PARA VALIDAR SI ESCOGÍ CORRECTAMENTE UNA CUENTA DE GOOGLE
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loggin);
 
-        progressBar = (ProgressBar)findViewById(R.id.progressBarLoging);
+        progressBar = (ProgressBar)findViewById(R.id.progressBarLoging); //SE INFLA EL PROGRESS BAR
+        loginButtonGoogle = (SignInButton) findViewById(R.id.login_button_google); //SE INFLA EL BOTON DE GOOGE
+        loginButtonFacebook = (LoginButton)findViewById(R.id.login_button_facebook); //SE INFLA EL BOTON DE FACEBOOK
+        txtClave = (EditText)findViewById(R.id.txtPassword); //SE INFLA EL CAMPO DE PASSWORD
+        txtUsuario = (EditText)findViewById(R.id.txtUsuario); //SE INFLA EL CAMPO DE USUARIO
+        firebaseAuth = FirebaseAuth.getInstance(); //SE INICIALIZA LA VARIABLE DE FIREBASE QUE MANEJA TODOS LOS LOGUEOS
+        callbackManager = CallbackManager.Factory.create(); //SE INICIALIZA LA VARIABLE DE FACEBOOK QUE MANEJA LOS LOGUEOS
 
-        firebaseAuth = FirebaseAuth.getInstance();
+        loginButtonGoogle.setColorScheme(loginButtonGoogle.COLOR_DARK);
+        loginButtonGoogle.setSize(loginButtonGoogle.SIZE_WIDE);
+
+        /**
+         * QUIZA EL LISTENER MAS IMPORTANTE, ES EL QUE VA A ESTAR A CARGO DE TODO LO QUE SE PUEDA
+         * ESCUCHAR EN CUANTO A FIREBASE SE REFIERE
+         */
         firebaseAuthListener = new FirebaseAuth.AuthStateListener(){
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
+                FirebaseUser user = firebaseAuth.getCurrentUser();//TOMAMOS EL USUARIO ACTUAL
                 if(user!=null){
-                    goPrincipal(user);
+                    goPrincipalScreen(user);
                 }
             }
         };
 
-        callbackManager = CallbackManager.Factory.create();
-        loginButtonFacebook = (LoginButton)findViewById(R.id.login_button_facebook);
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this,this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
         loginButtonFacebook.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                handleFacebookAccessToken(loginResult.getAccessToken());
+                firebaseAuth(loginResult.getAccessToken());
             }
 
             @Override
@@ -76,14 +106,28 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener{
             }
         });
 
-        txtClave = (EditText)findViewById(R.id.txtPassword);
-        txtUsuario = (EditText)findViewById(R.id.txtUsuario);
+        loginButtonGoogle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+                startActivityForResult(i,SIGN_IN_GOOGLE_CODE);
+            }
+        });
+
     }
 
-    private void handleFacebookAccessToken(AccessToken accessToken) {
-        progressBar.setVisibility(View.VISIBLE);
-        loginButtonFacebook.setVisibility(View.GONE);
-        AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
+    private void firebaseAuth(Object objectCredetial){
+        hideButtons(); //OCULTA LOS COMPONENTES BOTONES
+        AuthCredential credential;
+        if(objectCredetial instanceof AccessToken){ //VERIFICA DE QUE TIPO VA A SER LA CREDENCIAL
+            //SI ENTRA AQUÍ ES PORQUE LA FORMA DE LOGGEO FUE CON FACEBOOK
+            AccessToken accessToken = (AccessToken)objectCredetial;
+            credential = FacebookAuthProvider.getCredential(accessToken.getToken());
+        }else{
+            //SI ENTRA AQUÍ ES PORQUE LA FORMA DE LOGGUEO FUE CON GOOGLE
+            GoogleSignInAccount signInAccount = (GoogleSignInAccount) objectCredetial;
+            credential = GoogleAuthProvider.getCredential(signInAccount.getIdToken(),null);
+        }
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this,new OnCompleteListener<AuthResult>(){
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -95,6 +139,12 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener{
         });
     }
 
+    private void hideButtons() {
+        progressBar.setVisibility(View.VISIBLE);
+        loginButtonGoogle.setVisibility(View.GONE);
+        loginButtonFacebook.setVisibility(View.GONE);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -104,7 +154,9 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener{
     @Override
     protected void onStop() {
         super.onStop();
-        firebaseAuth.removeAuthStateListener(firebaseAuthListener);
+        if(firebaseAuthListener!=null){
+            firebaseAuth.removeAuthStateListener(firebaseAuthListener);
+        }
     }
 
     @Override
@@ -127,7 +179,7 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener{
     private void loginUser(){
     }
 
-    private void goPrincipal(FirebaseUser user) {
+    private void goPrincipalScreen(FirebaseUser user) {
         Intent i;
         setUser(user);
         i = new Intent(Loggin.this, Principal.class);
@@ -146,5 +198,22 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode,resultCode,data);
+        if (requestCode == SIGN_IN_GOOGLE_CODE){
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+        }
+    }
+
+    private void handleSignInResult(GoogleSignInResult result) {
+        if(result.isSuccess()){
+            firebaseAuth(result.getSignInAccount());
+        }else{
+            Toast.makeText(getApplicationContext(),"PASO ALGO MALO LOGUEO CON GOOGLE",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }
