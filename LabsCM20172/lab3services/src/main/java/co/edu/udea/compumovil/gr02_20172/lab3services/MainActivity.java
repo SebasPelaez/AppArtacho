@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
             StrictMode.setThreadPolicy(policy);
         }
 
-        SharedPreferences settings = getSharedPreferences(PREF_USER, 0);
+        SharedPreferences settings = getSharedPreferences(PREF_USER,0);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         final boolean keepS = prefs.getBoolean("keep_session",true);
         final int  userId = settings.getInt("userId",0);

@@ -29,6 +29,7 @@ import retrofit2.Call;
 public class MainActivity extends AppCompatActivity {
 
     private static final long SPLASH_SCREEN_DELAY = 3000;
+    private static final String PREF_USER = "UserPref";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,23 +48,34 @@ public class MainActivity extends AppCompatActivity {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                FirebaseUser userFirebase = FirebaseAuth.getInstance().getCurrentUser();
-                if(userFirebase == null){//PREGUNTO PPR DONDE ESTA LOGUEADO
-                    goLogin();
+                if(SesionParams()){
+                    FirebaseUser userFirebase = FirebaseAuth.getInstance().getCurrentUser();
+                    if(userFirebase == null){//PREGUNTO PPR DONDE ESTA LOGUEADO
+                        goLogin();
+                    }else{
+                        User_Singleton.getInstance().setName(userFirebase.getDisplayName());
+                        User_Singleton.getInstance().setEmail(userFirebase.getEmail());
+                        User_Singleton.getInstance().setImage(String.valueOf(userFirebase.getPhotoUrl()));
+                        Intent mainIntent = new Intent().setClass(
+                                MainActivity.this, Principal.class);
+                        startActivity(mainIntent);
+                        finish();
+                    }
                 }else{
-                    User_Singleton.getInstance().setName(userFirebase.getDisplayName());
-                    User_Singleton.getInstance().setEmail(userFirebase.getEmail());
-                    User_Singleton.getInstance().setImage(String.valueOf(userFirebase.getPhotoUrl()));
-                     Intent mainIntent = new Intent().setClass(
-                        MainActivity.this, Principal.class);
-                     startActivity(mainIntent);
-                     finish();
+                    goLogin();
                 }
             }
         };
         Timer timer = new Timer();
         timer.schedule(task, SPLASH_SCREEN_DELAY);
         }
+
+    private boolean SesionParams() {
+        SharedPreferences settings = getSharedPreferences(PREF_USER,0);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        final boolean keepS = prefs.getBoolean("keep_session",true);
+        return keepS;
+    }
 
     private void goLogin() {
         Intent mainIntent = new Intent().setClass(
