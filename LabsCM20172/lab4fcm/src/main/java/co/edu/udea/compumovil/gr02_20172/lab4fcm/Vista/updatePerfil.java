@@ -27,10 +27,18 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.Interface.RestClient;
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.R;
@@ -53,7 +61,7 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
     private EditText editPassword;
     private EditText confirmPassword;
     private int editGender;
-    private int userId;
+    private String userId;
     private RadioButton editMasc;
     private RadioButton editFem;
     private LinearLayout editInfoContainer;
@@ -74,10 +82,16 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
             "Valledupar","Cartagena de Indias","Pereira","Soledad","Buenaventura","Cúcuta","Pasto","Ibagué",
             "Manizales","Soacha","Montería","Bucaramanga"};
 
+
+    private DatabaseReference databaseReference;
+    private DatabaseReference userReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_perfil);
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        userReference = databaseReference.child("Usuario");
         initComponents();
         setInitValues();
         if(mayRequestStoragePermission())
@@ -308,6 +322,8 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
     }
 
     private void updateUserInformation(){
+        buscarKeyUsuario();
+        String key = User_Singleton.getInstance().getId();
         User editUser = new User();
 
         editUser.setName(editName.getText().toString());
@@ -318,26 +334,51 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
         editUser.setEmail(editEmail.getText().toString());
         editUser.setCity(editCity.getText().toString());
         editUser.setPassword(confirmPassword.getText().toString());
-        editUser.setImage(imagePath);//CORREGIR
 
+        editUser.setImage(User_Singleton.getInstance().getImage());
         editUser.setId(User_Singleton.getInstance().getId());
         editUser.setUsername(User_Singleton.getInstance().getUsername());
         editUser.setBirthday(User_Singleton.getInstance().getBirthday());
-        editUser.setImage(User_Singleton.getInstance().getImage());//QUITAR
 
-        RestClient restClient = RestClient.retrofit.create(RestClient.class);
-        Call<User> call = restClient.editUser(editUser);
-        try {
-            call.execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Map<String, Object> userValues = editUser.toMap(); //Convierte todos los elementos en un MAP
+        Map<String, Object> childUpdates = new HashMap<>(); //Crea un nuevo hijo
+
+        childUpdates.put(key, userValues); //Asigna al nuevo hijo los valores del usuario
+        userReference.updateChildren(childUpdates);//Guarda en la base de datos
+
         User_Singleton.destroyInstance();
         User_Singleton.getInstance(editUser);
+
         Toast.makeText(this, "Informacion editada", Toast.LENGTH_SHORT).show();
         Intent i = new Intent(updatePerfil.this,Principal.class);
         startActivity(i);
         finish();
+
+    }
+
+    public void buscarKeyUsuario() {
+        Query myTopPostsQuery = userReference;
+        myTopPostsQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = User_Singleton.getInstance();
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    Map<String, Object> userValues = (Map<String, Object>) postSnapshot.getValue();
+                    String username = (String) userValues.get("username");
+                    String email = (String) userValues.get("email");
+                    if(username.equals(user.getUsername()) || email.equals(user.getEmail())){
+                        user.setId((String)userValues.get("id"));
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w("DB", "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        });
 
     }
 

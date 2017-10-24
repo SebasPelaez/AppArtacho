@@ -31,15 +31,17 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Calendar;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import co.edu.udea.compumovil.gr02_20172.lab4fcm.Interface.RestClient;
+import java.io.File;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.R;
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.Validacion.Validation;
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.entities.User;
-import retrofit2.Call;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -75,11 +77,15 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
             "Valledupar","Cartagena de Indias","Pereira","Soledad","Buenaventura","Cúcuta","Pasto","Ibagué",
             "Manizales","Soacha","Montería","Bucaramanga"};
 
+    private DatabaseReference databaseReference;
+    private DatabaseReference userReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
-
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        userReference = databaseReference.child("Usuario");
         inicializarComponentes();
 
         if(mayRequestStoragePermission())
@@ -401,9 +407,9 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
     }
 
     public void registerUser(){
-        //RUTA PROVICIONAL PARA IMAGEN
-        String ruta = "http://localhost:3000/api/Containers/all/upload";
+        String key = userReference.push().getKey();
         User u = new User();
+        u.setId(key);
         u.setUsername(username.getText().toString());
         u.setPassword(password.getText().toString());
         u.setName(nombre.getText().toString());
@@ -414,17 +420,12 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
         u.setAddress(direccion.getText().toString());
         u.setEmail(email.getText().toString());
         u.setCity(ciudad.getText().toString());
-        u.setImage(imagePath);
 
-        //se realiza la peticion para ingresarlo en la base de datos
-        RestClient restClient = RestClient.retrofit.create(RestClient.class);
-        Call<User> call = restClient.createUser(u);
-        try {
-            call.execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Map<String, Object> userValues = u.toMap(); //Convierte todos los elementos en un MAP
+        Map<String, Object> childUpdates = new HashMap<>(); //Crea un nuevo hijo
 
+        childUpdates.put(key, userValues); //Asigna al nuevo hijo los valores del usuario
+        userReference.updateChildren(childUpdates);//Guarda en la base de datos
         //Se redirigea la actividad principal para loguearse
         Intent i = new Intent(Registro.this, Loggin.class);
         startActivity(i);

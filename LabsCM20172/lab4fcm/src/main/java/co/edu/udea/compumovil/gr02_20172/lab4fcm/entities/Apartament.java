@@ -14,7 +14,7 @@ public class Apartament implements Serializable {
     private String name;
     private String type;
     private int value;
-    private int idUSer;
+    private String idUSer;
     private Double area;
     private String description;
     private String location;
@@ -23,7 +23,7 @@ public class Apartament implements Serializable {
     public Apartament() {
     }
 
-    public Apartament(int id, String name, String type, int value, int idUSer, Double area, String description, String location, int numRooms) {
+    public Apartament(int id, String name, String type, int value, String idUSer, Double area, String description, String location, int numRooms) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -67,11 +67,11 @@ public class Apartament implements Serializable {
         this.value = value;
     }
 
-    public int getIdUSer() {
+    public String getIdUSer() {
         return idUSer;
     }
 
-    public void setIdUSer(int idUSer) {
+    public void setIdUSer(String idUSer) {
         this.idUSer = idUSer;
     }
 

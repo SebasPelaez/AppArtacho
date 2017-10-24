@@ -9,13 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
+
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.R;
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.entities.User;
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.entities.User_Singleton;
+
+import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,15 +55,37 @@ public class Perfil extends Fragment {
         genMasculino = (RadioButton) view.findViewById(R.id.rbtnSexoMasculino_Informacion);
         genFemenino = (RadioButton) view.findViewById(R.id.rbtnSexoFemenino_Informacion);
         foto = (CircularImageView) view.findViewById(R.id.imgFoto_Informacion);
-        recuperarInformacion();
+        validarInformacion();
         return view;
     }
 
-    public void recuperarInformacion() {
+    private void validarInformacion() {
+        User user = User_Singleton.getInstance();
+        if(user.getPassword()!=null){
+            mostrarInformacionCompleta();
+        }else{
+            Toast.makeText(this.getContext(), "Aún hay información sin completar, Completa tu registro", Toast.LENGTH_SHORT).show();
+            mostrarInformacionParcial();
+        }
+    }
+
+    private void mostrarInformacionParcial() {
         User user = User_Singleton.getInstance();
         nombre.setText(nombre.getText().toString() + ": " + user.getName());
         email.setText(email.getText().toString() + ": " + user.getEmail());
-        /*apellido.setText(apellido.getText().toString() + ": " + user.getLastname());
+        if(!user.getImage().equals("")){
+            Uri i = Uri.parse(user.getImage());
+            Glide.with(Perfil.this)
+                    .load(i)
+                    .into(foto);
+        }
+    }
+
+    private void mostrarInformacionCompleta() {
+        User user = User_Singleton.getInstance();
+        nombre.setText(nombre.getText().toString() + ": " + user.getName());
+        email.setText(email.getText().toString() + ": " + user.getEmail());
+        apellido.setText(apellido.getText().toString() + ": " + user.getLastname());
         telefono.setText(telefono.getText().toString() + ": " + user.getPhone());
         direccion.setText(direccion.getText().toString() + ": " + user.getAddress());
 
@@ -69,7 +95,7 @@ public class Perfil extends Fragment {
         } else {
             genFemenino.setChecked(true);
         }
-        */
+
         if(!user.getImage().equals("")){
             Uri i = Uri.parse(user.getImage());
             Glide.with(Perfil.this)

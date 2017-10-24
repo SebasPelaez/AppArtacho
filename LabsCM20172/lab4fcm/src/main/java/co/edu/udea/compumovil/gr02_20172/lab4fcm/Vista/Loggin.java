@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -30,8 +31,18 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.R;
+import co.edu.udea.compumovil.gr02_20172.lab4fcm.entities.User;
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.entities.User_Singleton;
 
 
@@ -50,6 +61,9 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener, G
 
     private ProgressBar progressBar;
     private static final int SIGN_IN_GOOGLE_CODE = 777; //CÓGIDO PARA VALIDAR SI ESCOGÍ CORRECTAMENTE UNA CUENTA DE GOOGLE
+
+    private DatabaseReference databaseReference;//REFERENCIAS A LA BASE DE DATOS DE FIREBASE
+    private DatabaseReference userReference;//REFERENCIA A UN HIJO EN LA BASE DE DATOS.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +76,9 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener, G
         txtUsuario = (EditText)findViewById(R.id.txtUsuario); //SE INFLA EL CAMPO DE USUARIO
         firebaseAuth = FirebaseAuth.getInstance(); //SE INICIALIZA LA VARIABLE DE FIREBASE QUE MANEJA TODOS LOS LOGUEOS
         callbackManager = CallbackManager.Factory.create(); //SE INICIALIZA LA VARIABLE DE FACEBOOK QUE MANEJA LOS LOGUEOS
+
+        databaseReference = FirebaseDatabase.getInstance().getReference();//INSTANCIA LA BASE DE DATOS DE FIREBASE
+        userReference = databaseReference.child("Usuario");//SE PARA EN EL HIJO USUARIO
 
         loginButtonGoogle.setColorScheme(loginButtonGoogle.COLOR_DARK);
         loginButtonGoogle.setSize(loginButtonGoogle.SIZE_WIDE);
@@ -182,10 +199,46 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener, G
     private void goPrincipalScreen(FirebaseUser user) {
         Intent i;
         setUser(user);
+        validarUsuarioExistente();
         i = new Intent(Loggin.this, Principal.class);
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
         finish();
+    }
+
+    private void validarUsuarioExistente() {
+        buscarKeyUsuario();
+        if(User_Singleton.getInstance().getId()==null)
+            registerUser();
+    }
+
+    public void buscarKeyUsuario() {
+        Query myTopPostsQuery = userReference;
+        final String[] id = new String[1];
+        myTopPostsQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = User_Singleton.getInstance();
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    Map<String, Object> userValues = (Map<String, Object>) postSnapshot.getValue();
+                    String name = (String) userValues.get("name");
+                    String email = (String) userValues.get("email");
+                    if(name.equals(user.getName()) || email.equals(user.getEmail())){
+                        id[0] =(String)userValues.get("id");
+                        id[1] = "sdfsd";
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w("DB", "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        });
+        User_Singleton.getInstance().getId();
+        System.out.println();
     }
 
     private void setUser(FirebaseUser user) {
@@ -215,5 +268,28 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener, G
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    public void registerUser(){
+        String key = userReference.push().getKey();
+        User u = new User();
+        u.setId(key);
+        u.setEmail(User_Singleton.getInstance().getEmail());
+        u.setImage(User_Singleton.getInstance().getImage());
+        u.setName(User_Singleton.getInstance().getName());
+        u.setUsername("");
+        u.setPassword("");
+        u.setLastname("");
+        u.setGender(0);//Prueba con un Integer
+        u.setBirthday("");
+        u.setPhone("");
+        u.setAddress("");
+        u.setCity("");
+
+        Map<String, Object> userValues = u.toMap(); //Convierte todos los elementos en un MAP
+        Map<String, Object> childUpdates = new HashMap<>(); //Crea un nuevo hijo
+
+        childUpdates.put(key, userValues); //Asigna al nuevo hijo los valores del usuario
+        userReference.updateChildren(childUpdates);//Guarda en la base de datos
     }
 }

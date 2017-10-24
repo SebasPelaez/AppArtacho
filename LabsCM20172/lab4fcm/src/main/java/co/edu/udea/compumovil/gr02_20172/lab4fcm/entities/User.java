@@ -1,11 +1,14 @@
 package co.edu.udea.compumovil.gr02_20172.lab4fcm.entities;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Juan on 1/09/2017.
  */
 
 public class User {
-    private int id;
+    private String id;
     private String username;
     private String password;
     private String name;
@@ -29,11 +32,11 @@ public class User {
         this.image = image;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -115,5 +118,22 @@ public class User {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("id", id);
+        result.put("username", username);
+        result.put("password", password);
+        result.put("name", name);
+        result.put("last_name", last_name);
+        result.put("gender", gender);
+        result.put("birthday", birthday);
+        result.put("phone", phone);
+        result.put("address", address);
+        result.put("email", email);
+        result.put("city", city);
+        result.put("image", image);
+        return result;
     }
 }
