@@ -78,11 +78,6 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
     private final int SELECT_PICTURE = 300;
     private String mPath;
 
-    private String[] ciudades={"Bogotá","Santa Marta","Medellín","Villavicencio","Cali","Bello","Barranquilla",
-            "Valledupar","Cartagena de Indias","Pereira","Soledad","Buenaventura","Cúcuta","Pasto","Ibagué",
-            "Manizales","Soacha","Montería","Bucaramanga"};
-
-
     private DatabaseReference databaseReference;
     private DatabaseReference userReference;
 
@@ -261,6 +256,7 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initComponents(){
+        imagePath = User_Singleton.getInstance().getImage();
         editImage  = (CircularImageView)findViewById(R.id.editImage);
         editName  = (EditText) findViewById(R.id.editName);
         editLastName  = (EditText)findViewById(R.id.editLastName);
@@ -314,17 +310,16 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
                     .load(Uri.parse(user.getImage()))
                     .into(editImage);
         }
-        ArrayAdapter adapterCiudades = new ArrayAdapter(this,android.R.layout.simple_list_item_1,ciudades);
-        editCity.setAdapter(adapterCiudades);
-        positionCity = adapterCiudades.getPosition(user.getCity());
-        editCity.setText(ciudades[positionCity]);
-        editCity.setThreshold(1);
+        editCity.setText(user.getCity());
     }
 
     private void updateUserInformation(){
-        buscarKeyUsuario();
         String key = User_Singleton.getInstance().getId();
         User editUser = new User();
+
+        editUser.setId(User_Singleton.getInstance().getId());
+        editUser.setUsername(User_Singleton.getInstance().getUsername());
+        editUser.setBirthday(User_Singleton.getInstance().getBirthday());
 
         editUser.setName(editName.getText().toString());
         editUser.setLastname(editLastName.getText().toString());
@@ -334,17 +329,9 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
         editUser.setEmail(editEmail.getText().toString());
         editUser.setCity(editCity.getText().toString());
         editUser.setPassword(confirmPassword.getText().toString());
+        editUser.setImage(imagePath);
 
-        editUser.setImage(User_Singleton.getInstance().getImage());
-        editUser.setId(User_Singleton.getInstance().getId());
-        editUser.setUsername(User_Singleton.getInstance().getUsername());
-        editUser.setBirthday(User_Singleton.getInstance().getBirthday());
-
-        Map<String, Object> userValues = editUser.toMap(); //Convierte todos los elementos en un MAP
-        Map<String, Object> childUpdates = new HashMap<>(); //Crea un nuevo hijo
-
-        childUpdates.put(key, userValues); //Asigna al nuevo hijo los valores del usuario
-        userReference.updateChildren(childUpdates);//Guarda en la base de datos
+        userReference.child(key).setValue(editUser);
 
         User_Singleton.destroyInstance();
         User_Singleton.getInstance(editUser);
@@ -353,32 +340,6 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
         Intent i = new Intent(updatePerfil.this,Principal.class);
         startActivity(i);
         finish();
-
-    }
-
-    public void buscarKeyUsuario() {
-        Query myTopPostsQuery = userReference;
-        myTopPostsQuery.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = User_Singleton.getInstance();
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                    Map<String, Object> userValues = (Map<String, Object>) postSnapshot.getValue();
-                    String username = (String) userValues.get("username");
-                    String email = (String) userValues.get("email");
-                    if(username.equals(user.getUsername()) || email.equals(user.getEmail())){
-                        user.setId((String)userValues.get("id"));
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w("DB", "loadPost:onCancelled", databaseError.toException());
-                // ...
-            }
-        });
 
     }
 

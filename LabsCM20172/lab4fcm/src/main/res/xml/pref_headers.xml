@@ -16,7 +16,7 @@
         android:icon="@drawable/ic_edit"
         android:title="@string/editarPerfil">
         <intent android:targetPackage="co.edu.udea.compumovil.gr02_20172.lab4fcm"
-            android:targetClass="co.edu.udea.compumovil.gr02_20172.lab3services.Vista.updatePerfil"/>
+            android:targetClass="co.edu.udea.compumovil.gr02_20172.lab4fcm.Vista.updatePerfil"/>
     </header>
 
 

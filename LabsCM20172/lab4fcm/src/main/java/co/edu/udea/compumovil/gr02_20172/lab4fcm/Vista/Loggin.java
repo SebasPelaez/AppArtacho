@@ -35,16 +35,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.R;
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.entities.User;
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.entities.User_Singleton;
-
 
 public class Loggin extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener{
 
@@ -64,6 +62,9 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener, G
 
     private DatabaseReference databaseReference;//REFERENCIAS A LA BASE DE DATOS DE FIREBASE
     private DatabaseReference userReference;//REFERENCIA A UN HIJO EN LA BASE DE DATOS.
+
+    private List<User> listaUsuarios;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,11 +78,11 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener, G
         firebaseAuth = FirebaseAuth.getInstance(); //SE INICIALIZA LA VARIABLE DE FIREBASE QUE MANEJA TODOS LOS LOGUEOS
         callbackManager = CallbackManager.Factory.create(); //SE INICIALIZA LA VARIABLE DE FACEBOOK QUE MANEJA LOS LOGUEOS
 
-        databaseReference = FirebaseDatabase.getInstance().getReference();//INSTANCIA LA BASE DE DATOS DE FIREBASE
-        userReference = databaseReference.child("Usuario");//SE PARA EN EL HIJO USUARIO
-
         loginButtonGoogle.setColorScheme(loginButtonGoogle.COLOR_DARK);
         loginButtonGoogle.setSize(loginButtonGoogle.SIZE_WIDE);
+
+        databaseReference = FirebaseDatabase.getInstance().getReference();//INSTANCIA LA BASE DE DATOS DE FIREBASE
+        userReference = databaseReference.child("Usuario");//SE PARA EN EL HIJO USUARIO
 
         /**
          * QUIZA EL LISTENER MAS IMPORTANTE, ES EL QUE VA A ESTAR A CARGO DE TODO LO QUE SE PUEDA
@@ -92,7 +93,9 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener, G
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();//TOMAMOS EL USUARIO ACTUAL
                 if(user!=null){
-                    goPrincipalScreen(user);
+                    setUser(user);//SETEA UN USUARIO QUE ENTRA POR RED SOCIAL
+                    validarUsuarioExistente();//VERIFICA SI EXISTE EL USUARIO, SI NO CREA UN NUEVO REGISTRO
+                    goPrincipalScreen();
                 }
             }
         };
@@ -131,6 +134,26 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener, G
             }
         });
 
+        listaUsuarios = new ArrayList<>();
+        listarUsuarios();
+
+    }
+
+    private void listarUsuarios() {
+        userReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot noteSnapshot : dataSnapshot.getChildren()) {
+                    User note = noteSnapshot.getValue(User.class);
+                    listaUsuarios.add(note);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("TAG", databaseError.getMessage());
+            }
+        });
     }
 
     private void firebaseAuth(Object objectCredetial){
@@ -149,7 +172,7 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener, G
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(!task.isSuccessful()){
-                    Toast.makeText(getApplicationContext(),"PASO ALGO MALO",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"PASO ALGO MALO", Toast.LENGTH_SHORT).show();
                 }
                 progressBar.setVisibility(View.GONE);
             }
@@ -192,14 +215,31 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener, G
         }
     }
 
-
     private void loginUser(){
+        String username = txtUsuario.getText().toString();
+        String password = txtClave.getText().toString();
+        if(!username.equals("") && !password.equals("")){
+            User uLogueado=validarUsuarioContrasena(username,password);
+            if(uLogueado!=null){
+                User_Singleton.getInstance().setId(uLogueado.getId());
+                User_Singleton.getInstance().setUsername(uLogueado.getUsername());
+                User_Singleton.getInstance().setPassword(uLogueado.getPassword());
+                User_Singleton.getInstance().setName(uLogueado.getName());
+                User_Singleton.getInstance().setLastname(uLogueado.getLastname());
+                User_Singleton.getInstance().setGender(uLogueado.getGender());
+                User_Singleton.getInstance().setBirthday(uLogueado.getBirthday());
+                User_Singleton.getInstance().setPhone(uLogueado.getPhone());
+                User_Singleton.getInstance().setAddress(uLogueado.getAddress());
+                User_Singleton.getInstance().setEmail(uLogueado.getEmail());
+                User_Singleton.getInstance().setCity(uLogueado.getCity());
+                User_Singleton.getInstance().setImage(String.valueOf(uLogueado.getImage()));
+                goPrincipalScreen();
+            }
+        }
     }
 
-    private void goPrincipalScreen(FirebaseUser user) {
+    private void goPrincipalScreen() {
         Intent i;
-        setUser(user);
-        validarUsuarioExistente();
         i = new Intent(Loggin.this, Principal.class);
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
@@ -207,43 +247,38 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener, G
     }
 
     private void validarUsuarioExistente() {
-        buscarKeyUsuario();
-        if(User_Singleton.getInstance().getId()==null)
+        User singleUser = User_Singleton.getInstance();
+        for(User u: listaUsuarios){
+            if(u.getName().equals(singleUser.getName()) || u.getEmail().equals(singleUser.getEmail())){
+                singleUser.setId(u.getId());
+                break;
+            }
+        }
+        if(singleUser.getId().equals(""))
             registerUser();
     }
 
-    public void buscarKeyUsuario() {
-        Query myTopPostsQuery = userReference;
-        final String[] id = new String[1];
-        myTopPostsQuery.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = User_Singleton.getInstance();
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                    Map<String, Object> userValues = (Map<String, Object>) postSnapshot.getValue();
-                    String name = (String) userValues.get("name");
-                    String email = (String) userValues.get("email");
-                    if(name.equals(user.getName()) || email.equals(user.getEmail())){
-                        id[0] =(String)userValues.get("id");
-                        id[1] = "sdfsd";
-                    }
-                }
+    public User validarUsuarioContrasena(String username,String password){
+        for(User u: listaUsuarios){
+            if(u.getUsername().equals(username) && u.getPassword().equals(password)){
+                return u;
             }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w("DB", "loadPost:onCancelled", databaseError.toException());
-                // ...
-            }
-        });
-        User_Singleton.getInstance().getId();
-        System.out.println();
+        }
+        return null;
     }
 
     private void setUser(FirebaseUser user) {
+        User_Singleton.getInstance().setId("");
+        User_Singleton.getInstance().setUsername("");
+        User_Singleton.getInstance().setPassword("");
         User_Singleton.getInstance().setName(user.getDisplayName());
+        User_Singleton.getInstance().setLastname("");
+        User_Singleton.getInstance().setGender(-1);
+        User_Singleton.getInstance().setBirthday("");
+        User_Singleton.getInstance().setPhone("");
+        User_Singleton.getInstance().setAddress("");
         User_Singleton.getInstance().setEmail(user.getEmail());
+        User_Singleton.getInstance().setCity("");
         User_Singleton.getInstance().setImage(String.valueOf(user.getPhotoUrl()));
     }
 
@@ -267,7 +302,6 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener, G
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
     }
 
     public void registerUser(){
@@ -285,11 +319,6 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener, G
         u.setPhone("");
         u.setAddress("");
         u.setCity("");
-
-        Map<String, Object> userValues = u.toMap(); //Convierte todos los elementos en un MAP
-        Map<String, Object> childUpdates = new HashMap<>(); //Crea un nuevo hijo
-
-        childUpdates.put(key, userValues); //Asigna al nuevo hijo los valores del usuario
-        userReference.updateChildren(childUpdates);//Guarda en la base de datos
+        userReference.child(key).setValue(u);
     }
 }
