@@ -85,7 +85,7 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
     private DatabaseReference userReference;
     private FirebaseStorage storage;
     private StorageReference storageRef;
-    StorageReference imageRef;
+    private StorageReference imageRef;
 
 
     @Override

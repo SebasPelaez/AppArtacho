@@ -79,7 +79,7 @@ public class ApartamentoAdapter extends RecyclerView.Adapter<ApartamentoAdapter.
         holder.area.setText("Área: "+apto.getArea());
         holder.descripcion.setText("Descripción: "+apto.getDescription());
 
-        Glide.with(mContext).load(Uri.parse(findImages(apto.getId()))).into(holder.thumbnail);
+        Glide.with(mContext).load(apto.getResourece()).into(holder.thumbnail);
 
     }
 
@@ -96,25 +96,6 @@ public class ApartamentoAdapter extends RecyclerView.Adapter<ApartamentoAdapter.
         apartamentoList= new ArrayList<>();
         apartamentoList.addAll(newList);
         notifyDataSetChanged();
-    }
-
-    private String findImages(int aptoId){
-        List<Resource> resources = null;
-        String path=null;
-        RestClient restClient = RestClient.retrofit.create(RestClient.class);
-        Call<List<Resource>> call = restClient.getResources();
-        try {
-            resources = call.execute().body();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        for(Resource r: resources){
-            if(r.getIdApartment() == aptoId){
-                path=r.getPathResource();
-                break;
-            }
-        }
-        return path;
     }
     
 }

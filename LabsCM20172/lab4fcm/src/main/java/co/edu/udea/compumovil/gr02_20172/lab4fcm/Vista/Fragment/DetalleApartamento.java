@@ -31,7 +31,7 @@ public class DetalleApartamento extends Fragment{
 
     private RecyclerView recyclerView;
     private BannerAdapter adapter;
-    private List<String> photoList;
+    private List<Uri> photoList;
 
     private TextView lblNombreApartamento;
     private TextView lblTipoApartamento;
@@ -111,19 +111,7 @@ public class DetalleApartamento extends Fragment{
 
 
     private void prepareApartamentos(Apartament apto) {
-        List<Resource> resources = null;
-        RestClient restClient = RestClient.retrofit.create(RestClient.class);
-        Call<List<Resource>> call = restClient.getResources();
-        try {
-            resources = call.execute().body();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        for(Resource r: resources){
-            if(r.getIdApartment() == apto.getId()){
-                photoList.add(r.getPathResource());
-            }
-        }
+        photoList.add(Uri.parse(apto.getResourece()));
         adapter.notifyDataSetChanged();
     }
 

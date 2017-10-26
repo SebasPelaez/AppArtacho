@@ -6,9 +6,17 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.RemoteViews;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.Interface.RestClient;
@@ -17,10 +25,18 @@ import retrofit2.Call;
 
 public class ReceiverWidget extends AppWidgetProvider {
 
+    private DatabaseReference databaseReference;//REFERENCIAS A LA BASE DE DATOS DE FIREBASE
+    private DatabaseReference apartamentosReference;//REFERENCIA A UN HIJO EN LA BASE DE DATOS.
+    private List<Apartament> apartamentoList;
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager,
                          int[] appWidgetIds) {
 
+        databaseReference = FirebaseDatabase.getInstance().getReference();//INSTANCIA LA BASE DE DATOS DE FIREBASE
+        apartamentosReference = databaseReference.child("Apartamentos");//SE PARA EN EL HIJO USUARIO
+        apartamentoList = new ArrayList<>();
+        listApartaments();
         // Get all ids
         // Get all ids
         ComponentName thisWidget = new ComponentName(context,
@@ -28,14 +44,7 @@ public class ReceiverWidget extends AppWidgetProvider {
         int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
         for (int widgetId : allWidgetIds) {
 
-            RestClient restClient = RestClient.retrofit.create(RestClient.class);
-            Call<Apartament> call = restClient.getApartament(lastApartment());
-            Apartament currentApto = null;
-            try {
-                currentApto = call.execute().body();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Apartament currentApto = apartamentoList.get(apartamentoList.size()-1);
 
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
                     R.layout.widget_view);
@@ -62,18 +71,21 @@ public class ReceiverWidget extends AppWidgetProvider {
         }
     }
 
-    private int lastApartment(){
-        int id=0;
-        RestClient restClient = RestClient.retrofit.create(RestClient.class);
-        Call<List<Apartament>> call = restClient.getApartaments();
-        List<Apartament> apartaments;
-        try {
-            apartaments = call.execute().body();
-            id = apartaments.get(apartaments.size()-1).getId();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return id;
+    private void listApartaments(){
+        apartamentosReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot noteSnapshot : dataSnapshot.getChildren()) {
+                    Apartament a = noteSnapshot.getValue(Apartament.class);
+                    apartamentoList.add(a);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("TAG", databaseError.getMessage());
+            }
+        });
     }
 
 }

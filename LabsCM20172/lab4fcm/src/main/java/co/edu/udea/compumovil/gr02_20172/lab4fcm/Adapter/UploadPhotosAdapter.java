@@ -1,6 +1,7 @@
 package co.edu.udea.compumovil.gr02_20172.lab4fcm.Adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,7 @@ import co.edu.udea.compumovil.gr02_20172.lab4fcm.R;
 public class UploadPhotosAdapter extends RecyclerView.Adapter<UploadPhotosAdapter.MyViewHolder>  {
 
     private Context mContext;
-    private List<String> photos;
+    private List<Uri> photos;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public ImageView thumbnail;
@@ -31,7 +32,7 @@ public class UploadPhotosAdapter extends RecyclerView.Adapter<UploadPhotosAdapte
         }
     }
 
-    public UploadPhotosAdapter(Context mContext, List<String> photos) {
+    public UploadPhotosAdapter(Context mContext, List<Uri> photos) {
         this.mContext = mContext;
         this.photos = photos;
     }
@@ -46,7 +47,7 @@ public class UploadPhotosAdapter extends RecyclerView.Adapter<UploadPhotosAdapte
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        String pathPhoto = photos.get(position);
+        Uri pathPhoto = photos.get(position);
         // loading album cover using Glide library
         Glide.with(mContext).load(pathPhoto).into(holder.thumbnail);
     }

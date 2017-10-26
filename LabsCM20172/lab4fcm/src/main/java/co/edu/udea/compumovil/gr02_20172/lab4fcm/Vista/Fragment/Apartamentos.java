@@ -20,6 +20,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +52,9 @@ public class Apartamentos extends Fragment implements SearchView.OnQueryTextList
 
     private View rootView;
 
+    private DatabaseReference databaseReference;//REFERENCIAS A LA BASE DE DATOS DE FIREBASE
+    private DatabaseReference apartamentosReference;//REFERENCIA A UN HIJO EN LA BASE DE DATOS.
+
     public Apartamentos() {
         // Required empty public constructor
     }
@@ -62,6 +71,9 @@ public class Apartamentos extends Fragment implements SearchView.OnQueryTextList
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_apartamentos, container, false);
 
+        databaseReference = FirebaseDatabase.getInstance().getReference();//INSTANCIA LA BASE DE DATOS DE FIREBASE
+        apartamentosReference = databaseReference.child("Apartamentos");//SE PARA EN EL HIJO USUARIO
+
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +86,7 @@ public class Apartamentos extends Fragment implements SearchView.OnQueryTextList
         recyclerView.setHasFixedSize(true);
 
         apartamentoList = new ArrayList<>();
-        //prepareApartamentos();
+        prepareApartamentos();
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(llm);
@@ -87,13 +99,21 @@ public class Apartamentos extends Fragment implements SearchView.OnQueryTextList
      */
 
     private void prepareApartamentos() {
-        RestClient restClient = RestClient.retrofit.create(RestClient.class);
-        Call<List<Apartament>> call = restClient.getApartaments();
-        try {
-            apartamentoList = call.execute().body();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        apartamentosReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot noteSnapshot : dataSnapshot.getChildren()) {
+                    Apartament a = noteSnapshot.getValue(Apartament.class);
+                    apartamentoList.add(a);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("TAG", databaseError.getMessage());
+            }
+        });
+
         adapter = new ApartamentoAdapter(rootView.getContext(), apartamentoList);
         recyclerView.setAdapter(adapter);
         handlerClick();

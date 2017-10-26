@@ -22,7 +22,7 @@ import co.edu.udea.compumovil.gr02_20172.lab4fcm.R;
 public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.MyViewHolder> {
 
     private Context mContext;
-    private List<String> photos;
+    private List<Uri> photos;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public ImageView thumbnail;
@@ -33,7 +33,7 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.MyViewHold
         }
     }
 
-    public BannerAdapter(Context mContext, List<String> photos) {
+    public BannerAdapter(Context mContext, List<Uri> photos) {
         this.mContext = mContext;
         this.photos = photos;
     }
@@ -48,9 +48,9 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(final BannerAdapter.MyViewHolder holder, int position) {
-        String pathPhoto = photos.get(position);
+        Uri pathPhoto = photos.get(position);
         // loading album cover using Glide library
-        Glide.with(mContext).load(Uri.parse(pathPhoto)).into(holder.thumbnail);
+        Glide.with(mContext).load(pathPhoto).into(holder.thumbnail);
     }
 
     @Override

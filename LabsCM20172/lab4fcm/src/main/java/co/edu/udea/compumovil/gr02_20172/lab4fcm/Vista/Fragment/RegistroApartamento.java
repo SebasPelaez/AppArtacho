@@ -1,6 +1,7 @@
 package co.edu.udea.compumovil.gr02_20172.lab4fcm.Vista.Fragment;
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -29,21 +31,25 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.Adapter.UploadPhotosAdapter;
-import co.edu.udea.compumovil.gr02_20172.lab4fcm.Interface.RestClient;
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.R;
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.Validacion.Validation;
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.Vista.Principal;
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.entities.Apartament;
-import co.edu.udea.compumovil.gr02_20172.lab4fcm.entities.Resource;
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.entities.User_Singleton;
-import retrofit2.Call;
-
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.app.Activity.RESULT_OK;
@@ -79,10 +85,17 @@ public class RegistroApartamento extends Fragment{
 
     private RecyclerView recyclerView;
     private UploadPhotosAdapter adapter;
-    private List<String> photosList;
+    private List<Uri> photosList;
 
     private String[] tipoInmuebles={"Casa","Apartamento","Finca","PenHouse","Hacienda","Cuchitril","Apartaestudio",
             "Apartacho","Garaje "};
+
+    private DatabaseReference databaseReference;
+    private DatabaseReference apartamentosReference;
+    private FirebaseStorage storage;
+    private StorageReference storageRef;
+    private StorageReference imageRef;
+    private List<Uri> urlImagenes;
 
     public RegistroApartamento() {
         // Required empty public constructor
@@ -94,6 +107,15 @@ public class RegistroApartamento extends Fragment{
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_registro_apartamento, container, false);
         inicializarComponentes(rootView);
+
+        /**
+         * CONEXIONES A LA BASE DE DATOS DE FIRBEASE
+         */
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        apartamentosReference = databaseReference.child("Apartamentos");
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
+        urlImagenes = new ArrayList<>();
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_viewUpload);
         recyclerView.setHasFixedSize(true);
@@ -125,7 +147,7 @@ public class RegistroApartamento extends Fragment{
         btnRegistrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                registerApartment();
+                registerImg_Apartment();
             }
         });
 
@@ -271,52 +293,62 @@ public class RegistroApartamento extends Fragment{
     }
 
     public void registerApartment(){
-        Apartament newApartament = new Apartament();
+        String key = apartamentosReference.push().getKey();
+        Apartament apartament = new Apartament();
+        apartament.setId(key);
+        apartament.setName(txtNombreInmueble.getText().toString());
+        apartament.setType(txtTipoInmueble.getText().toString());
+        apartament.setValue(Integer.parseInt(txtValor.getText().toString()));
+        apartament.setIdUSer(User_Singleton.getInstance().getId());
+        apartament.setArea(Double.parseDouble(txtArea.getText().toString()));
+        apartament.setDescription(txtDescripcionApartamento.getText().toString());
+        apartament.setLocation(txtUbicacion.getText().toString());
+        apartament.setNumRooms(Integer.parseInt(txtCuartos.getText().toString()));
+        apartament.setResourece(String.valueOf(urlImagenes.get(0)));
 
-        newApartament.setName(txtNombreInmueble.getText().toString());
-        newApartament.setType(txtTipoInmueble.getText().toString());
-        newApartament.setValue(Integer.parseInt(txtValor.getText().toString()));
-        newApartament.setIdUSer(User_Singleton.getInstance().getId());
-        newApartament.setArea(Double.parseDouble(txtArea.getText().toString()));
-        newApartament.setDescription(txtDescripcionApartamento.getText().toString());
-        newApartament.setNumRooms(Integer.parseInt(txtCuartos.getText().toString()));
-        newApartament.setLocation(txtUbicacion.getText().toString());
+        apartamentosReference.child(key).setValue(apartament);
 
-        RestClient restClient = RestClient.retrofit.create(RestClient.class);
-        Call<Apartament> call = restClient.createApartament(newApartament);
-        try {
-            call.execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         Toast.makeText(rootView.getContext(),"Apartamento guardado:",Toast.LENGTH_SHORT).show();
-        registerImg_Apartment();
 
         Intent i = new Intent(getContext(),Principal.class);
         startActivity(i);
     }
 
     public void registerImg_Apartment(){
-        String images[] = {"http://192.168.1.53:3000/api/Containers/all/download/a.jpg","http://192.168.1.53:3000/api/Containers/all/download/b.jpg",
-                "http://192.168.1.53:3000/api/Containers/all/download/c.jpg","http://192.168.1.53:3000/api/Containers/all/download/d.jpg",
-                "http://192.168.1.53:3000/api/Containers/all/download/e.jpg","http://192.168.1.53:3000/api/Containers/all/download/f.jpg",
-                "http://192.168.1.53:3000/api/Containers/all/download/g.jpg","http://192.168.1.53:3000/api/Containers/all/download/h.jpg",
-                "http://192.168.1.53:3000/api/Containers/all/download/i.jpg"};
+        final ProgressDialog progressDialog = new ProgressDialog(rootView.getContext());
+        progressDialog.setTitle("Creando Apartamento");
+        progressDialog.show();
 
-        int rand = randomize(9,1);
-        for(int i=0;i<rand;i++){
-            Resource newResource = new Resource();
-            newResource.setIdApartment(lastApartment());
-            newResource.setPathResource(images[randomize(9,1)]);
+        imageRef = storageRef.child("Apartamentos/"+photosList.get(0).getLastPathSegment());
 
-            RestClient restClient = RestClient.retrofit.create(RestClient.class);
-            Call<Resource> call = restClient.createResource(newResource);
-            try {
-                call.execute();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        imageRef.putFile(photosList.get(0))
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        //dismissing the progress dialog
+                        progressDialog.dismiss();
+                        //displaying success toast
+                        Toast.makeText(rootView.getContext(), "Imagen guardada", Toast.LENGTH_LONG).show();
+                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        urlImagenes.add(downloadUrl);
+                        registerApartment();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        progressDialog.dismiss();
+                        Toast.makeText(rootView.getContext(), "AQUI: "+exception.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                })
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        //displaying the upload progress
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                        progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
+                    }
+                });
     }
 
     @Override
@@ -334,15 +366,15 @@ public class RegistroApartamento extends Fragment{
                                 public void onScanCompleted(String path, Uri uri) {
                                     Log.i("ExternalStorage", "Scanned " + path + ":");
                                     Log.i("ExternalStorage", "-> Uri = " + uri);
+                                    photosList.add(uri);
                                 }
                             });
-                    photosList.add(mPath);
                     adapter.notifyDataSetChanged();
                     break;
                 case SELECT_PICTURE:
                     Uri path = data.getData();
                     imagePath = path.toString();
-                    photosList.add(imagePath);
+                    photosList.add(path);
                     adapter.notifyDataSetChanged();
                     break;
             }
@@ -354,22 +386,5 @@ public class RegistroApartamento extends Fragment{
         super.onSaveInstanceState(outState);
     }
 
-    private int lastApartment(){
-        int id=0;
-        RestClient restClient = RestClient.retrofit.create(RestClient.class);
-        Call<List<Apartament>> call = restClient.getApartaments();
-        List<Apartament> apartaments;
-        try {
-            apartaments = call.execute().body();
-            id = apartaments.get(apartaments.size()-1).getId();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return id;
-    }
-
-    public int randomize(int top, int below) {
-       return (int) (Math.random() * (top - below + 1) + below);
-    }
 
 }

@@ -1,6 +1,7 @@
 package co.edu.udea.compumovil.gr02_20172.lab4fcm.entities;
 
 import android.graphics.Point;
+import android.net.Uri;
 
 import java.io.Serializable;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
  */
 
 public class Apartament implements Serializable {
-    private int id;
+    private String id;
     private String name;
     private String type;
     private int value;
@@ -19,11 +20,13 @@ public class Apartament implements Serializable {
     private String description;
     private String location;
     private int numRooms;
+    private String resourece;
 
     public Apartament() {
     }
 
-    public Apartament(int id, String name, String type, int value, String idUSer, Double area, String description, String location, int numRooms) {
+    public Apartament(String id, String name, String type, int value, String idUSer, Double area,
+                      String description, String location, int numRooms, String resourece) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -33,13 +36,22 @@ public class Apartament implements Serializable {
         this.description = description;
         this.location = location;
         this.numRooms = numRooms;
+        this.resourece = resourece;
     }
 
-    public int getId() {
+    public String getResourece() {
+        return resourece;
+    }
+
+    public void setResourece(String resourece) {
+        this.resourece = resourece;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
