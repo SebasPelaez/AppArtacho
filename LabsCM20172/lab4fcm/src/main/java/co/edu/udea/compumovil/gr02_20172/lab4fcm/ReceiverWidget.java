@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -18,11 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import co.edu.udea.compumovil.gr02_20172.lab4fcm.Interface.RestClient;
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.entities.Apartament;
-import retrofit2.Call;
-
 public class ReceiverWidget extends AppWidgetProvider {
 
     private DatabaseReference databaseReference;//REFERENCIAS A LA BASE DE DATOS DE FIREBASE
@@ -36,7 +33,34 @@ public class ReceiverWidget extends AppWidgetProvider {
         databaseReference = FirebaseDatabase.getInstance().getReference();//INSTANCIA LA BASE DE DATOS DE FIREBASE
         apartamentosReference = databaseReference.child("Apartamentos");//SE PARA EN EL HIJO USUARIO
         apartamentoList = new ArrayList<>();
-        listApartaments();
+
+        apartamentosReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Apartament a = dataSnapshot.getValue(Apartament.class);
+                apartamentoList.add(a);
+            }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         // Get all ids
         // Get all ids
         ComponentName thisWidget = new ComponentName(context,
@@ -67,25 +91,11 @@ public class ReceiverWidget extends AppWidgetProvider {
                     0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             remoteViews.setOnClickPendingIntent(R.id.widget_Photo, pendingIntent);
             appWidgetManager.updateAppWidget(widgetId, remoteViews);
-
         }
     }
 
-    private void listApartaments(){
-        apartamentosReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot noteSnapshot : dataSnapshot.getChildren()) {
-                    Apartament a = noteSnapshot.getValue(Apartament.class);
-                    apartamentoList.add(a);
-                }
-            }
+    private void prepareApartamentos() {
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d("TAG", databaseError.getMessage());
-            }
-        });
     }
 
 }

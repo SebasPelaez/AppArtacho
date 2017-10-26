@@ -174,7 +174,7 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener, G
                 if(!task.isSuccessful()){
                     Toast.makeText(getApplicationContext(),"PASO ALGO MALO", Toast.LENGTH_SHORT).show();
                 }
-                progressBar.setVisibility(View.GONE);
+                showButtons();
             }
         });
     }
@@ -183,6 +183,12 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener, G
         progressBar.setVisibility(View.VISIBLE);
         loginButtonGoogle.setVisibility(View.GONE);
         loginButtonFacebook.setVisibility(View.GONE);
+    }
+
+    private void showButtons() {
+        progressBar.setVisibility(View.GONE);
+        loginButtonGoogle.setVisibility(View.VISIBLE);
+        loginButtonFacebook.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -216,26 +222,42 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener, G
     }
 
     private void loginUser(){
-        String username = txtUsuario.getText().toString();
+        hideButtons(); //OCULTA LOS COMPONENTES BOTONES
+        final String username = txtUsuario.getText().toString();
         String password = txtClave.getText().toString();
         if(!username.equals("") && !password.equals("")){
-            User uLogueado=validarUsuarioContrasena(username,password);
-            if(uLogueado!=null){
-                User_Singleton.getInstance().setId(uLogueado.getId());
-                User_Singleton.getInstance().setUsername(uLogueado.getUsername());
-                User_Singleton.getInstance().setPassword(uLogueado.getPassword());
-                User_Singleton.getInstance().setName(uLogueado.getName());
-                User_Singleton.getInstance().setLastname(uLogueado.getLastname());
-                User_Singleton.getInstance().setGender(uLogueado.getGender());
-                User_Singleton.getInstance().setBirthday(uLogueado.getBirthday());
-                User_Singleton.getInstance().setPhone(uLogueado.getPhone());
-                User_Singleton.getInstance().setAddress(uLogueado.getAddress());
-                User_Singleton.getInstance().setEmail(uLogueado.getEmail());
-                User_Singleton.getInstance().setCity(uLogueado.getCity());
-                User_Singleton.getInstance().setImage(String.valueOf(uLogueado.getImage()));
-                goPrincipalScreen();
-            }
+
+            firebaseAuth.signInWithEmailAndPassword(username, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            Log.d("TAG", "signInWithEmail:onComplete:" + task.isSuccessful());
+                            if(task.isSuccessful()) {
+                                Toast.makeText(getApplicationContext(), "Login exitoso", Toast.LENGTH_SHORT).show();
+                                User uLogueado=validarUsuarioContrasena(username);
+                                if(uLogueado!=null){
+                                    User_Singleton.getInstance().setId(uLogueado.getId());
+                                    User_Singleton.getInstance().setUsername(uLogueado.getUsername());
+                                    User_Singleton.getInstance().setPassword(uLogueado.getPassword());
+                                    User_Singleton.getInstance().setName(uLogueado.getName());
+                                    User_Singleton.getInstance().setLastname(uLogueado.getLastname());
+                                    User_Singleton.getInstance().setGender(uLogueado.getGender());
+                                    User_Singleton.getInstance().setBirthday(uLogueado.getBirthday());
+                                    User_Singleton.getInstance().setPhone(uLogueado.getPhone());
+                                    User_Singleton.getInstance().setAddress(uLogueado.getAddress());
+                                    User_Singleton.getInstance().setEmail(uLogueado.getEmail());
+                                    User_Singleton.getInstance().setCity(uLogueado.getCity());
+                                    User_Singleton.getInstance().setImage(String.valueOf(uLogueado.getImage()));
+                                    goPrincipalScreen();
+                                }
+                            } else{
+                                Toast.makeText(getApplicationContext(), "Usuario invalido", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    });
         }
+        showButtons();
     }
 
     private void goPrincipalScreen() {
@@ -258,9 +280,9 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener, G
             registerUser();
     }
 
-    public User validarUsuarioContrasena(String username,String password){
+    public User validarUsuarioContrasena(String correo){
         for(User u: listaUsuarios){
-            if(u.getUsername().equals(username) && u.getPassword().equals(password)){
+            if(u.getEmail().equals(correo)){
                 return u;
             }
         }

@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -99,18 +100,33 @@ public class Apartamentos extends Fragment implements SearchView.OnQueryTextList
      */
 
     private void prepareApartamentos() {
-        apartamentosReference.addValueEventListener(new ValueEventListener() {
+        apartamentosReference.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot noteSnapshot : dataSnapshot.getChildren()) {
-                    Apartament a = noteSnapshot.getValue(Apartament.class);
-                    apartamentoList.add(a);
-                }
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Apartament a = dataSnapshot.getValue(Apartament.class);
+                //Toast.makeText(getActivity(), apartment.getUbication(), Toast.LENGTH_SHORT).show();
+                apartamentoList.add(a);
+                adapter.notifyDataSetChanged();
+
+            }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d("TAG", databaseError.getMessage());
+
             }
         });
 

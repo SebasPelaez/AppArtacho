@@ -47,7 +47,7 @@
                     android:backgroundTint="#ffffff"
                     android:drawablePadding="5dp"
                     android:drawableStart="@drawable/ic_account"
-                    android:hint="@string/strIngresar"
+                    android:hint="@string/Email"
                     android:inputType="textPersonName"
                     android:padding="15dp"
                     android:textColor="@color/secondary_text"

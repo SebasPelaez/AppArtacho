@@ -32,8 +32,12 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -81,6 +85,7 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
             "Valledupar","Cartagena de Indias","Pereira","Soledad","Buenaventura","Cúcuta","Pasto","Ibagué",
             "Manizales","Soacha","Montería","Bucaramanga"};
 
+    private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
     private DatabaseReference userReference;
     private FirebaseStorage storage;
@@ -92,11 +97,14 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
+
         databaseReference = FirebaseDatabase.getInstance().getReference();
         userReference = databaseReference.child("Usuario");
 
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
+
+        mAuth = FirebaseAuth.getInstance();
 
         inicializarComponentes();
 
@@ -414,6 +422,8 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
     }
 
     public void registerUser(String urlPhto){
+        registerOnFirebase(email.getText().toString(),password.getText().toString());
+
         String key = userReference.push().getKey();
         User u = new User();
         u.setId(key);
@@ -430,7 +440,23 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
         u.setImage(String.valueOf(selectedImage));
         u.setImage(urlPhto);
         userReference.child(key).setValue(u);
+
         goLogginScreen();
+    }
+
+    private void registerOnFirebase(String textEmail,String textPassword) {
+        mAuth.createUserWithEmailAndPassword(textEmail, textPassword)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            Log.d("TAG", "createUserWithEmail:onComplete:" + task.isSuccessful());
+                        } else{
+                            Toast.makeText(getApplicationContext(), "Error creating user", Toast.LENGTH_SHORT).show();
+                        }
+                        // ...
+                    }
+                });
     }
 
     private void uploadPhoto(){
