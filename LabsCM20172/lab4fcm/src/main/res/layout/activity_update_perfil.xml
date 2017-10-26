@@ -234,6 +234,7 @@
                     tools:layout_editor_absoluteY="497dp" />
 
                 <Button
+                    android:id="@+id/btnUpdateInfo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"

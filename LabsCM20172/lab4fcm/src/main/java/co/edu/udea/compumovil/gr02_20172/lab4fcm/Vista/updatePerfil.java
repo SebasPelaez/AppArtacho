@@ -1,6 +1,7 @@
 package co.edu.udea.compumovil.gr02_20172.lab4fcm.Vista;
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -27,12 +28,18 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.io.File;
@@ -81,12 +88,21 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
     private DatabaseReference databaseReference;
     private DatabaseReference userReference;
 
+    private FirebaseStorage storage;
+    private StorageReference storageRef;
+    private StorageReference imageRef;
+    private Uri selectedImage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_perfil);
         databaseReference = FirebaseDatabase.getInstance().getReference();
         userReference = databaseReference.child("Usuario");
+
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
+
         initComponents();
         setInitValues();
         if(mayRequestStoragePermission())
@@ -197,20 +213,16 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
                                 public void onScanCompleted(String path, Uri uri) {
                                     Log.i("ExternalStorage", "Scanned " + path + ":");
                                     Log.i("ExternalStorage", "-> Uri = " + uri);
-                                    //informacion.getData().setRuta_foto(path);
+                                    selectedImage = uri;
                                 }
                             });
-
-
                     Bitmap bitmap = BitmapFactory.decodeFile(mPath);
                     editImage.setImageBitmap(bitmap);
                     break;
                 case SELECT_PICTURE:
-
-                    Uri path = data.getData();
-                    imagePath = path.toString();
-                    editImage.setImageURI(path);
-                    //informacion.getData().setRuta_foto(path.toString());
+                    selectedImage = data.getData();
+                    imagePath = selectedImage.toString();
+                    editImage.setImageURI(selectedImage);
                     break;
 
             }
@@ -290,7 +302,6 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
 
     private void setInitValues(){
         User user = User_Singleton.getInstance();
-        int positionCity;
         userId = user.getId();
         editName.setText(user.getName());
         editLastName.setText(user.getLastname());
@@ -313,11 +324,11 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
         editCity.setText(user.getCity());
     }
 
-    private void updateUserInformation(){
+    private void updateUserInformation(String urlPhto){
         String key = User_Singleton.getInstance().getId();
         User editUser = new User();
 
-        editUser.setId(User_Singleton.getInstance().getId());
+        editUser.setId(key);
         editUser.setUsername(User_Singleton.getInstance().getUsername());
         editUser.setBirthday(User_Singleton.getInstance().getBirthday());
 
@@ -329,7 +340,7 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
         editUser.setEmail(editEmail.getText().toString());
         editUser.setCity(editCity.getText().toString());
         editUser.setPassword(confirmPassword.getText().toString());
-        editUser.setImage(imagePath);
+        editUser.setImage(urlPhto);
 
         userReference.child(key).setValue(editUser);
 
@@ -345,6 +356,51 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        updateUserInformation();
+        switch (v.getId()) {
+            case R.id.btnUpdateInfo:
+                if(!imagePath.equals(User_Singleton.getInstance().getImage())){
+                    uploadPhoto();
+                }else{
+                    updateUserInformation(imagePath);
+                }
+                break;
+            default:
+                break;
+        }
     }
+
+    private void uploadPhoto(){
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Creando Usuario");
+        progressDialog.show();
+
+        imageRef = storageRef.child("Images/"+selectedImage.getLastPathSegment());
+
+        imageRef.putFile(selectedImage)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        //dismissing the progress dialog
+                        progressDialog.dismiss();
+                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        updateUserInformation(String.valueOf(downloadUrl));
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        progressDialog.dismiss();
+                        Toast.makeText(getApplicationContext(), "AQUI: "+exception.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                })
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        //displaying the upload progress
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                        progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
+                    }
+                });
+    }
+
 }

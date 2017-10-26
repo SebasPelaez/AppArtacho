@@ -2,6 +2,7 @@ package co.edu.udea.compumovil.gr02_20172.lab4fcm.Vista;
 
 import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -31,14 +32,17 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
-
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.R;
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.Validacion.Validation;
 import co.edu.udea.compumovil.gr02_20172.lab4fcm.entities.User;
@@ -61,7 +65,7 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
     private EditText rPassword;
     private LinearLayout layout_imagen;
     private int sexo;
-    private String imagePath;
+    private Uri selectedImage;
 
     /**
      * Para la foto
@@ -79,6 +83,10 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
 
     private DatabaseReference databaseReference;
     private DatabaseReference userReference;
+    private FirebaseStorage storage;
+    private StorageReference storageRef;
+    StorageReference imageRef;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +94,10 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
         setContentView(R.layout.activity_registro);
         databaseReference = FirebaseDatabase.getInstance().getReference();
         userReference = databaseReference.child("Usuario");
+
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
+
         inicializarComponentes();
 
         if(mayRequestStoragePermission())
@@ -179,7 +191,7 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
             case R.id.btnRegistrar:
                 if(validarContrasenas()){
                     if(checkValidation() && validarCamposVacios()){
-                        registerUser();
+                        uploadPhoto();
                     }else{
                         Toast.makeText(getApplicationContext(),"Hay errores en el formulario",Toast.LENGTH_SHORT).show();
                     }
@@ -341,7 +353,6 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
         if(resultCode == RESULT_OK){
             switch (requestCode){
                 case PHOTO_CODE:
-                    imagePath = mPath;
                     MediaScannerConnection.scanFile(this,
                             new String[]{mPath}, null,
                             new MediaScannerConnection.OnScanCompletedListener() {
@@ -349,19 +360,15 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
                                 public void onScanCompleted(String path, Uri uri) {
                                     Log.i("ExternalStorage", "Scanned " + path + ":");
                                     Log.i("ExternalStorage", "-> Uri = " + uri);
-                                    //informacion.getData().setRuta_foto(path);
+                                    selectedImage = uri;
                                 }
                             });
-
-
                     Bitmap bitmap = BitmapFactory.decodeFile(mPath);
                     foto.setImageBitmap(bitmap);
                     break;
                 case SELECT_PICTURE:
-
-                    Uri path = data.getData();
-                    imagePath = path.toString();
-                    foto.setImageURI(path);
+                    selectedImage = data.getData();
+                    foto.setImageURI(selectedImage);
                     break;
 
             }
@@ -406,7 +413,7 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
         builder.show();
     }
 
-    public void registerUser(){
+    public void registerUser(String urlPhto){
         String key = userReference.push().getKey();
         User u = new User();
         u.setId(key);
@@ -420,12 +427,49 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
         u.setAddress(direccion.getText().toString());
         u.setEmail(email.getText().toString());
         u.setCity(ciudad.getText().toString());
+        u.setImage(String.valueOf(selectedImage));
+        u.setImage(urlPhto);
+        userReference.child(key).setValue(u);
+        goLogginScreen();
+    }
 
-        Map<String, Object> userValues = u.toMap(); //Convierte todos los elementos en un MAP
-        Map<String, Object> childUpdates = new HashMap<>(); //Crea un nuevo hijo
+    private void uploadPhoto(){
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Creando Usuario");
+        progressDialog.show();
 
-        childUpdates.put(key, userValues); //Asigna al nuevo hijo los valores del usuario
-        userReference.updateChildren(childUpdates);//Guarda en la base de datos
+        imageRef = storageRef.child("Images/"+selectedImage.getLastPathSegment());
+
+        imageRef.putFile(selectedImage)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        //dismissing the progress dialog
+                        progressDialog.dismiss();
+                        //displaying success toast
+                        Toast.makeText(getApplicationContext(), "Usuario Creado", Toast.LENGTH_LONG).show();
+                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        registerUser(String.valueOf(downloadUrl));
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        progressDialog.dismiss();
+                        Toast.makeText(getApplicationContext(), "AQUI: "+exception.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                })
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        //displaying the upload progress
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                        progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
+                    }
+                });
+    }
+
+    private void goLogginScreen() {
         //Se redirigea la actividad principal para loguearse
         Intent i = new Intent(Registro.this, Loggin.class);
         startActivity(i);

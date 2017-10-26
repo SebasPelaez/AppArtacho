@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="co.edu.udea.compumovil.gr02_20172.lab4fmc.Vista.Registro">
+    tools:context="co.edu.udea.compumovil.gr02_20172.lab4fcm.Vista.Registro">
 
     <ScrollView
         android:layout_width="0dp"
