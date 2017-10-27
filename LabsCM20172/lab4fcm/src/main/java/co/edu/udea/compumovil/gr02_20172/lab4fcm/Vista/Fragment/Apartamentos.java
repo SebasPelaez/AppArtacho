@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 
 import com.google.firebase.database.ChildEventListener;
@@ -107,7 +108,6 @@ public class Apartamentos extends Fragment implements SearchView.OnQueryTextList
                 //Toast.makeText(getActivity(), apartment.getUbication(), Toast.LENGTH_SHORT).show();
                 apartamentoList.add(a);
                 adapter.notifyDataSetChanged();
-
             }
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
@@ -129,7 +129,6 @@ public class Apartamentos extends Fragment implements SearchView.OnQueryTextList
 
             }
         });
-
         adapter = new ApartamentoAdapter(rootView.getContext(), apartamentoList);
         recyclerView.setAdapter(adapter);
         handlerClick();
@@ -188,8 +187,11 @@ public class Apartamentos extends Fragment implements SearchView.OnQueryTextList
     public void generarAccion(String tag) {
         switch (tag){
             case "Actualizar_Aptos":
+                apartamentoList.clear();
+                adapter.notifyDataSetChanged();
                 prepareApartamentos();
                 adapter.notifyDataSetChanged();
+                Toast.makeText(rootView.getContext(),"Se actualizaron los apartamentos",Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
