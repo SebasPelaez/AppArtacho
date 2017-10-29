@@ -198,10 +198,14 @@ public class Registro extends AppCompatActivity implements View.OnClickListener{
         switch (v.getId()) {
             case R.id.btnRegistrar:
                 if(validarContrasenas()){
-                    if(checkValidation() && validarCamposVacios()){
-                        uploadPhoto();
+                    if(password.length()>=6){
+                        if(checkValidation() && validarCamposVacios()){
+                            uploadPhoto();
+                        }else{
+                            Toast.makeText(getApplicationContext(),"Hay errores en el formulario",Toast.LENGTH_SHORT).show();
+                        }
                     }else{
-                        Toast.makeText(getApplicationContext(),"Hay errores en el formulario",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"La contraseña debe tener más de 6 dígitos",Toast.LENGTH_SHORT).show();
                     }
                 }else{
                     Toast.makeText(getApplicationContext(),"Las contraseñas no coinciden",Toast.LENGTH_SHORT).show();

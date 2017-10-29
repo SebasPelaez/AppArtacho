@@ -339,7 +339,10 @@ public class updatePerfil extends AppCompatActivity implements View.OnClickListe
         editUser.setAddress(editAddress.getText().toString());
         editUser.setEmail(editEmail.getText().toString());
         editUser.setCity(editCity.getText().toString());
-        editUser.setPassword(confirmPassword.getText().toString());
+        if(!confirmPassword.getText().toString().equals(User_Singleton.getInstance().getPassword())
+                && confirmPassword.length()>=6){
+            editUser.setPassword(confirmPassword.getText().toString());
+        }
         editUser.setImage(urlPhto);
 
         userReference.child(key).setValue(editUser);

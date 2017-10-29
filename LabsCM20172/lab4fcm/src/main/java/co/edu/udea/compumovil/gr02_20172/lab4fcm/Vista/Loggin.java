@@ -299,7 +299,12 @@ public class Loggin extends AppCompatActivity implements View.OnClickListener, G
         User_Singleton.getInstance().setBirthday("");
         User_Singleton.getInstance().setPhone("");
         User_Singleton.getInstance().setAddress("");
-        User_Singleton.getInstance().setEmail(user.getEmail());
+        if(user.getEmail()!= null){
+            User_Singleton.getInstance().setEmail(user.getEmail());
+        }else{
+            User_Singleton.getInstance().setEmail("");
+        }
+
         User_Singleton.getInstance().setCity("");
         User_Singleton.getInstance().setImage(String.valueOf(user.getPhotoUrl()));
     }

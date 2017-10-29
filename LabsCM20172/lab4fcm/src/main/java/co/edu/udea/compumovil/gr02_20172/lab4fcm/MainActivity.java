@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
@@ -134,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUser(User u){
+        Log.d("Debug","Cuando los voy a setear tienen el ID: "+ u.getId());
         User_Singleton.getInstance().setId(u.getId());
         User_Singleton.getInstance().setUsername(u.getName());
         User_Singleton.getInstance().setPassword(u.getPassword());
