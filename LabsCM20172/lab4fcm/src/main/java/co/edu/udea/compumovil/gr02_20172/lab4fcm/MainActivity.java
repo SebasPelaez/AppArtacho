@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,9 +46,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         databaseReference = FirebaseDatabase.getInstance().getReference();//INSTANCIA LA BASE DE DATOS DE FIREBASE
         userReference = databaseReference.child("Usuario");//SE PARA EN EL HIJO USUARIO
+        databaseReference.child("Devices").child(refreshedToken).setValue(refreshedToken);
         listaUsuarios = new ArrayList<>();
         listarUsuarios();
 
